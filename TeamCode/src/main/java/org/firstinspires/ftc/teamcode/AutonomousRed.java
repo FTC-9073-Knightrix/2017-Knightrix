@@ -18,7 +18,7 @@ public class AutonomousRed extends Telemetry {
         }
         else {
             //End program
-            moveRobot(0,0);
+            moveStraight(true,0);
         }
     }
 }

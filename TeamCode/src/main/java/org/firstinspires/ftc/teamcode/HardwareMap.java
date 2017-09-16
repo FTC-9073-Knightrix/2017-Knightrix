@@ -108,7 +108,7 @@ public abstract class HardwareMap extends OpMode {
     }
 
     //Custom classes
-    void moveRobot (double powerLeft, double powerRight) {
+    void moveRobot (double powerLeft, double powerRight) { //moveRobot maybe not useful for mechanum wheels
         //If the left motor is not null
         if (leftMotor != null) {
             //Set the power of the left motor to 'power'
@@ -118,6 +118,28 @@ public abstract class HardwareMap extends OpMode {
         if (rightMotor != null) {
             //Set the power of the right motor to 'power'
             rightMotor.setPower(powerRight);
+        }
+    }
+    void moveStraight (boolean forwards, double power) {
+        if (forwards) { //if we want the robot to go forwards
+            leftMotor.setDirection(DcMotor.Direction.FORWARD);
+            rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        }
+        else { //if we want the robot to go backwards
+            leftMotor.setDirection(DcMotor.Direction.REVERSE);
+            rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        }
+        if (leftMotor != null && rightMotor != null) {
+            leftMotor.setPower(power);
+            rightMotor.setPower(power);
+        }
+    }
+    void moveSideways (boolean right, double power) {
+        if (right) { //if we want the robot to go right
+
+        }
+        else { //if we want the robot to go left
+
         }
     }
 }
