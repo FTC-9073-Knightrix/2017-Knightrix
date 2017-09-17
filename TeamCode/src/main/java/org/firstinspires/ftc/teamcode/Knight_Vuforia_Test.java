@@ -67,7 +67,7 @@
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 //@Disabled
-public class VuforiaTest extends LinearOpMode {
+public class Knight_Vuforia_Test extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
