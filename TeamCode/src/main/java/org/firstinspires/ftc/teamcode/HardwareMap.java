@@ -20,8 +20,10 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class HardwareMap extends OpMode {
     //Motors
-    DcMotor leftMotor;
-    DcMotor rightMotor;
+    DcMotor leftFrontMotor;
+    DcMotor leftBackMotor;
+    DcMotor rightFrontMotor;
+    DcMotor rightBackMotor;
 
     //Servos
     Servo Servo1; //Label later
@@ -69,16 +71,22 @@ public abstract class HardwareMap extends OpMode {
     public float gyro1Heading;
 
     //Motor Variables
-    float leftMotorPower;
-    float rightMotorPower;
+    /*float leftMotorPower;
+    float rightMotorPower;*/
 
     public void init () {
-        //leftMotor
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        //rightMotor
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        //leftFrontMotor
+        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        //leftBackMotor
+        leftBackMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        //rightFrontMotor
+        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        //rightBackMotor
+        rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //Range Sensors
         range1 = hardwareMap.i2cDevice.get("range1");
@@ -108,7 +116,7 @@ public abstract class HardwareMap extends OpMode {
     }
 
     //Custom classes
-    void moveRobot (double powerLeft, double powerRight) { //moveRobot maybe not useful for mechanum wheels
+    /*void moveRobot (double powerLeft, double powerRight) { //moveRobot maybe not useful for mechanum wheels
         //If the left motor is not null
         if (leftMotor != null) {
             //Set the power of the left motor to 'power'
@@ -119,27 +127,29 @@ public abstract class HardwareMap extends OpMode {
             //Set the power of the right motor to 'power'
             rightMotor.setPower(powerRight);
         }
-    }
-    void moveStraight (boolean forwards, double power) {
-        if (forwards) { //if we want the robot to go forwards
-            leftMotor.setDirection(DcMotor.Direction.FORWARD);
-            rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        }
-        else { //if we want the robot to go backwards
-            leftMotor.setDirection(DcMotor.Direction.REVERSE);
-            rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        }
-        if (leftMotor != null && rightMotor != null) {
-            leftMotor.setPower(power);
-            rightMotor.setPower(power);
+    }*/
+    void move (double power) {
+        if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
+            leftFrontMotor.setPower(power);
+            leftBackMotor.setPower(power);
+            rightFrontMotor.setPower(power);
+            rightBackMotor.setPower(power);
         }
     }
-    void moveSideways (boolean right, double power) {
-        if (right) { //if we want the robot to go right
-
+    void turn (double power) {
+        if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
+            leftFrontMotor.setPower(power);
+            leftBackMotor.setPower(power);
+            rightFrontMotor.setPower(-power);
+            rightBackMotor.setPower(-power);
         }
-        else { //if we want the robot to go left
-
+    }
+    void strafe (double power) {
+        if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
+            leftFrontMotor.setPower(power);
+            leftBackMotor.setPower(-power);
+            rightFrontMotor.setPower(-power);
+            rightBackMotor.setPower(power);
         }
     }
 }

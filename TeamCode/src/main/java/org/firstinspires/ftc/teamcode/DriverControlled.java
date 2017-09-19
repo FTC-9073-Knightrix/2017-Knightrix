@@ -16,6 +16,8 @@ public class DriverControlled extends Telemetry {
     public void loop () {
         updateTelemetry();
 
-        moveRobot(leftMotorPower, rightMotorPower);
+        move(gamepad1.left_stick_y);
+        turn(gamepad1.right_stick_x);
+        strafe(gamepad1.left_stick_x);
     }
 }

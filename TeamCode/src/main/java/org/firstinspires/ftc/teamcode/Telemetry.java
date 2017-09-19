@@ -8,7 +8,7 @@ public abstract class Telemetry extends HardwareMap {
     public void updateTelemetry() {
         telemetry.addLine("~Telemetry~");
         telemetry.addLine("Time: " + Double.toString(getRuntime()));
-        if (!teleOp) {
+        if (!teleOp) { //If autonomous
             if (autoRed) {
                 if (state == 0) {
                     /*Write sensors needed here*/
@@ -19,9 +19,9 @@ public abstract class Telemetry extends HardwareMap {
                     /*Write sensors needed here*/
                 }
             }
-        } else {
-            leftMotorPower = gamepad1.left_stick_y;
-            rightMotorPower = gamepad1.right_stick_y;
+        } else { //If teleOp
+            /*leftMotorPower = gamepad1.left_stick_y;
+            rightMotorPower = gamepad1.right_stick_y;*/
         }
     }
 }
