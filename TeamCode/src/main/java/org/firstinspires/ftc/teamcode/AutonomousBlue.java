@@ -18,7 +18,7 @@ public class AutonomousBlue extends Telemetry {
         }
         else {
             //End program
-            moveStraight(true, 0);
+            move(0);
         }
     }
 }

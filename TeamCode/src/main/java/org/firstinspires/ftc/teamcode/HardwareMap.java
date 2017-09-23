@@ -71,6 +71,9 @@ public abstract class HardwareMap extends OpMode {
     public float gyro1Heading;
 
     //Motor Variables
+    float angle;
+    float anglePower;
+    float average;
     /*float leftMotorPower;
     float rightMotorPower;*/
 
@@ -150,6 +153,33 @@ public abstract class HardwareMap extends OpMode {
             leftBackMotor.setPower(-power);
             rightFrontMotor.setPower(-power);
             rightBackMotor.setPower(power);
+        }
+    }
+    void diagonal (/*double power, double angle*/) {
+        average = (gamepad1.left_stick_x + gamepad1.left_stick_y) / 2;//which is bigger
+
+        if (gamepad1.left_stick_x != 0) {
+            angle = (float) Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x);
+        }
+        else {
+            angle = (float) Math.asin(gamepad1.left_stick_y);
+        }
+
+        anglePower = (1 - (angle / 45)) * average;
+
+        if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
+            if ((gamepad1.left_stick_y > 0 && gamepad1.left_stick_x < 0) || (gamepad1.left_stick_y < 0 && gamepad1.left_stick_x > 0)) {
+                leftFrontMotor.setPower(average);
+                leftBackMotor.setPower(anglePower);
+                rightFrontMotor.setPower(anglePower);
+                rightBackMotor.setPower(average);
+            }
+            else if ((gamepad1.left_stick_y > 0 && gamepad1.left_stick_x > 0) || (gamepad1.left_stick_y < 0 && gamepad1.left_stick_x < 0)) {
+                leftFrontMotor.setPower(anglePower);
+                leftBackMotor.setPower(average);
+                rightFrontMotor.setPower(average);
+                rightBackMotor.setPower(anglePower);
+            }
         }
     }
 }
