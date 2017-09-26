@@ -22,6 +22,12 @@ public abstract class Telemetry extends HardwareMap {
         } else { //If teleOp
             /*leftMotorPower = gamepad1.left_stick_y;
             rightMotorPower = gamepad1.right_stick_y;*/
+
+            if (gamepad1 != null) {telemetry.addLine("gamepad1 != null");}
+            if (leftFrontMotor != null) {telemetry.addLine("leftFrontMotor != null");}
+            if (leftBackMotor != null) {telemetry.addLine("leftBackMotor != null");}
+            if (rightFrontMotor != null) {telemetry.addLine("rightFrontMotor != null");}
+            if (rightBackMotor != null) {telemetry.addLine("rightBackMotor != null");}
         }
     }
 }
