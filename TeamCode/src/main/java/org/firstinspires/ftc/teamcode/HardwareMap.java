@@ -28,8 +28,8 @@ public abstract class HardwareMap extends OpMode {
     DcMotor rightFrontMotor;
     DcMotor rightBackMotor;
 
-    DcMotorController MC2;
-    LegacyModule MC1;
+    //DcMotorController MC2;
+    //LegacyModule MC1;
 
     //Servos
     /*Servo Servo1; //Label later*/
@@ -85,6 +85,7 @@ public abstract class HardwareMap extends OpMode {
     /*float leftMotorPower;
     float rightMotorPower;*/
 
+    @Override
     public void init () {
         //leftFrontMotor
         leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
@@ -99,8 +100,8 @@ public abstract class HardwareMap extends OpMode {
         rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        MC1 = hardwareMap.legacyModule.get("MC1");
-        MC2 = hardwareMap.dcMotorController.get("MC2");
+        //MC1 = hardwareMap.legacyModule.get("MC1");
+        //MC2 = hardwareMap.dcMotorController.get("MC2");
         //Range Sensors
         /*
         range1 = hardwareMap.i2cDevice.get("range1");
@@ -142,11 +143,11 @@ public abstract class HardwareMap extends OpMode {
             rightMotor.setPower(powerRight);
         }
     }*/
-    void MoveRightDrive(double Power){
+    void MoveRightDrive(double power){
         //If 'RightDrive' is not null
         if (rightBackMotor != null){
             //Set the power of 'RightDrive' to 'Power'
-            rightBackMotor.setPower (Power);
+            rightBackMotor.setPower (power);
         }
     }
 
