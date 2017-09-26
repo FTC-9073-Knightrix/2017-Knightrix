@@ -41,13 +41,19 @@ public class DriverControlled extends OpMode{
  */
     @Override
     public void loop() {
-        double left;
-        double right;
+        double LB;
+        double LF;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        LB = -gamepad1.left_stick_y;
+        LF = -gamepad1.right_stick_y;
 
-        robot.leftDrive.setPower(left);
+        robot.leftFrontMotor.setPower(LF);
+        robot.leftBackMotor.setPower(LB);
+        if (leftFrontMotor != null) {telemetry.addLine("leftFrontMotor != null");}
+        if (leftBackMotor != null) {telemetry.addLine("leftBackMotor != null");}
+        if (rightFrontMotor != null) {telemetry.addLine("rightFrontMotor != null");}
+        if (rightBackMotor != null) {telemetry.addLine("rightBackMotor != null");}
+
     }
 }

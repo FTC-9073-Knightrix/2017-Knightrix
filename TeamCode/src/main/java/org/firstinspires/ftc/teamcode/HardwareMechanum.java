@@ -10,7 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareMechanum {
 
     /* Public OpMode members. */
-    public DcMotor leftDrive = null;
+    public DcMotor leftFrontMotor = null;
+    public DcMotor leftBackMotor = null;
 
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap = null;
@@ -27,15 +28,19 @@ public class HardwareMechanum {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive = hwMap.get(DcMotor.class, "M1");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        leftFrontMotor = hwMap.get(DcMotor.class, "M1");
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        leftBackMotor = hwMap.get(DcMotor.class, "M2");
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
+        leftFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }
