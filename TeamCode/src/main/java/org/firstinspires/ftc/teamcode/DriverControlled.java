@@ -50,10 +50,7 @@ public class DriverControlled extends OpMode{
 
         robot.leftFrontMotor.setPower(LF);
         robot.leftBackMotor.setPower(LB);
-        if (leftFrontMotor != null) {telemetry.addLine("leftFrontMotor != null");}
-        if (leftBackMotor != null) {telemetry.addLine("leftBackMotor != null");}
-        if (rightFrontMotor != null) {telemetry.addLine("rightFrontMotor != null");}
-        if (rightBackMotor != null) {telemetry.addLine("rightBackMotor != null");}
+        telemetry.addLine("leftFrontMotor != null");
 
     }
 }
