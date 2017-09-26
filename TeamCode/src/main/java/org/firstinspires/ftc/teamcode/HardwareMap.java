@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -11,6 +13,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
+import com.qualcomm.robotcore.hardware.LegacyModule;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -25,14 +28,18 @@ public abstract class HardwareMap extends OpMode {
     DcMotor rightFrontMotor;
     DcMotor rightBackMotor;
 
+    DcMotorController MC2;
+    LegacyModule MC1;
+
     //Servos
-    Servo Servo1; //Label later
+    /*Servo Servo1; //Label later*/
 
     //Gamepads
-    Gamepad gamepad1;
-    Gamepad gamepad2;
+    //public Gamepad gamepad1;
+    //public Gamepad gamepad2;
 
     //Range Sensors
+    /*
     I2cDevice range1;
     I2cDevice range2;
     UltrasonicSensor legoRange;
@@ -46,7 +53,7 @@ public abstract class HardwareMap extends OpMode {
     ColorSensor color1;
 
     //Gyro Sensor
-    GyroSensor gyro1;
+    GyroSensor gyro1;*/
 
 
     //Variables
@@ -56,6 +63,7 @@ public abstract class HardwareMap extends OpMode {
     boolean autoRed = false;
 
     //Sensor Variables
+    /*
     static final float lineTrackerVoltage = 2; //2
     public double legoRangeValue;
     public I2cDeviceSynch range1Reader;
@@ -68,7 +76,7 @@ public abstract class HardwareMap extends OpMode {
     public double frontLineVoltage;
     public double leftLineVoltage;
     public double rightLineVoltage;
-    public float gyro1Heading;
+    public float gyro1Heading;*/
 
     //Motor Variables
     float angle;
@@ -82,7 +90,7 @@ public abstract class HardwareMap extends OpMode {
         leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         //leftBackMotor
-        leftBackMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
         //rightFrontMotor
         rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
@@ -91,7 +99,10 @@ public abstract class HardwareMap extends OpMode {
         rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        MC1 = hardwareMap.legacyModule.get("MC1");
+        MC2 = hardwareMap.dcMotorController.get("MC2");
         //Range Sensors
+        /*
         range1 = hardwareMap.i2cDevice.get("range1");
         range2 = hardwareMap.i2cDevice.get("range2");
         range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x28), false);
@@ -110,12 +121,12 @@ public abstract class HardwareMap extends OpMode {
         color1.enableLed(false);
 
         //Gyro Sensor
-        gyro1 = hardwareMap.gyroSensor.get("gyro1");
+        gyro1 = hardwareMap.gyroSensor.get("gyro1");*/
     }
 
     public void init_loop () {
         //Calibrate gyro sensor
-        gyro1.calibrate();
+        /*gyro1.calibrate();*/
     }
 
     //Custom classes
@@ -131,31 +142,46 @@ public abstract class HardwareMap extends OpMode {
             rightMotor.setPower(powerRight);
         }
     }*/
+    void MoveRightDrive(double Power){
+        //If 'RightDrive' is not null
+        if (rightBackMotor != null){
+            //Set the power of 'RightDrive' to 'Power'
+            rightBackMotor.setPower (Power);
+        }
+    }
+
     void move (double power) {
+        telemetry.addLine("move()");
         if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
             leftFrontMotor.setPower(power);
             leftBackMotor.setPower(power);
             rightFrontMotor.setPower(power);
             rightBackMotor.setPower(power);
+            telemetry.addLine("move() motors != null");
         }
     }
     void turn (double power) {
+        telemetry.addLine("turn()");
         if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
             leftFrontMotor.setPower(power);
             leftBackMotor.setPower(power);
             rightFrontMotor.setPower(-power);
             rightBackMotor.setPower(-power);
+            telemetry.addLine("turn() motors != null");
         }
     }
     void strafe (double power) {
+        telemetry.addLine("strafe()");
         if (leftFrontMotor != null && leftBackMotor != null && rightFrontMotor != null && rightBackMotor != null) {
             leftFrontMotor.setPower(power);
             leftBackMotor.setPower(-power);
             rightFrontMotor.setPower(-power);
             rightBackMotor.setPower(power);
+            telemetry.addLine("strafe() motors != null");
         }
     }
     void diagonal (/*double power, double angle*/) {
+        telemetry.addLine("diagonal()");
         average = (gamepad1.left_stick_x + gamepad1.left_stick_y) / 2;//which is bigger
 
         if (gamepad1.left_stick_x != 0) {
@@ -180,6 +206,7 @@ public abstract class HardwareMap extends OpMode {
                 rightFrontMotor.setPower(average);
                 rightBackMotor.setPower(anglePower);
             }
+            telemetry.addLine("diagonal() motors != null");
         }
     }
 }
