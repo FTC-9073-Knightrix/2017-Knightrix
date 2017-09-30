@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by nicolas on 9/9/17.
  */
 
-@TeleOp(name = "Test:Run one motor")
+@TeleOp(name = "Test")
 
-public class DriverControlled extends OpMode{
+public class DriverControlled extends HardwareMap{
 
     /* Declare OpMode members. */
-    HardwareMechanum robot       = new HardwareMechanum(); // use the class created to define a Pushbot's hardware
+    //HardwareMechanum robot       = new HardwareMechanum(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -22,7 +22,7 @@ public class DriverControlled extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        //robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -48,9 +48,14 @@ public class DriverControlled extends OpMode{
         LB = -gamepad1.left_stick_y;
         LF = -gamepad1.right_stick_y;
 
-        robot.leftFrontMotor.setPower(LF);
-        robot.leftBackMotor.setPower(LB);
-        telemetry.addLine("leftFrontMotor != null");
+        leftFrontMotor.setPower(LF);
+        leftBackMotor.setPower(LB);
+        //telemetry.addLine("leftFrontMotor != null");
+
+        /*move();
+        turn();
+        strafe();
+        diagonal();*/
 
     }
 }
