@@ -18,25 +18,40 @@ public class TrigTest extends TestHardwareMap{
     public void loop() {
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-        if(gamepad1.left_stick_x > 0 && gamepad1.left_stick_y > 0) //quadrant up/right
-            angle = (90-Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x)));
-        else if(gamepad1.left_stick_x > 0 && gamepad1.left_stick_y < 0) //quadrant down/right
-            angle = (90+Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x)));
-        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y < 0) //quadrant down/left
-            angle = (270-Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x)));
-        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y > 0) //quadrant up/left
-            angle = (270+Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x)));
-        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 1) //(0,1)
-            angle = 0;
-        else if(gamepad1.left_stick_x == 1 && gamepad1.left_stick_y == 0) //(1,0)
-            angle = 90;
+        if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y < 0) {//quadrant up/right
+            telemetry.addLine("Quadrant = 1 UR");
+            myangle = (float) (90 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //90 to 0
+        }
+        else if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y > 0) {//quadrant down/right
+            telemetry.addLine("Quadrant = 2 DR");
+            myangle = (float) (90 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //180 to 90}
+        }
+        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y > 0) {//quadrant down/left
+            telemetry.addLine("Quadrant = 3 DL");
+            myangle = (float) (270 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //360-270
+        }
+        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y < 0) { //quadrant up/left
+            telemetry.addLine("Quadrant = 4 UL");
+            myangle = (float) (270 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //270-180
+        }
+        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) //(0,0)
+            myangle = (float) 0;
         else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == -1) //(0,-1)
-            angle = 180;
+            myangle = (float) 0;
+        else if(gamepad1.left_stick_x == 1 && gamepad1.left_stick_y == 0) //(1,0)
+            myangle = (float) 90;
+        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 1) //(0,1)
+            myangle = (float) 180;
         else if(gamepad1.left_stick_x == -1 && gamepad1.left_stick_y == 0) //(-1,0)
-            angle = 270;
+            myangle = (float) 270;
 
-        telemetry.addLine("angle ="+angle);
+        //mech_move(myangle);
+        telemetry.addLine("angle ="+myangle);
+        telemetry.addLine("LF =" + Math.sin((myangle+45)/180*3.141592));
+        telemetry.addLine("LB =" + Math.sin((myangle+135)/180*3.141592));
+        telemetry.addLine("RF =" + Math.sin((myangle+135)/180*3.141592));
+        telemetry.addLine("RB =" + Math.sin((myangle+45)/180*3.141592));
 
     }
-    
+
 }

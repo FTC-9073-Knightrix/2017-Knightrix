@@ -9,16 +9,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 public abstract class TestHardwareMap extends OpMode {
+// Remove Hardware Section
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
 
     //Variables
-    public float angle = 0;
+    float myangle = 0;
 
     @Override
     public void init(){
+
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
         LeftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
@@ -32,7 +34,7 @@ public abstract class TestHardwareMap extends OpMode {
 
     }
     void MoveRobot(double PowerLeft, double PowerRight) {
-        if (RightFrontDrive != null) {
+    /*    if (RightFrontDrive != null) {
             RightFrontDrive.setPower(PowerRight/3);
         }
         if (RightBackDrive != null) {
@@ -44,9 +46,21 @@ public abstract class TestHardwareMap extends OpMode {
         if (LeftBackDrive != null) {
             LeftBackDrive.setPower(PowerLeft/3);
         }
+    */
     }
+
+    void mech_move (float myangle){
+        if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
+            LeftFrontDrive.setPower(Math.sin((myangle + 45) / 180 * 3.141592));
+            LeftBackDrive.setPower(Math.sin((myangle + 135) / 180 * 3.141592));
+            RightFrontDrive.setPower(Math.sin((myangle + 135) / 180 * 3.141592));
+            RightBackDrive.setPower(Math.sin((myangle + 45) / 180 * 3.141592));
+        }
+
+    }
+
     void move (float leftx, float lefty, float rightx) {
-        if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+     /*   if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             if (leftx == 0 && lefty != 0 && rightx == 0) { //move
                 LeftFrontDrive.setPower(lefty);
                 LeftBackDrive.setPower(lefty);
@@ -75,7 +89,10 @@ public abstract class TestHardwareMap extends OpMode {
                 RightBackDrive.setPower(0);
             }
         }
+    */
     }
+
+
     /*void turn (float power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
         LeftFrontDrive.setPower(-power);
