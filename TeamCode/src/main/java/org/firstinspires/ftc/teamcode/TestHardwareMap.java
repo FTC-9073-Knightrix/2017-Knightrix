@@ -14,6 +14,9 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
 
+    //Variables
+    public float angle = 0;
+
     @Override
     public void init(){
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
@@ -24,6 +27,9 @@ public abstract class TestHardwareMap extends OpMode {
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive = hardwareMap.dcMotor.get("RB");
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+
+
     }
     void MoveRobot(double PowerLeft, double PowerRight) {
         if (RightFrontDrive != null) {
