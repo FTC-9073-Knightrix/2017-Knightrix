@@ -45,8 +45,11 @@ public class TrigTest extends TestHardwareMap{
         else if(gamepad1.left_stick_x == -1 && gamepad1.left_stick_y == 0) //(-1,0)
             myangle = (float) 270;
 
-        //mech_move(myangle);
+        mypower = gamepad1.right_stick_y;
+
+        mech_move(myangle,mypower);
         telemetry.addLine("angle ="+myangle);
+        telemetry.addLine("power ="+mypower);
         telemetry.addLine("LF =" + Math.sin((myangle+45)/180*3.141592));
         telemetry.addLine("LB =" + Math.sin((myangle+135)/180*3.141592));
         telemetry.addLine("RF =" + Math.sin((myangle+135)/180*3.141592));
