@@ -53,8 +53,8 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("power ="+mypower);
         telemetry.addLine("LF =" + Math.round(Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("LB =" + Math.round(Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("RF =" + Math.round(Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("RB =" + Math.round(Math.sin((myangle+45)/180*3.141592)*100));
+        telemetry.addLine("RF =" + Math.round(Math.sin((myangle+45)/180*3.141592)*100));
+        telemetry.addLine("RB =" + Math.round(Math.sin((myangle+135)/180*3.141592)*100));
 
     }
 

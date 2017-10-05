@@ -54,8 +54,8 @@ public abstract class TestHardwareMap extends OpMode {
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
             LeftFrontDrive.setPower( mypower * Math.sin((myangle + 45) / 180 * 3.141592));
             LeftBackDrive.setPower(  mypower * Math.sin((myangle + 135) / 180 * 3.141592));
-            RightFrontDrive.setPower(mypower * Math.sin((myangle + 135) / 180 * 3.141592));
-            RightBackDrive.setPower( mypower * Math.sin((myangle + 45) / 180 * 3.141592));
+            RightFrontDrive.setPower(mypower * Math.sin((myangle + 45) / 180 * 3.141592));
+            RightBackDrive.setPower( mypower * Math.sin((myangle + 135) / 180 * 3.141592));
         }
 
     }
