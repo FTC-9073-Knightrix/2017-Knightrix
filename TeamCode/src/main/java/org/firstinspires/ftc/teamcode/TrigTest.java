@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by ibravo on 10/3/17.
@@ -16,44 +17,44 @@ public class TrigTest extends TestHardwareMap{
 
     @Override
     public void loop() {
+
+        double leftstick_x = gamepad1.left_stick_x;
+        double leftstick_y = gamepad1.left_stick_y;
+
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-        if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y < 0) {//quadrant up/right
-            telemetry.addLine("Quadrant = 1 UR");
-            myangle = (float) (90 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //90 to 0
+        if (leftstick_x > 0 && leftstick_y < 0) {//quadrant up/right
+            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //90 to 0
         }
-        else if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y > 0) {//quadrant down/right
-            telemetry.addLine("Quadrant = 2 DR");
-            myangle = (float) (90 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //180 to 90}
+        else if (leftstick_x > 0 && leftstick_y > 0) {//quadrant down/right
+            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //180 to 90}
         }
-        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y > 0) {//quadrant down/left
-            telemetry.addLine("Quadrant = 3 DL");
-            myangle = (float) (270 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //360-270
+        else if(leftstick_x < 0 && leftstick_y > 0) {//quadrant down/left
+            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //360-270
         }
-        else if(gamepad1.left_stick_x < 0 && gamepad1.left_stick_y < 0) { //quadrant up/left
-            telemetry.addLine("Quadrant = 4 UL");
-            myangle = (float) (270 + Math.toDegrees(Math.atan(gamepad1.left_stick_y / gamepad1.left_stick_x))); //270-180
+        else if(leftstick_x < 0 && leftstick_y < 0) { //quadrant up/left
+            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //270-180
         }
-        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) //(0,0)
+        else if(leftstick_x == 0 && leftstick_y == 0) //(0,0)
             myangle = (float) 0;
-        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == -1) //(0,-1)
+        else if(leftstick_x == 0 && leftstick_y < 0) //(0,-1)
             myangle = (float) 0;
-        else if(gamepad1.left_stick_x == 1 && gamepad1.left_stick_y == 0) //(1,0)
+        else if(leftstick_x > 0  && leftstick_y == 0) //(1,0)
             myangle = (float) 90;
-        else if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 1) //(0,1)
+        else if(leftstick_x == 0 && leftstick_y > 0) //(0,1)
             myangle = (float) 180;
-        else if(gamepad1.left_stick_x == -1 && gamepad1.left_stick_y == 0) //(-1,0)
+        else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
             myangle = (float) 270;
 
-        mypower = gamepad1.right_stick_y;
+        mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
 
         mech_move(myangle,mypower);
         telemetry.addLine("angle ="+myangle);
         telemetry.addLine("power ="+mypower);
-        telemetry.addLine("LF =" + Math.sin((myangle+45)/180*3.141592));
-        telemetry.addLine("LB =" + Math.sin((myangle+135)/180*3.141592));
-        telemetry.addLine("RF =" + Math.sin((myangle+135)/180*3.141592));
-        telemetry.addLine("RB =" + Math.sin((myangle+45)/180*3.141592));
+        telemetry.addLine("LF =" + Math.round(Math.sin((myangle+45)/180*3.141592)*100));
+        telemetry.addLine("LB =" + Math.round(Math.sin((myangle+135)/180*3.141592)*100));
+        telemetry.addLine("RF =" + Math.round(Math.sin((myangle+135)/180*3.141592)*100));
+        telemetry.addLine("RB =" + Math.round(Math.sin((myangle+45)/180*3.141592)*100));
 
     }
 
