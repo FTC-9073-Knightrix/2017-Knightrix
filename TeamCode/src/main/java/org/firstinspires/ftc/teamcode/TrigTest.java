@@ -18,9 +18,25 @@ public class TrigTest extends TestHardwareMap{
     @Override
     public void loop() {
 
+        boolean upclaw = gamepad1.dpad_up;
+        boolean downclaw = gamepad1.dpad_down;
+
+
         double leftstick_x = gamepad1.left_stick_x;
         double leftstick_y = gamepad1.left_stick_y;
         float myrot = gamepad1.right_stick_x/2;
+
+        updownPower = 0;
+        if (upclaw){
+            updownPower = .2;
+        }
+        if(downclaw){
+            updownPower = -.2;
+        }
+        updownMotor.setPower(updownPower);
+
+
+
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
