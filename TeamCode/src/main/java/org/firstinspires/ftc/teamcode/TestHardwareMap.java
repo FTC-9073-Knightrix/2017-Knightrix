@@ -64,6 +64,7 @@ public abstract class TestHardwareMap extends OpMode {
 
     }
 
+    
     void move (float leftx, float lefty, float rightx) {
      /*   if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             if (leftx == 0 && lefty != 0 && rightx == 0) { //move
