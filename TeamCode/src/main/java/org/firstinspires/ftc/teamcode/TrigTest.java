@@ -20,6 +20,7 @@ public class TrigTest extends TestHardwareMap{
 
         double leftstick_x = gamepad1.left_stick_x;
         double leftstick_y = gamepad1.left_stick_y;
+        float myrot = gamepad1.right_stick_x/2;
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -48,7 +49,6 @@ public class TrigTest extends TestHardwareMap{
 
         mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
 
-        mech_move(myangle,mypower);
         telemetry.addLine("angle ="+myangle);
         telemetry.addLine("power ="+mypower);
         telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
@@ -56,6 +56,7 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
 
+        mech_move(myangle,mypower,myrot);
     }
 
 }

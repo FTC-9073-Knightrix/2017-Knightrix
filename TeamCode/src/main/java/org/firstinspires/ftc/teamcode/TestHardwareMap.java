@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by nicolas on 9/30/17.
@@ -18,6 +19,7 @@ public abstract class TestHardwareMap extends OpMode {
     //Variables
     float myangle = 0;
     float mypower = 0;
+    float myrot = 0;
 
     @Override
     public void init(){
@@ -50,12 +52,14 @@ public abstract class TestHardwareMap extends OpMode {
     */
     }
 
-    void mech_move (float myangle, float mypower){
+    void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-            LeftFrontDrive.setPower( mypower * -Math.sin((myangle + 45) / 180 * 3.141592));
-            LeftBackDrive.setPower(  mypower * -Math.sin((myangle + 135) / 180 * 3.141592));
-            RightFrontDrive.setPower(mypower * -Math.sin((myangle + 45) / 180 * 3.141592));
-            RightBackDrive.setPower( mypower * -Math.sin((myangle + 135) / 180 * 3.141592));
+
+                LeftFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                LeftBackDrive.setPower(Range.clip( -myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+
         }
 
     }
