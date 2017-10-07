@@ -18,6 +18,7 @@ public class TrigTest extends TestHardwareMap{
     @Override
     public void loop() {
 
+
         boolean upclaw = gamepad1.dpad_up;
         boolean downclaw = gamepad1.dpad_down;
 
