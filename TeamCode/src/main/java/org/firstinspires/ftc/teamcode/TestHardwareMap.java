@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,8 +18,11 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
     DcMotor updownMotor;
+    //servos
     Servo pickup1 ;
     Servo pickup2;
+    //sensors
+    ColorSensor C1;
 
     //Variables
     float myangle = 0;
@@ -27,6 +31,10 @@ public abstract class TestHardwareMap extends OpMode {
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
+    int C1red = C1.red();
+    int C1blue = C1.blue();
+    boolean red;
+    boolean blue;
 
     @Override
     public void init(){
@@ -47,6 +55,9 @@ public abstract class TestHardwareMap extends OpMode {
         pickup1.setPosition(0);
         pickup2 = hardwareMap.servo.get("pickup2");
         pickup2.setPosition(1);
+
+        //sensors
+        C1 = hardwareMap.colorSensor.get("C1");
 
 
     }
