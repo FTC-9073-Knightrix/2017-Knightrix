@@ -1,8 +1,16 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
-import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.text.DecimalFormat;
 
@@ -13,85 +21,67 @@ import java.text.DecimalFormat;
  * and displays it in the Robot DriveStation
  * as telemetry data.
  */
-public class navXProcessedOp extends OpMode {
-    
-  /* This is the port on the Core Device Interace Module */
+
+@TeleOp(name = "NavX Test")
+
+public class NavXtest extends OpMode {
+
+    /* This is the port on the Core Device Interace Module */
   /* in which the navX-Micro is connected.  Modify this  */
-  /* depending upon which I2C port you are using.        */  
-  private final int NAVX_DIM_I2C_PORT = 0;
-    
-  private String startDate;
-  private ElapsedTime runtime = new ElapsedTime();
-  private AHRS navx_device;
-    
-  @Override
-  public void init() {
-    navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
-            NAVX_DIM_I2C_PORT,
-            AHRS.DeviceDataType.kProcessedData);
-  }
+  /* depending upon which I2C port you are using.        */
+    private ElapsedTime runtime = new ElapsedTime();
+    IntegratingGyroscope gyro;
+    NavxMicroNavigationSensor navxGyro;
 
-  @Override
-  public void stop() {
-    navx_device.close();
-  }
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+    @Override
+    public void init() {
+        navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
+        gyro = (IntegratingGyroscope) navxGyro;
+    }
+
+    @Override
+    public void init_loop() {
+        if (navxGyro.isCalibrating()) {
+            telemetry.addLine("navX Calibration");
+        }
+    }
+
+    /*
+     * This method will be called repeatedly in a loop
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
-  @Override
-  public void init_loop() {
-    telemetry.addData("navX Op Init Loop", runtime.toString());
-  }
+    @Override
+    public void loop() {
+        String gyrocal;
+        AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
+        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        DecimalFormat df = new DecimalFormat("#.##");
 
-  /*
-   * This method will be called repeatedly in a loop
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void loop() {
+        gyrocal = (navxGyro.isCalibrating() ?
+                "CALIBRATING" : "Calibration Complete");
+        telemetry.addData("2 GyroAccel", gyrocal);
 
-      boolean connected = navx_device.isConnected();
-      telemetry.addData("1 navX-Device", connected ? 
-              "Connected" : "Disconnected" );
-      String gyrocal, magcal, yaw, pitch, roll, compass_heading;
-      String fused_heading, ypr, cf, motion;
-      DecimalFormat df = new DecimalFormat("#.##");
-      
-      if ( connected ) {
-          gyrocal = (navx_device.isCalibrating() ? 
-                  "CALIBRATING" : "Calibration Complete");
-          magcal = (navx_device.isMagnetometerCalibrated() ? 
-                  "Calibrated" : "UNCALIBRATED");
-          yaw = df.format(navx_device.getYaw());
-          pitch = df.format(navx_device.getPitch());
-          roll = df.format(navx_device.getRoll());
-          ypr = yaw + ", " + pitch + ", " + roll;
-          compass_heading = df.format(navx_device.getCompassHeading());
-          fused_heading = df.format(navx_device.getFusedHeading());
-          if (!navx_device.isMagnetometerCalibrated()) {
-              compass_heading = "-------";
-          }
-          cf = compass_heading + ", " + fused_heading;
-          if ( navx_device.isMagneticDisturbance()) {
-              cf += " (Mag. Disturbance)";
-          }
-          motion = (navx_device.isMoving() ? "Moving" : "Not Moving");
-          if ( navx_device.isRotating() ) {
-              motion += ", Rotating";
-          }
-      } else {
-          gyrocal =
-            magcal =
-            ypr =
-            cf =
-            motion = "-------";
-      }
-      telemetry.addData("2 GyroAccel", gyrocal );
-      telemetry.addData("3 Y,P,R", ypr);
-      telemetry.addData("4 Magnetometer", magcal );
-      telemetry.addData("5 Compass,9Axis", cf );
-      telemetry.addData("6 Motion", motion);
-  }
+        telemetry.addLine()
+                .addData("dx", formatRate(rates.xRotationRate))
+                .addData("dy", formatRate(rates.yRotationRate))
+                .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
 
+        telemetry.addLine()
+                .addData("heading", formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
+        telemetry.update();
+    }
+
+    String formatRate(float rate) {
+        return String.format("%.3f", rate);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
 }

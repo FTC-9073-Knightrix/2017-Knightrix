@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -16,6 +18,9 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
     DcMotor updownMotor;
+
+    IntegratingGyroscope gyro;
+    NavxMicroNavigationSensor navxGyro;
 
     //Variables
     float myangle = 0;
@@ -39,9 +44,18 @@ public abstract class TestHardwareMap extends OpMode {
         updownMotor = hardwareMap.dcMotor.get("UD");
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
 
-
+        navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
+        gyro = (IntegratingGyroscope) navxGyro;
 
     }
+
+    @Override
+    public void init_loop() {
+        if (navxGyro.isCalibrating()) {
+            telemetry.addLine("navX Calibration");
+        }
+    }
+
     void MoveRobot(double PowerLeft, double PowerRight) {
     /*    if (RightFrontDrive != null) {
             RightFrontDrive.setPower(PowerRight/3);
