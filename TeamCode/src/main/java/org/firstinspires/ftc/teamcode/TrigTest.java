@@ -21,7 +21,8 @@ public class TrigTest extends TestHardwareMap{
 
         boolean upclaw = gamepad1.dpad_up;
         boolean downclaw = gamepad1.dpad_down;
-
+        pickup1.setPosition(gamepad1.right_trigger);
+        pickup2.setPosition(gamepad1.right_trigger);
 
         double leftstick_x = gamepad1.left_stick_x;
         double leftstick_y = gamepad1.left_stick_y;
@@ -29,10 +30,10 @@ public class TrigTest extends TestHardwareMap{
 
         updownPower = 0;
         if (upclaw){
-            updownPower = .2;
+            updownPower = -.2;
         }
         if(downclaw){
-            updownPower = -.2;
+            updownPower = .2;
         }
         updownMotor.setPower(updownPower);
 
