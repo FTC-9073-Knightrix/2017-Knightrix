@@ -21,8 +21,8 @@ public class TrigTest extends TestHardwareMap{
 
         boolean upclaw = gamepad1.dpad_up;
         boolean downclaw = gamepad1.dpad_down;
-        pickup1.setPosition(gamepad1.right_trigger);
-        pickup2.setPosition(1-gamepad1.right_trigger);
+        pickup1.setPosition(Range.clip(1-gamepad1.right_trigger, 0, 0.5));
+        pickup2.setPosition(Range.clip(gamepad1.right_trigger, 0, 0.5));
 
         double leftstick_x = gamepad1.left_stick_x;
         double leftstick_y = gamepad1.left_stick_y;
@@ -30,25 +30,25 @@ public class TrigTest extends TestHardwareMap{
 
         updownPower = 0;
         if (upclaw){
-            updownPower = -.2;
+            updownPower = .5;
         }
         if(downclaw){
-            updownPower = .2;
+            updownPower = -.2;
         }
         updownMotor.setPower(updownPower);
 
-        if(C1 != null){
-            if(C1red > C1blue){
-                telemetry.addLine("red");
-                red = true;
-                blue = false;
-            }
-            if(C1blue > C1red){
-                telemetry.addLine("blue");
-                red = false;
-                blue = true;
-            }
-        }
+//        if(C1 != null){
+//            if(C1red > C1blue){
+//                telemetry.addLine("red");
+//                red = true;
+//                blue = false;
+//            }
+//            if(C1blue > C1red){
+//                telemetry.addLine("blue");
+//                red = false;
+//                blue = true;
+//            }
+//        }
 
 
 
