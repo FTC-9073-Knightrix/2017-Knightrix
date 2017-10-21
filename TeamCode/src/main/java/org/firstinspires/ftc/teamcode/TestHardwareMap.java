@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -18,6 +19,8 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
     DcMotor updownMotor;
+    Servo pickup1 ;
+    Servo pickup2;
 
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -26,6 +29,10 @@ public abstract class TestHardwareMap extends OpMode {
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    /*float lastX = gamepad1.left_stick_x;
+    float lastY = gamepad1.left_stick_y;*/
+    float lastX = 0;
+    float lastY = 0;
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
@@ -43,6 +50,12 @@ public abstract class TestHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         updownMotor = hardwareMap.dcMotor.get("UD");
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        // servos
+        pickup1 = hardwareMap.servo.get("pickup1");
+        pickup1.setPosition(0);
+        pickup2 = hardwareMap.servo.get("pickup2");
+        pickup2.setPosition(1);
 
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
@@ -75,10 +88,17 @@ public abstract class TestHardwareMap extends OpMode {
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
 
+            //FRONT ARE GOING FASTER THAN THE BACK
+
                 LeftFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
                 LeftBackDrive.setPower(Range.clip( -myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
                 RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
                 RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+
+            telemetry.addLine("LeftFront: " + Range.clip(-myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            telemetry.addLine("LeftBack: " + Range.clip( -myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            telemetry.addLine("RightFront: " + Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            telemetry.addLine("RightBack: " + Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
 
         }
 
@@ -119,7 +139,7 @@ public abstract class TestHardwareMap extends OpMode {
     }
 
 
-    /*void turn (float power) {
+    void turn (float power, float degree) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
         LeftFrontDrive.setPower(-power);
         LeftBackDrive.setPower(-power);
