@@ -25,9 +25,9 @@ public abstract class TestHardwareMap extends OpMode {
     public void init(){
 
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
-        LeftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
-        LeftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive = hardwareMap.dcMotor.get("RB");
@@ -55,13 +55,12 @@ public abstract class TestHardwareMap extends OpMode {
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
 
-                LeftFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip( -myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
 
         }
-
     }
 
     
