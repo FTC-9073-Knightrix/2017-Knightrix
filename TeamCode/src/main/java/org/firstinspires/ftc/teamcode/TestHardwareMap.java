@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -15,11 +16,17 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
+    DcMotor updownMotor;
+    Servo pickup1 ;
+    Servo pickup2;
 
     //Variables
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    double updownPower;
+    boolean upclaw = false;
+    boolean downclaw = false;
 
     @Override
     public void init(){
@@ -32,7 +39,14 @@ public abstract class TestHardwareMap extends OpMode {
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive = hardwareMap.dcMotor.get("RB");
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        updownMotor = hardwareMap.dcMotor.get("UD");
+        updownMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        // servos
+        pickup1 = hardwareMap.servo.get("pickup1");
+        pickup1.setPosition(0);
+        pickup2 = hardwareMap.servo.get("pickup2");
+        pickup2.setPosition(1);
 
 
     }

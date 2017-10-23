@@ -27,12 +27,14 @@ public abstract class HardwareMap extends OpMode {
     public DcMotor leftBackMotor;
     public DcMotor rightFrontMotor;
     public DcMotor rightBackMotor;
+    public DcMotor updownclawMotor;
 
     //DcMotorController MC2;
     //LegacyModule MC1;
 
     //Servos
-    /*Servo Servo1; //Label later*/
+    Servo pickup1;
+    Servo pickup2;
 
     //Gamepads
     //public Gamepad gamepad1;
@@ -88,26 +90,35 @@ public abstract class HardwareMap extends OpMode {
     @Override
     public void init () {
         //leftFrontMotor
-        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
-        leftFrontMotor.setPower(0);
-        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //leftBackMotor
-        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
-        leftBackMotor.setPower(0);
-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //rightFrontMotor
-        rightFrontMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
-        rightFrontMotor.setPower(0);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //rightBackMotor
-        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
-        rightBackMotor.setPower(0);
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+//        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+//        leftFrontMotor.setPower(0);
+//        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+//        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        //leftBackMotor
+//        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+//        leftBackMotor.setPower(0);
+//        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+//        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        //rightFrontMotor
+//        rightFrontMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+//        rightFrontMotor.setPower(0);
+//        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+//        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        //rightBackMotor
+//        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+//        rightBackMotor.setPower(0);
+//        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+//        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        //updownclawMotor
+//        updownclawMotor = hardwareMap.get(DcMotor.class, "updownclawMotor");
+//        updownclawMotor.setPower(0);
+//        updownclawMotor.setDirection(DcMotor.Direction.FORWARD);
+//        updownclawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//        pickup1 = hardwareMap.get(Servo.class, "pickup1");
+//        pickup1.setPosition(0);
+//        pickup2 = hardwareMap.get(Servo.class, "pickup2");
+//        pickup2.setPosition(0);
         //MC1 = hardwareMap.legacyModule.get("MC1");
         //MC2 = hardwareMap.dcMotorController.get("MC2");
         //Range Sensors
