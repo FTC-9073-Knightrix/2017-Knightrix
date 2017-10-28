@@ -19,8 +19,12 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
     DcMotor updownMotor;
-    Servo pickup1 ;
+    DcMotor armMotor;
+    Servo pickup1;
     Servo pickup2;
+    Servo hand;
+    Servo side;
+    Servo arm;
 
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -50,12 +54,21 @@ public abstract class TestHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         updownMotor = hardwareMap.dcMotor.get("UD");
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor = hardwareMap.dcMotor.get("ARM");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // servos
         pickup1 = hardwareMap.servo.get("pickup1");
-        pickup1.setPosition(0);
+        pickup1.setPosition(0.5);
         pickup2 = hardwareMap.servo.get("pickup2");
-        pickup2.setPosition(1);
+        pickup2.setPosition(0.5);
+        hand = hardwareMap.servo.get("hand");
+        hand.setPosition(0.5);
+        side = hardwareMap.servo.get("side");
+        side.setPosition(1);
+        arm = hardwareMap.servo.get("arm");
+        arm.setPosition(0.5);
+
 
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
