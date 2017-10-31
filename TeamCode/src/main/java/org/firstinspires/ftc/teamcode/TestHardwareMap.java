@@ -40,6 +40,11 @@ public abstract class TestHardwareMap extends OpMode {
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
+    boolean left = false;
+    boolean right = false;
+    double gyroResetValue = 0;
+    double leftstick_x = 0;
+    double leftstick_y = 0;
 
     @Override
     public void init(){
@@ -59,15 +64,15 @@ public abstract class TestHardwareMap extends OpMode {
 
         // servos
         pickup1 = hardwareMap.servo.get("pickup1");
-        pickup1.setPosition(0.5);
+        //pickup1.setPosition(0.5);
         pickup2 = hardwareMap.servo.get("pickup2");
-        pickup2.setPosition(0.5);
+        //pickup2.setPosition(0.5);
         hand = hardwareMap.servo.get("hand");
-        hand.setPosition(0.5);
+        //hand.setPosition(0.5);
         side = hardwareMap.servo.get("side");
-        side.setPosition(1);
+        //side.setPosition(1);
         arm = hardwareMap.servo.get("arm");
-        arm.setPosition(0.5);
+        //arm.setPosition(0);
 
 
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
