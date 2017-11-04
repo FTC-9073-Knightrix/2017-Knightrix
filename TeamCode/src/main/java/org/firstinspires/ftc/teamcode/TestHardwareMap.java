@@ -2,11 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by nicolas on 9/30/17.
@@ -25,6 +31,7 @@ public abstract class TestHardwareMap extends OpMode {
     Servo hand;
     Servo side;
     Servo arm;
+    ColorSensor color1;
 
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -45,7 +52,16 @@ public abstract class TestHardwareMap extends OpMode {
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
-    int state = 0;
+    double state = 0;
+    double timer = 0;
+    double timer2 = 0;
+    /*int color1red;
+    int color1green;
+    int color1blue;*/
+    boolean blue = false;
+    boolean red = false;
+    double angle = 0;
+    boolean turn1 = false;
 
     @Override
     public void init(){
@@ -71,13 +87,15 @@ public abstract class TestHardwareMap extends OpMode {
         hand = hardwareMap.servo.get("hand");
         //hand.setPosition(0.5);
         side = hardwareMap.servo.get("side");
-        //side.setPosition(1);
+        side.setPosition(0.6);
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
 
-
+        //sensors
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
+        color1 = hardwareMap.colorSensor.get("C1");
+        color1.enableLed(false);
 
     }
 
@@ -115,7 +133,7 @@ public abstract class TestHardwareMap extends OpMode {
 
     
     void move (float leftx, float lefty, float rightx) {
-     /*   if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+        if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             if (leftx == 0 && lefty != 0 && rightx == 0) { //move
                 LeftFrontDrive.setPower(lefty);
                 LeftBackDrive.setPower(lefty);
@@ -144,20 +162,34 @@ public abstract class TestHardwareMap extends OpMode {
                 RightBackDrive.setPower(0);
             }
         }
-    */
     }
 
 
-    void turn (float power, float degree) {
+    void turn (double power, double degree) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
-        LeftFrontDrive.setPower(-power);
-        LeftBackDrive.setPower(-power);
-        RightFrontDrive.setPower(power);
-        RightBackDrive.setPower(power);
-            telemetry.addLine("" + power);
+            Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+            double degreeTurn = orientation.firstAngle + degree;
+            if (orientation.firstAngle < degreeTurn - 1) {
+                LeftFrontDrive.setPower(power);
+                LeftBackDrive.setPower(power);
+                RightFrontDrive.setPower(power);
+                RightBackDrive.setPower(power);
+            }
+            else if (orientation.firstAngle > degreeTurn + 1) {
+                LeftFrontDrive.setPower(-power);
+                LeftBackDrive.setPower(-power);
+                RightFrontDrive.setPower(-power);
+                RightBackDrive.setPower(-power);
+            }
+            else {
+                LeftFrontDrive.setPower(0);
+                LeftBackDrive.setPower(0);
+                RightFrontDrive.setPower(0);
+                RightBackDrive.setPower(0);
+            }
         }
     }
-    /*void strafe (float power) {
+    void strafe (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
         LeftFrontDrive.setPower(power);
         LeftBackDrive.setPower(-power);
@@ -165,5 +197,23 @@ public abstract class TestHardwareMap extends OpMode {
         RightBackDrive.setPower(power);
         telemetry.addLine("" + power);
         }
-    }*/
+    }
+    String color() {
+        String returnvalue = null;
+        if (color1 != null) {
+            if (color1.blue() > color1.red()) {
+                returnvalue = "blue";
+            }
+            else if (color1.red() > color1.blue()) {
+                returnvalue = "red";
+            }
+            else if (color1.red() == color1.blue() && color1.blue() != 0 && color1.red() != 0) {
+                returnvalue = "both";
+            }
+            else {
+                returnvalue = "none";
+            }
+        }
+        return returnvalue;
+    }
 }

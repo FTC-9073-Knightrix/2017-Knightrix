@@ -51,19 +51,28 @@ public class TrigTest extends TestHardwareMap{
         }
 
         if (gamepad1.right_trigger > 0) {
-            pickup1.setPosition(Range.clip(1 - gamepad1.right_trigger, 0.5, 1));
-            pickup2.setPosition(Range.clip(gamepad1.right_trigger, 0.5, 1));
+//            pickup1.setPosition(Range.clip(1 - gamepad1.right_trigger, 0.5, 0.9));
+            pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
-            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 1));
-            pickup2.setPosition(Range.clip(gamepad2.right_trigger, 0.5, 1));
+//            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 0.9));
+            pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
-        arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
+        if (gamepad1.left_trigger > 0) {
+//            pickup2.setPosition(Range.clip(gamepad1.left_trigger, 0.5, 1));
+            pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(.9-0.2))  , 0.2, .9));
+        }
+        else {
+//            pickup2.setPosition(Range.clip(gamepad2.left_trigger, 0.5, 1));
+            pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(.9-0.2))  , 0.2, .9));
+        }
+
+        //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
         if (gamepad2.left_bumper) {hand.setPosition(0.55);}
         else {hand.setPosition(0.5);}
 
-        if (gamepad2.right_bumper) {side.setPosition(0.6);}
-        else {side.setPosition(1);}
+        //if (gamepad2.right_bumper) {side.setPosition(0.6);}
+        //else {side.setPosition(1);}
 
         if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
             leftstick_x = gamepad1.left_stick_x;
@@ -132,6 +141,9 @@ public class TrigTest extends TestHardwareMap{
 
         telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
+        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
+        telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
+        telemetry.addLine("Side: " + side.getPosition());
         telemetry.addLine("gyro z = " + orientation.firstAngle);
         telemetry.addLine("new 0: " + gyroResetValue);
         telemetry.addLine("gyro x = " + orientation.secondAngle);
