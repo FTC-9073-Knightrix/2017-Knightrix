@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by nicolas on 9/9/17.
  */
 
-@TeleOp(name = "Test")
+//@TeleOp(name = "Test")
 
 public class DriverControlled extends HardwareMap{
 
