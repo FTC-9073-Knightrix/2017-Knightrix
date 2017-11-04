@@ -3,11 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 /**
  * Created by ibravo on 10/3/17.
  */
 
 @TeleOp(name = "Driver Controlled")
+
+//http://pdocs.kauailabs.com/navx-micro/examples/field-oriented-drive/
 
 public class TrigTest extends TestHardwareMap{
     @Override
@@ -18,27 +25,76 @@ public class TrigTest extends TestHardwareMap{
     @Override
     public void loop() {
 
+        if (gamepad1.dpad_up) {
+            upclaw = gamepad1.dpad_up;
+        }
+        else {
+            upclaw = gamepad2.dpad_up;
+        }
+        if (gamepad1.dpad_down) {
+            downclaw = gamepad1.dpad_down;
+        }
+        else {
+            downclaw = gamepad2.dpad_down;
+        }
+        if (gamepad1.dpad_left) {
+            left = gamepad1.dpad_left;
+        }
+        else {
+            left = gamepad1.dpad_left;
+        }
+        if (gamepad1.dpad_right) {
+            right = gamepad1.dpad_right;
+        }
+        else {
+            right = gamepad2.dpad_right;
+        }
 
-        boolean upclaw = gamepad1.dpad_up;
-        boolean downclaw = gamepad1.dpad_down;
-        pickup1.setPosition(gamepad1.right_trigger);
-        pickup2.setPosition(gamepad1.right_trigger);
+        if (gamepad1.right_trigger > 0) {
+            pickup1.setPosition(Range.clip(1 - gamepad1.right_trigger, 0.5, 1));
+            pickup2.setPosition(Range.clip(gamepad1.right_trigger, 0.5, 1));
+        }
+        else {
+            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 1));
+            pickup2.setPosition(Range.clip(gamepad2.right_trigger, 0.5, 1));
+        }
+        arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
+        if (gamepad2.left_bumper) {hand.setPosition(0.55);}
+        else {hand.setPosition(0.5);}
 
-        double leftstick_x = gamepad1.left_stick_x;
-        double leftstick_y = gamepad1.left_stick_y;
+        if (gamepad2.right_bumper) {side.setPosition(0.6);}
+        else {side.setPosition(1);}
+
+        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
+            leftstick_x = gamepad1.left_stick_x;
+            leftstick_y = -gamepad1.left_stick_y;
+        }
+        else {
+            leftstick_x = -gamepad1.left_stick_x;
+            leftstick_y = gamepad1.left_stick_y;
+        }
         float myrot = gamepad1.right_stick_x/2;
 
-        updownPower = 0;
+        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        double gyroDegrees = orientation.firstAngle - gyroResetValue;
+        double gyroTilt = orientation.secondAngle;
+
+        if (gamepad1.a) {
+            gyroResetValue = orientation.firstAngle;
+        }
+
         if (upclaw){
-            updownPower = -.2;
+            updownPower = .8;
         }
-        if(downclaw){
-            updownPower = .2;
+        else if(downclaw){
+            updownPower = -.8;
         }
+        else {updownPower = 0;}
         updownMotor.setPower(updownPower);
 
-
-
+        if(left) {armMotor.setPower(-0.2);}
+        else if(right) {armMotor.setPower(0.2);}
+        else {armMotor.setPower(0);}
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -65,14 +121,26 @@ public class TrigTest extends TestHardwareMap{
         else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
             myangle = (float) 270;
 
+
         mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
 
-        telemetry.addLine("angle ="+myangle);
-        telemetry.addLine("power ="+mypower);
+        //myangle = myangle - angle that the gyro is at
+        myangle -= gyroDegrees;
+        if (myangle < -359) {
+            myangle += 360;
+        }
+
+        telemetry.addLine("angle = " + myangle);
+        telemetry.addLine("power = " + mypower);
+        telemetry.addLine("gyro z = " + orientation.firstAngle);
+        telemetry.addLine("new 0: " + gyroResetValue);
+        telemetry.addLine("gyro x = " + orientation.secondAngle);
+        telemetry.addLine("gyro y = " + orientation.thirdAngle);
         telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
+
 
         mech_move(myangle,mypower,myrot);
     }

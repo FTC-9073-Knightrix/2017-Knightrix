@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -17,16 +19,32 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
     DcMotor updownMotor;
-    Servo pickup1 ;
+    DcMotor armMotor;
+    Servo pickup1;
     Servo pickup2;
+    Servo hand;
+    Servo side;
+    Servo arm;
+
+    IntegratingGyroscope gyro;
+    NavxMicroNavigationSensor navxGyro;
 
     //Variables
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    /*float lastX = gamepad1.left_stick_x;
+    float lastY = gamepad1.left_stick_y;*/
+    float lastX = 0;
+    float lastY = 0;
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
+    boolean left = false;
+    boolean right = false;
+    double gyroResetValue = 0;
+    double leftstick_x = 0;
+    double leftstick_y = 0;
     int state = 0;
 
     @Override
@@ -42,15 +60,34 @@ public abstract class TestHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         updownMotor = hardwareMap.dcMotor.get("UD");
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor = hardwareMap.dcMotor.get("ARM");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // servos
         pickup1 = hardwareMap.servo.get("pickup1");
-        pickup1.setPosition(0);
+        //pickup1.setPosition(0.5);
         pickup2 = hardwareMap.servo.get("pickup2");
-        pickup2.setPosition(1);
+        //pickup2.setPosition(0.5);
+        hand = hardwareMap.servo.get("hand");
+        //hand.setPosition(0.5);
+        side = hardwareMap.servo.get("side");
+        //side.setPosition(1);
+        arm = hardwareMap.servo.get("arm");
+        //arm.setPosition(0);
 
+
+        navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
+        gyro = (IntegratingGyroscope) navxGyro;
 
     }
+
+    @Override
+    public void init_loop() {
+        if (navxGyro.isCalibrating()) {
+            telemetry.addLine("navX Calibration");
+        }
+    }
+
     void MoveRobot(double PowerLeft, double PowerRight) {
     /*    if (RightFrontDrive != null) {
             RightFrontDrive.setPower(PowerRight/3);
@@ -69,12 +106,10 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-
-                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-
+                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
@@ -113,7 +148,7 @@ public abstract class TestHardwareMap extends OpMode {
     }
 
 
-    /*void turn (float power) {
+    void turn (float power, float degree) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
         LeftFrontDrive.setPower(-power);
         LeftBackDrive.setPower(-power);
