@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by ibravo on 10/3/17.
  */
 
-@TeleOp(name = "TrigTest")
+@TeleOp(name = "Driver Controlled")
 
 public class TrigTest extends TestHardwareMap{
     @Override

@@ -27,6 +27,7 @@ public abstract class TestHardwareMap extends OpMode {
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
+    int state = 0;
 
     @Override
     public void init(){
