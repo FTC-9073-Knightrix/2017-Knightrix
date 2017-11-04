@@ -50,22 +50,29 @@ public class TrigTest extends TestHardwareMap{
             right = gamepad2.dpad_right;
         }
 
+        // Configure value for the side
+        side.setPosition(Range.clip(gamepad2.left_stick_x,-1,1));
+
+
+
+        // Right Glyth grabber
+        // Use GamePad1 as master, GamePad2 as slave
         if (gamepad1.right_trigger > 0) {
-//            pickup1.setPosition(Range.clip(1 - gamepad1.right_trigger, 0.5, 0.9));
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
-//            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 0.9));
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
+
+        // Left Glyth grabber
+        // Use GamePad1 as master, GamePad2 as slave
         if (gamepad1.left_trigger > 0) {
-//            pickup2.setPosition(Range.clip(gamepad1.left_trigger, 0.5, 1));
             pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(.9-0.2))  , 0.2, .9));
         }
         else {
-//            pickup2.setPosition(Range.clip(gamepad2.left_trigger, 0.5, 1));
             pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(.9-0.2))  , 0.2, .9));
         }
+
 
         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
         if (gamepad2.left_bumper) {hand.setPosition(0.55);}

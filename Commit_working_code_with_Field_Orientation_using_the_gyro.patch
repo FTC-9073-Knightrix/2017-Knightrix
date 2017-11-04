@@ -1,0 +1,81 @@
+Index: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TrigTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TrigTest.java	(revision 05f412439fc955053c6dcecac80f1d0851a2a487)
++++ TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TrigTest.java	(revision )
+@@ -50,22 +50,29 @@
+             right = gamepad2.dpad_right;
+         }
+ 
++        // Configure value for the side
++        side.setPosition(Range.clip(gamepad2.left_stick_x,-1,1));
++
++
++
++        // Right Glyth grabber
++        // Use GamePad1 as master, GamePad2 as slave
+         if (gamepad1.right_trigger > 0) {
+-//            pickup1.setPosition(Range.clip(1 - gamepad1.right_trigger, 0.5, 0.9));
+             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
+         }
+         else {
+-//            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 0.9));
+             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
+         }
++
++        // Left Glyth grabber
++        // Use GamePad1 as master, GamePad2 as slave
+         if (gamepad1.left_trigger > 0) {
+-//            pickup2.setPosition(Range.clip(gamepad1.left_trigger, 0.5, 1));
+             pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(.9-0.2))  , 0.2, .9));
+         }
+         else {
+-//            pickup2.setPosition(Range.clip(gamepad2.left_trigger, 0.5, 1));
+             pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(.9-0.2))  , 0.2, .9));
+         }
++
+ 
+         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
+         if (gamepad2.left_bumper) {hand.setPosition(0.55);}
+\ No newline at end of file
+Index: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRed.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRed.java	(revision 05f412439fc955053c6dcecac80f1d0851a2a487)
++++ TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRed.java	(revision )
+@@ -23,14 +23,16 @@
+     public void loop() {
+         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+ 
++        // START
+         if (state == 0) {
+-            //pickup1.setPosition(0);
+-            //pickup2.setPosition(1);
++//          pickup1.setPosition(0.5);
++//          pickup2.setPosition(0.5);
+             side.setPosition(0.6);
+             updownMotor.setPower(0);
+             timer = getRuntime();
+             state++;
+         }
++        //  Up Claw for time. Then stop motor
+         else if (state == 1) {
+             timer2 = getRuntime() - timer;
+             if (timer2 < 0.5) {
+@@ -43,9 +45,9 @@
+                 state++;
+             }
+         }
+-        else if (state == 2) {
+-            //move robot side to side
+-            //and check position of balls: range sensor
++        //move robot side to side
++        //and check position of balls: range sensor
++        else if (state == 2) {
+             state++;
+         }
+         else if (state == 3) {
