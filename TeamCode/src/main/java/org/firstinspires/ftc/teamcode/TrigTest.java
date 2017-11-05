@@ -17,11 +17,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 //http://pdocs.kauailabs.com/navx-micro/examples/field-oriented-drive/
 
 public class TrigTest extends TestHardwareMap{
+
+    /*
+    * Code to run ONCE when the driver hits INIT
+    */
+//    @Override
+//    public void init() {
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
+        //robot.init(hardwareMap);
+        // Send telemetry message to signify robot waiting;
+//        telemetry.addData("Say", "Hello Driver");    //
+//    }
+
+    /*
+    * Code to run ONCE when the driver hits PLAY
+    */
     @Override
     public void start() {
         super.start();
     }
 
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+    */
     @Override
     public void loop() {
 
@@ -58,6 +78,7 @@ public class TrigTest extends TestHardwareMap{
 //            pickup1.setPosition(Range.clip(1 - gamepad2.right_trigger, 0.5, 0.9));
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
+
         if (gamepad1.left_trigger > 0) {
 //            pickup2.setPosition(Range.clip(gamepad1.left_trigger, 0.5, 1));
             pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(.9-0.2))  , 0.2, .9));

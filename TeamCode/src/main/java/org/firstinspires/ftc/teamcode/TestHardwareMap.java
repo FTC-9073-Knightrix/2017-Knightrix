@@ -81,13 +81,13 @@ public abstract class TestHardwareMap extends OpMode {
 
         // servos
         pickup1 = hardwareMap.servo.get("pickup1");
-        //pickup1.setPosition(0.5);
+        pickup1.setPosition(0.5);
         pickup2 = hardwareMap.servo.get("pickup2");
-        //pickup2.setPosition(0.5);
+        pickup2.setPosition(0.5);
         hand = hardwareMap.servo.get("hand");
         //hand.setPosition(0.5);
         side = hardwareMap.servo.get("side");
-        side.setPosition(0.6);
+        side.setPosition(1); // Set ARM up
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
 
