@@ -23,14 +23,16 @@ public class AutoRed extends TestHardwareMap {
     public void loop() {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
+        // START
         if (state == 0) {
-            //pickup1.setPosition(0);
-            //pickup2.setPosition(1);
+//          pickup1.setPosition(0.5);
+//          pickup2.setPosition(0.5);
             side.setPosition(0.6);
             updownMotor.setPower(0);
             timer = getRuntime();
             state++;
         }
+        //  Up Claw for time. Then stop motor
         else if (state == 1) {
             timer2 = getRuntime() - timer;
             if (timer2 < 0.5) {
@@ -43,9 +45,9 @@ public class AutoRed extends TestHardwareMap {
                 state++;
             }
         }
+        //move robot side to side
+        //and check position of balls: range sensor
         else if (state == 2) {
-            //move robot side to side
-            //and check position of balls: range sensor
             state++;
         }
         else if (state == 3) {
