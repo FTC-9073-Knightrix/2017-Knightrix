@@ -169,6 +169,7 @@ public class TrigTest extends TestHardwareMap{
 
         telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
+        telemetry.addLine("Rotation = " + myrot);
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
         telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
         telemetry.addLine("Side: " + side.getPosition());
@@ -180,6 +181,7 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
+        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
 
         mech_move(myangle,mypower,myrot);

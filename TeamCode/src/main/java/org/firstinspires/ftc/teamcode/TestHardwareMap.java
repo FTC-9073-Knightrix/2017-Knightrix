@@ -61,7 +61,10 @@ public abstract class TestHardwareMap extends OpMode {
     boolean blue = false;
     boolean red = false;
     double angle = 0;
+    double start_angle = 0;
     boolean turn1 = false;
+    boolean turn2 = false;
+    double degreeTurn = 0;
 
     @Override
     public void init(){
@@ -80,14 +83,14 @@ public abstract class TestHardwareMap extends OpMode {
         armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // servos
-        pickup1 = hardwareMap.servo.get("pickup1");
-        pickup1.setPosition(0.5);
-        pickup2 = hardwareMap.servo.get("pickup2");
-        pickup2.setPosition(0.5);
-        hand = hardwareMap.servo.get("hand");
-        //hand.setPosition(0.5);
+        pickup1 = hardwareMap.servo.get("pickup1"); //Right
+        pickup1.setPosition(0.8);
+        pickup2 = hardwareMap.servo.get("pickup2"); //Left
+        pickup2.setPosition(0.3);
         side = hardwareMap.servo.get("side");
         side.setPosition(1); // Set ARM up
+        hand = hardwareMap.servo.get("hand");
+        //hand.setPosition(0.5);
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
 
@@ -164,30 +167,27 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-
-    void turn (double power, double degree) {
+    boolean turn (double power, double degree) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-            double degreeTurn = orientation.firstAngle + degree;
-            if (orientation.firstAngle < degreeTurn - 1) {
-                LeftFrontDrive.setPower(power);
-                LeftBackDrive.setPower(power);
-                RightFrontDrive.setPower(power);
-                RightBackDrive.setPower(power);
-            }
-            else if (orientation.firstAngle > degreeTurn + 1) {
-                LeftFrontDrive.setPower(-power);
-                LeftBackDrive.setPower(-power);
-                RightFrontDrive.setPower(-power);
-                RightBackDrive.setPower(-power);
+            angle = orientation.firstAngle;
+            if(Math.abs(start_angle - angle) < degree) {
+                LeftFrontDrive.setPower(Range.clip(power,-1,1));
+                LeftBackDrive.setPower(Range.clip(power,-1,1));
+                RightFrontDrive.setPower(Range.clip(power,-1,1));
+                RightBackDrive.setPower(Range.clip(power,-1,1));
+                //mech_move(0,0,(float)(power)); // Positive value, turns right; Negative turns LEFT
+                return false;
             }
             else {
                 LeftFrontDrive.setPower(0);
                 LeftBackDrive.setPower(0);
                 RightFrontDrive.setPower(0);
                 RightBackDrive.setPower(0);
+                return true;
             }
         }
+        else {return false;}
     }
     void strafe (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
