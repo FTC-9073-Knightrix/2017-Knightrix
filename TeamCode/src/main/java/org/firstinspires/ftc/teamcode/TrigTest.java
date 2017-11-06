@@ -71,7 +71,8 @@ public class TrigTest extends TestHardwareMap{
         }
 
         // Configure value for the side
-        side.setPosition(Range.clip(gamepad2.left_stick_x,-1,1));
+        // Default position is DOWN
+        //side.setPosition(Range.clip(gamepad2.left_stick_x,-1,1));
 
 
 
