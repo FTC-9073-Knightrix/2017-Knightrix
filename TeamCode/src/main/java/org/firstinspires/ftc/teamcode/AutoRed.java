@@ -37,8 +37,8 @@ public class AutoRed extends TestHardwareMap {
             if (timer2 < 1) {
                 updownMotor.setPower(-0.2);
             } else {
-                pickup1.setPosition(0.3); // Right close
-                pickup2.setPosition(0.8); // Left close
+                pickup1.setPosition(0.2); // Right close
+                pickup2.setPosition(0.9); // Left close
                 updownMotor.setPower(0);
                 timer = getRuntime();
                 state++;
