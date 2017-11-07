@@ -24,10 +24,8 @@ public class AutoRed extends TestHardwareMap {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         // START
-        // Close claw
+        // DOWN Claw
         if (state == 0) {
-            pickup1.setPosition(0.3); // Right close
-            pickup2.setPosition(0.8); // Left close
             updownMotor.setPower(0);
             timer = getRuntime();  // Sets timer = accumulated time
             state++;
@@ -39,6 +37,8 @@ public class AutoRed extends TestHardwareMap {
             if (timer2 < 1) {
                 updownMotor.setPower(-0.2);
             } else {
+                pickup1.setPosition(0.3); // Right close
+                pickup2.setPosition(0.8); // Left close
                 updownMotor.setPower(0);
                 timer = getRuntime();
                 state++;
@@ -53,18 +53,28 @@ public class AutoRed extends TestHardwareMap {
                 else {
                     updownMotor.setPower(0);
                     angle = orientation.firstAngle;
-                    side.setPosition(0.5); // Move side DOWN
+                    side.setPosition(0.4); // Move side DOWN
+                    state++;
                     state++;
                 }
         }
         //move robot side to side
         //and check position of balls: range sensor
-        else if (state == 3) {
-            state++;
-            state++;
-            angle = orientation.firstAngle;
-            start_angle = angle;
-        }
+        else if (state == 4) {
+            if (color().equals("red")) {
+                state = 7;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+            else if (color().equals("blue")) {
+                state = 5;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+            else {
+                move(0.1);
+            }
+        }/*
         else if (state == 4) {
             if (color().equals("red")) {
                 if (!turn1) {
@@ -99,13 +109,14 @@ public class AutoRed extends TestHardwareMap {
 
 
 
-                 */
+
             }
         }
+        */
         // Turns Left
         else if (state == 5){
-            turn(-0.5,10); // Positive value, turns right; Negative turns LEFT
-            if (turn(-0.5,10)) {
+            turn(-0.2,10); // Positive value, turns right; Negative turns LEFT
+            if (turn(-0.2,10)) {
                 state++;
                 angle = orientation.firstAngle;
                 start_angle = angle;
@@ -113,18 +124,53 @@ public class AutoRed extends TestHardwareMap {
         }
         // lifts Side and Turns Right
         else if (state == 6){
-            turn(0.5,10); // Positive value, turns right; Negative turns LEFT
+            turn(0.2,10); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
-            if (turn(0.5,10)) {
+            if (turn(0.2,10)) {
+                state = 9;
+            }
+        }
+        else if (state == 7) {
+            turn(0.2,10);
+            if (turn(0.2,10)) {
+                state++;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+        }
+        else if (state == 8){
+            turn(-0.2,10); // Positive value, turns right; Negative turns LEFT
+            side.setPosition(1); // Move side UP
+            if (turn(-0.2,10)) {
+                state++;
+                timer = getRuntime();
+            }
+        }
+
+        else if (state == 9) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 1) {
+                move(0.5);
+            }
+            else {
+                state++;
+                timer = getRuntime();
+            }
+        }
+        else if (state == 10) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.5) {
+                strafe(-0.5);
+            }
+            else {
                 state++;
             }
         }
 
-
-
         else {
-        //    turn(0.5, -90);
+            turn(-0.5, 90);
         }
+
         telemetry.addLine("State: " + state);
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("gyro z = " + orientation.firstAngle);

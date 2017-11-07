@@ -17,6 +17,6 @@ public class TestDrive extends TestHardwareMap{
     @Override
     public void loop() {
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-        move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
     }
 }

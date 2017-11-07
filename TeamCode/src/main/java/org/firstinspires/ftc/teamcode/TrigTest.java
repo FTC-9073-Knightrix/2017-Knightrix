@@ -77,7 +77,7 @@ public class TrigTest extends TestHardwareMap{
 
 
         // Right Glyth grabber
-        // Use GamePad1 as master, GamePad2 as slave
+        // Use GamePad1 as master, GamePad1 has precedence
         if (gamepad1.right_trigger > 0) {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
@@ -86,12 +86,12 @@ public class TrigTest extends TestHardwareMap{
         }
 
         // Left Glyth grabber
-        // Use GamePad1 as master, GamePad2 as slave
+        // Use GamePad1 as master, GamePad1 has precedence
         if (gamepad1.left_trigger > 0) {
-            pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(.9-0.2))  , 0.2, .9));
+            pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
-            pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(.9-0.2))  , 0.2, .9));
+            pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
 
 

@@ -98,7 +98,7 @@ public abstract class TestHardwareMap extends OpMode {
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
         color1 = hardwareMap.colorSensor.get("C1");
-        color1.enableLed(false);
+        color1.enableLed(true);
 
     }
 
@@ -135,35 +135,12 @@ public abstract class TestHardwareMap extends OpMode {
     }
 
     
-    void move (float leftx, float lefty, float rightx) {
+    void move (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
-            if (leftx == 0 && lefty != 0 && rightx == 0) { //move
-                LeftFrontDrive.setPower(lefty);
-                LeftBackDrive.setPower(lefty);
-                RightFrontDrive.setPower(lefty);
-                RightBackDrive.setPower(lefty);
-            }
-            else if (leftx != 0 && lefty == 0 && rightx == 0) { //strafe
-                LeftFrontDrive.setPower(-leftx);
-                LeftBackDrive.setPower(leftx);
-                RightFrontDrive.setPower(leftx);
-                RightBackDrive.setPower(-leftx);
-            }
-            else if (leftx == 0 && lefty == 0 && rightx != 0) { //turn
-                LeftFrontDrive.setPower(-rightx);
-                LeftBackDrive.setPower(-rightx);
-                RightFrontDrive.setPower(rightx);
-                RightBackDrive.setPower(rightx);
-            }
-            else if (leftx != 0 && lefty != 0) { //diagonal
-
-            }
-            else {
-                LeftFrontDrive.setPower(0);
-                LeftBackDrive.setPower(0);
-                RightFrontDrive.setPower(0);
-                RightBackDrive.setPower(0);
-            }
+            LeftFrontDrive.setPower(power);
+            LeftBackDrive.setPower(power);
+            RightFrontDrive.setPower(-power);
+            RightBackDrive.setPower(-power);
         }
     }
 
@@ -176,7 +153,6 @@ public abstract class TestHardwareMap extends OpMode {
                 LeftBackDrive.setPower(Range.clip(power,-1,1));
                 RightFrontDrive.setPower(Range.clip(power,-1,1));
                 RightBackDrive.setPower(Range.clip(power,-1,1));
-                //mech_move(0,0,(float)(power)); // Positive value, turns right; Negative turns LEFT
                 return false;
             }
             else {
@@ -189,15 +165,16 @@ public abstract class TestHardwareMap extends OpMode {
         }
         else {return false;}
     }
+
     void strafe (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
-        LeftFrontDrive.setPower(power);
-        LeftBackDrive.setPower(-power);
-        RightFrontDrive.setPower(-power);
-        RightBackDrive.setPower(power);
-        telemetry.addLine("" + power);
+            LeftFrontDrive.setPower(power);
+            LeftBackDrive.setPower(-power);
+            RightFrontDrive.setPower(power);
+            RightBackDrive.setPower(-power);
         }
     }
+
     String color() {
         String returnvalue = null;
         if (color1 != null) {
