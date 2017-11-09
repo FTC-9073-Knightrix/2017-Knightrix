@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 /**
  * Created by nicolas on 11/4/17.
@@ -74,45 +75,7 @@ public class AutoRed extends TestHardwareMap {
             else {
                 move(0.1);
             }
-        }/*
-        else if (state == 4) {
-            if (color().equals("red")) {
-                if (!turn1) {
-                    turn(0.5, 15);
-                    turn1 = true;
-                } else if (orientation.firstAngle >= angle + 14 && orientation.firstAngle <= angle + 16) {
-                    side.setPosition(1); // UP side
-                    turn(0.5, -15); // add a way to stop this<<
-                }
-                if (orientation.firstAngle <= angle && turn1) {
-                    turn1 = false;
-                    state++;
-                }
-            } else if (color().equals("blue") || color().equals("none")) {
-                if (!turn1) {
-                    turn(0.5, -15);
-                    turn1 = true;
-                } else if (orientation.firstAngle >= angle + 344 && orientation.firstAngle <= angle + 346) {
-                    side.setPosition(1);
-                    turn(0.5, 15); //add a way to stop this <<<
-                }
-                if (orientation.firstAngle <= angle + 1 && turn1) {
-                    turn1 = false;
-                    state++;
-                }
-                /*
-                1- Get current gyro position
-                2- Move in one direction
-                   myrot = 05;
-                3- if (abs(new gyro position - original gyro position) > 15
-                    myrot = 0
-
-
-
-
-            }
         }
-        */
         // Turns Left
         else if (state == 5){
             turn(-0.2,10); // Positive value, turns right; Negative turns LEFT
@@ -151,22 +114,52 @@ public class AutoRed extends TestHardwareMap {
             timer2 = getRuntime() - timer;
             if (timer2 < 1) {
                 move(0.5);
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                    state++;
+                }
+                else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                    state = 11;
+                }
+                else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                    state = 12;
+                }
+                telemetry.addLine("Vuforia = " + vuMark);
             }
             else {
                 state++;
-                timer = getRuntime();
             }
         }
-        else if (state == 10) {
-            timer2 = getRuntime() - timer;
-            if (timer2 < 0.5) {
+        else if (state == 10) {//left
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 100) {
                 strafe(-0.5);
             }
             else {
                 state++;
             }
         }
-
+        else if (state == 11) {//center
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 80) {
+                strafe(-0.5);
+            }
+            else {
+                state++;
+            }
+        }
+        else if (state == 12) {
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 60) {
+                strafe(-0.5);
+            }
+            else {
+                state++;
+            }
+        }//right
         else {
             turn(-0.5, 90);
         }
@@ -176,5 +169,6 @@ public class AutoRed extends TestHardwareMap {
         telemetry.addLine("gyro z = " + orientation.firstAngle);
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
+        telemetry.addLine("Range = " + range1Value);
     }
 }

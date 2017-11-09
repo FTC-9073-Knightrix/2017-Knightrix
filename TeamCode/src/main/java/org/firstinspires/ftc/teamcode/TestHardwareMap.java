@@ -5,14 +5,23 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by nicolas on 9/30/17.
@@ -32,9 +41,11 @@ public abstract class TestHardwareMap extends OpMode {
     Servo side;
     Servo arm;
     ColorSensor color1;
-
+    I2cDevice range1;
+    I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
+    VuforiaLocalizer vuforia;
 
     //Variables
     float myangle = 0;
@@ -65,10 +76,20 @@ public abstract class TestHardwareMap extends OpMode {
     boolean turn1 = false;
     boolean turn2 = false;
     double degreeTurn = 0;
+    String pictograph = null;
+    public I2cDeviceSynch range1Reader;
+    public I2cDeviceSynch range2Reader;
+    public byte[] range1Cache;
+    public byte[] range2Cache;
+    public double range1Value;
+    public double range2Value;
+    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+    VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
     @Override
     public void init(){
-
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
@@ -99,7 +120,17 @@ public abstract class TestHardwareMap extends OpMode {
         gyro = (IntegratingGyroscope) navxGyro;
         color1 = hardwareMap.colorSensor.get("C1");
         color1.enableLed(true);
-
+        range1 = hardwareMap.i2cDevice.get("R1");
+        range2 = hardwareMap.i2cDevice.get("R2");
+        range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x28), false);
+        range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x16), false);
+        range1Reader.engage();
+        range2Reader.engage();
+        parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
     }
 
     @Override
