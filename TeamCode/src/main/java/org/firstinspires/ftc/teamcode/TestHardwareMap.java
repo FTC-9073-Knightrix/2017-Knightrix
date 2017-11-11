@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -83,7 +84,7 @@ public abstract class TestHardwareMap extends OpMode {
     //public byte[] range2Cache;
     public double range1Value;
     //public double range2Value;
-    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+    VuforiaTrackable relicTemplate = null;
 
     @Override
     public void init(){
@@ -119,17 +120,22 @@ public abstract class TestHardwareMap extends OpMode {
         color1.enableLed(true);
         range1 = hardwareMap.i2cDevice.get("R1");
         //range2 = hardwareMap.i2cDevice.get("R2");
-        range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x28), false);
-        //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x16), false);
+        range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x16), false);
+        //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
         range1Reader.engage();
         //range2Reader.engage();
+        // Vuforia
+        OpenGLMatrix lastLocation = null;
+        VuforiaLocalizer vuforia;
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         relicTrackables.activate();
+
     }
 
     @Override
