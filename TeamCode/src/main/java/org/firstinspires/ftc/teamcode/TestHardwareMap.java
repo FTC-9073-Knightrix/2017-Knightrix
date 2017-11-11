@@ -42,7 +42,7 @@ public abstract class TestHardwareMap extends OpMode {
     Servo arm;
     ColorSensor color1;
     I2cDevice range1;
-    I2cDevice range2;
+    //I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
@@ -80,13 +80,10 @@ public abstract class TestHardwareMap extends OpMode {
     public I2cDeviceSynch range1Reader;
     public I2cDeviceSynch range2Reader;
     public byte[] range1Cache;
-    public byte[] range2Cache;
+    //public byte[] range2Cache;
     public double range1Value;
-    public double range2Value;
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-    VuforiaTrackable relicTemplate = relicTrackables.get(0);
+    //public double range2Value;
+    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
     @Override
     public void init(){
@@ -121,14 +118,16 @@ public abstract class TestHardwareMap extends OpMode {
         color1 = hardwareMap.colorSensor.get("C1");
         color1.enableLed(true);
         range1 = hardwareMap.i2cDevice.get("R1");
-        range2 = hardwareMap.i2cDevice.get("R2");
+        //range2 = hardwareMap.i2cDevice.get("R2");
         range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x28), false);
-        range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x16), false);
+        //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x16), false);
         range1Reader.engage();
-        range2Reader.engage();
+        //range2Reader.engage();
         parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         relicTrackables.activate();
     }
@@ -203,6 +202,7 @@ public abstract class TestHardwareMap extends OpMode {
             LeftBackDrive.setPower(-power);
             RightFrontDrive.setPower(power);
             RightBackDrive.setPower(-power);
+            //add gyro adjustment
         }
     }
 

@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by nicolas on 11/4/17.
@@ -75,38 +77,114 @@ public class AutoBlue extends TestHardwareMap {
         }
         // Turns Left
         else if (state == 5) {
-            turn(-0.2, 180); // Positive value, turns right; Negative turns LEFT
-            if (turn(-0.2, 180)) {
-                state = 8;
-                timer = getRuntime();
+            turn(-0.2, 10); // Positive value, turns right; Negative turns LEFT
+            if (turn(-0.2, 10)) {
+                state++;
+                angle = orientation.firstAngle;
+                start_angle = angle;
             }
         }
         // lifts Side and Turns Right
-        /*else if (state == 6) {
+        else if (state == 6) {
             turn(0.2, 10); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
             if (turn(0.2, 10)) {
                 state = 9;
             }
-        }*/
+        }
         else if (state == 7) {
-            turn(0.2, 180);
-            if (turn(0.2, 180)) {
-                state = 8;
-                timer = getRuntime();
+            turn(0.2, 10);
+            if (turn(0.2, 10)) {
+                state++;
+                angle = orientation.firstAngle;
+                start_angle = angle;
             }
         }
-        /*else if (state == 8) {
+        else if (state == 8) {
             turn(-0.2, 10); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
             if (turn(-0.2, 10)) {
                 state++;
                 timer = getRuntime();
             }
-        }*/
-        else if (state == 8) {
+        }
+        else if (state == 9) {
             timer2 = getRuntime() - timer;
-            if (timer < 1) {
+            if (timer2 < 1) {
+                move(-0.5);
+            }
+            else {
+                if (pictograph.equals("left")) {
+                    state = 10;
+                }
+                else if (pictograph.equals("right")) {
+                    state = 12;
+                }
+                else {
+                    state = 11;//center
+                }
+            }
+        }
+        else if (state == 10) {//left
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 100) {
+                strafe(-0.5);
+            }
+            else {
+                state = 12.5;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+        }
+        else if (state == 11) {//center
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 80) {
+                strafe(-0.5);
+            }
+            else {
+                state = 12.5;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+        }
+        else if (state == 12) {//right
+            range1Cache = range1Reader.read(0x04, 2);
+            range1Value = range1Cache[0] & 0xFF;
+            if (range1Value < 60) {
+                strafe(-0.5);
+            }
+            else {
+                state = 12.5;
+                angle = orientation.firstAngle;
+                start_angle = angle;
+            }
+        }//right
+        else if (state == 12.5) {
+            turn(0.2, 180);
+            if (turn(0.2, 180)) {
+                timer = getRuntime();
+                state = 13;
+            }
+        }
+        else if (state == 13) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.4) {
+                move(0.3);
+            }
+            else {
+                state++;
+                timer = getRuntime();
+            }
+        }
+        else if (state == 14) {
+            pickup1.setPosition(0.8);
+            pickup2.setPosition(0.3);
+        }
+        else if (state == 15) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.2) {
                 move(-0.5);
             }
             else {
@@ -114,7 +192,29 @@ public class AutoBlue extends TestHardwareMap {
             }
         }
         else {
-            turn (0.2, 90);
+            turn (0.5, 90);
         }
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            pictograph = "left";
+        }
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            pictograph = "center";
+        }
+        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            pictograph = "right";
+        }
+
+        telemetry.addLine("State: " + state);
+        telemetry.addLine("start_angle = " + start_angle);
+        telemetry.addLine("gyro z = " + orientation.firstAngle);
+        telemetry.addLine("Color: " + color());
+        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
+        telemetry.addLine("Range = " + range1Value);
+        telemetry.addLine("Vuforia = " + pictograph);
     }
 }

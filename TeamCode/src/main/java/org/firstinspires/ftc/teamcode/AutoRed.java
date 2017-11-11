@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by nicolas on 11/4/17.
@@ -47,17 +49,17 @@ public class AutoRed extends TestHardwareMap {
         }
         //  Up Claw for time. Then stop motor
         else if (state == 2) {
-                timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
-                if (timer2 < 0.5) {
-                    updownMotor.setPower(0.5);
-                }
-                else {
-                    updownMotor.setPower(0);
-                    angle = orientation.firstAngle;
-                    side.setPosition(0.4); // Move side DOWN
-                    state++;
-                    state++;
-                }
+            timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
+            if (timer2 < 0.5) {
+                updownMotor.setPower(0.5);
+            }
+            else {
+                updownMotor.setPower(0);
+                angle = orientation.firstAngle;
+                side.setPosition(0.4); // Move side DOWN
+                state++;
+                state++;
+            }
         }
         //move robot side to side
         //and check position of balls: range sensor
@@ -114,20 +116,17 @@ public class AutoRed extends TestHardwareMap {
             timer2 = getRuntime() - timer;
             if (timer2 < 1) {
                 move(0.5);
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if (vuMark == RelicRecoveryVuMark.LEFT) {
-                    state++;
-                }
-                else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                    state = 11;
-                }
-                else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    state = 12;
-                }
-                telemetry.addLine("Vuforia = " + vuMark);
             }
             else {
-                state++;
+                if (pictograph.equals("left")) {
+                    state = 10;
+                }
+                else if (pictograph.equals("right")) {
+                    state = 12;
+                }
+                else {
+                    state = 11;//center
+                }
             }
         }
         else if (state == 10) {//left
@@ -160,8 +159,45 @@ public class AutoRed extends TestHardwareMap {
                 state++;
             }
         }//right
+        else if (state == 13) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.4) {
+                move(0.3);
+            }
+            else {
+                state++;
+                timer = getRuntime();
+            }
+        }
+        else if (state == 14) {
+            pickup1.setPosition(0.8);
+            pickup2.setPosition(0.3);
+        }
+        else if (state == 15) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.2) {
+                move(-0.5);
+            }
+            else {
+                state++;
+            }
+        }
         else {
             turn(-0.5, 90);
+        }
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            pictograph = "left";
+        }
+        else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            pictograph = "center";
+        }
+        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            pictograph = "right";
         }
 
         telemetry.addLine("State: " + state);
@@ -170,5 +206,6 @@ public class AutoRed extends TestHardwareMap {
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
         telemetry.addLine("Range = " + range1Value);
+        telemetry.addLine("Vuforia = " + pictograph);
     }
 }
