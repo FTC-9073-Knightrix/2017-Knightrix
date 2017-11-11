@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -53,7 +56,26 @@ public class AutoRed extends TestHardwareMap {
         if (state == 0) {
             updownMotor.setPower(0);
             timer = getRuntime();  // Sets timer = accumulated time
+            angle = orientation.firstAngle;
+            start_angle = angle;
+//            state= 99;
             state++;
+        }
+
+        // State 99 => Test
+        else if (state == 99) {
+            turn(0.3, 90); // Positive value, turns left; Negative turns right.... Positive is shortest distance, negative is outside circle
+            if (turn(0.3, 30)) {
+                move(0);
+                state++;
+            }
+        }
+        // State 99 => Test
+        else if (state == 100) {
+            turn(0.3, -30); // Positive value, turns left; Negative turns right
+            if (turn(0.3, -30)) {
+                move(0);
+            }
         }
 
         //  DOWN Claw for time. Then stop motor
@@ -89,12 +111,12 @@ public class AutoRed extends TestHardwareMap {
             if (color().equals("red")) {
                 state = 7;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+        //        start_angle = angle;
             }
             else if (color().equals("blue")) {
                 state = 5;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+      //          start_angle = angle;
             }
             else {
                 move(0.1);
@@ -102,35 +124,36 @@ public class AutoRed extends TestHardwareMap {
         }
         // Ball IS blue => Turns Left
         else if (state == 5){
-            turn(-0.2,10); // Positive value, turns right; Negative turns LEFT
-            if (turn(-0.2,10)) {
+            turn(0.2,10); // Positive value, turns right; Negative turns LEFT
+            if (turn(0.2,10)) {
                 state++;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+    //            start_angle = angle;
             }
         }
         // lifts Side and Turns Right
         else if (state == 6){
-            turn(0.2,10); // Positive value, turns right; Negative turns LEFT
+            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
-            if (turn(0.2,10)) {
+            if (turn(0.2,0)) {
                 state = 9;
+                timer = getRuntime();
             }
         }
         // Ball IS Red => Turns Right
         else if (state == 7) {
-            turn(0.2,10);
-            if (turn(0.2,10)) {
+            turn(0.2,-10);
+            if (turn(0.2,-10)) {
                 state++;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+  //              start_angle = angle;
             }
         }
         // lifts Side and Turns Left
         else if (state == 8){
-            turn(-0.2,10); // Positive value, turns right; Negative turns LEFT
+            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
-            if (turn(-0.2,10)) {
+            if (turn(0.2,0)) {
                 state++;
                 timer = getRuntime();
             }
@@ -138,7 +161,7 @@ public class AutoRed extends TestHardwareMap {
         // Goes forward for one second
         else if (state == 9) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 0.5) {
+            if (timer2 < 1.5) {
                 move(0.5);
             }
             else {
@@ -160,30 +183,36 @@ public class AutoRed extends TestHardwareMap {
             range1Cache = range1Reader.read(0x04, 2);
             range1Value = range1Cache[0] & 0xFF;
             if (range1Value < 100) {
-                strafe(-0.5);
+                mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
             }
             else {
                 state = 13; // Pushes block forward
+                timer = getRuntime();
             }
         }
         else if (state == 11) {//center
             range1Cache = range1Reader.read(0x04, 2);
             range1Value = range1Cache[0] & 0xFF;
             if (range1Value < 80) {
-                strafe(-0.5);
+                mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
             }
             else {
                 state = 13; // Pushes block forward
+                timer = getRuntime();
             }
         }
         else if (state == 12) {
             range1Cache = range1Reader.read(0x04, 2);
             range1Value = range1Cache[0] & 0xFF;
             if (range1Value < 60) {
-                strafe(-0.5);
+                mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
             }
             else {
                 state = 13; // Pushes block forward
+                timer = getRuntime();
             }
         }
         // Moves forward with the block
@@ -200,8 +229,22 @@ public class AutoRed extends TestHardwareMap {
         else if (state == 14) {
             pickup1.setPosition(0.8);
             pickup2.setPosition(0.3);
-            state++;
+            state = 14.5;
             timer = getRuntime();
+        }
+        // Wait 1 second
+        else if (state == 14.5) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 1) {
+                move(0);
+            }
+            else {
+                //Play a sound
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                state = 15;
+                timer = getRuntime();
+            }
         }
         // Moves backward
         else if (state == 15) {
@@ -211,11 +254,12 @@ public class AutoRed extends TestHardwareMap {
             }
             else {
                 state++;
+//                start_angle = orientation.firstAngle;
             }
         }
         // Turns 90 degrees
         else {
-            turn(-0.5, 90); // (direction,angle)
+            turn(0.2, 90); // (direction,angle)
             //move(0);
         }
 
@@ -235,10 +279,19 @@ public class AutoRed extends TestHardwareMap {
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
                 pictograph = "left";
+                //Play a sound
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_HIGH_SS,200);
             } else if (vuMark == RelicRecoveryVuMark.CENTER) {
                 pictograph = "center";
+                //Play a sound
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 pictograph = "right";
+                //Play a sound
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
             }
         }
 
@@ -247,6 +300,7 @@ public class AutoRed extends TestHardwareMap {
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("start_angle = " + start_angle);
+        telemetry.addLine("Curr_angle = " + angle);
         telemetry.addLine("gyro z = " + orientation.firstAngle);
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");

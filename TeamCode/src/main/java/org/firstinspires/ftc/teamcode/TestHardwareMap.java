@@ -180,15 +180,24 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-    boolean turn (double power, double degree) {
+    boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
             angle = orientation.firstAngle;
-            if(Math.abs(start_angle - angle) < degree) {
-                LeftFrontDrive.setPower(Range.clip(power,-1,1));
-                LeftBackDrive.setPower(Range.clip(power,-1,1));
-                RightFrontDrive.setPower(Range.clip(power,-1,1));
-                RightBackDrive.setPower(Range.clip(power,-1,1));
+            if(Math.abs(degree-angle) > 5) {
+                //if((double)((int)(start_angle)) - (double)((int)(angle)) < degree) {
+                if(angle > degree) {
+                    LeftFrontDrive.setPower(Range.clip(power, -1, 1));
+                    LeftBackDrive.setPower(Range.clip(power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(power, -1, 1));
+                }
+                else if(angle < degree) {
+                    LeftFrontDrive.setPower(Range.clip(-power, -1, 1));
+                    LeftBackDrive.setPower(Range.clip(-power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(-power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(-power, -1, 1));
+                }
                 return false;
             }
             else {
