@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -29,8 +32,12 @@ public class AutoBlue extends TestHardwareMap {
         // START
         // DOWN Claw
         if (state == 0) {
+            pickup1.setPosition(0.8);
+            pickup2.setPosition(0.3);
             updownMotor.setPower(0);
             timer = getRuntime();  // Sets timer = accumulated time
+            angle = orientation.firstAngle;
+            start_angle = angle;
             state++;
         }
 
@@ -41,10 +48,17 @@ public class AutoBlue extends TestHardwareMap {
                 updownMotor.setPower(-0.2);
             } else {
                 pickup1.setPosition(0.2); // Right close
-                pickup2.setPosition(0.9); // Left close
+                pickup2.setPosition(0.95); // Left close
                 updownMotor.setPower(0);
                 timer = getRuntime();
-                state++;
+                state = 1.5;
+            }
+        }
+        else if (state == 1.5) {
+            timer2 = getRuntime() - timer;
+            if (timer2 >= 0.5) {
+                state = 2;
+                timer = getRuntime();
             }
         }
         //  Up Claw for time. Then stop motor
@@ -64,32 +78,33 @@ public class AutoBlue extends TestHardwareMap {
         //and check position of balls: range sensor
         else if (state == 4) {
             if (color().equals("red")) {
-                state = 5;
-                angle = orientation.firstAngle;
-                start_angle = angle;
-            } else if (color().equals("blue")) {
                 state = 7;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+                //start_angle = angle;
+            } else if (color().equals("blue")) {
+                state = 5;
+                angle = orientation.firstAngle;
+                //start_angle = angle;
             } else {
                 move(0.1);
             }
         }
         // Turns Left
         else if (state == 5) {
-            turn(-0.2, 10); // Positive value, turns right; Negative turns LEFT
-            if (turn(-0.2, 10)) {
+            turn(0.2, -10); // Positive value, turns right; Negative turns LEFT
+            if (turn(0.2, -10)) {
                 state++;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+                //start_angle = angle;
             }
         }
         // lifts Side and Turns Right
         else if (state == 6) {
-            turn(0.2, 10); // Positive value, turns right; Negative turns LEFT
+            turn(0.2, 0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
-            if (turn(0.2, 10)) {
+            if (turn(0.2, 0)) {
                 state = 9;
+                timer = getRuntime();
             }
         }
         else if (state == 7) {
@@ -97,68 +112,72 @@ public class AutoBlue extends TestHardwareMap {
             if (turn(0.2, 10)) {
                 state++;
                 angle = orientation.firstAngle;
-                start_angle = angle;
+                //start_angle = angle;
             }
         }
         else if (state == 8) {
-            turn(-0.2, 10); // Positive value, turns right; Negative turns LEFT
+            turn(0.2, 0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
-            if (turn(-0.2, 10)) {
+            if (turn(0.2, 0)) {
                 state++;
                 timer = getRuntime();
             }
         }
         else if (state == 9) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 1) {
+            if (timer2 < 0.9) {
                 move(-0.5);
             }
             else {
-                if (pictograph.equals("left")) {
-                    state = 10;
+                if (pictograph == null) {
+                    state = 11;
                 }
-                else if (pictograph.equals("right")) {
+                else if (pictograph.equals("left")) {
                     state = 12;
                 }
-                else {
-                    state = 11;//center
+                else if (pictograph.equals("center")) {
+                    state = 11;
+                }
+                else if (pictograph.equals("right")) {
+                    state = 10;
                 }
             }
         }
         else if (state == 10) {//left
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 100) {
-                strafe(-0.5);
+            if ((int)range1Value != 86) {
+                if (range1Value < 86) {
+                    mech_move(-90, (float) -0.5, 0);
+                } else {
+                    mech_move(-90,(float)0.5,0);
+                }
             }
             else {
                 state = 12.5;
                 angle = orientation.firstAngle;
-                start_angle = angle;
             }
         }
         else if (state == 11) {//center
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 80) {
-                strafe(-0.5);
+            if ((int)range1Value != 69) {
+                if (range1Value < 69) {
+                    mech_move(-90, (float) -0.5, 0);
+                } else {
+                    mech_move(-90,(float)0.5,0);
+                }
             }
-            else {
-                state = 12.5;
-                angle = orientation.firstAngle;
-                start_angle = angle;
-            }
+            state = 12.5;
+            angle = orientation.firstAngle;
         }
         else if (state == 12) {//right
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 60) {
-                strafe(-0.5);
+            if ((int)range1Value != 51) {
+                if (range1Value < 51) {
+                    mech_move(-90, (float) -0.5, 0);
+                } else {
+                    mech_move(-90,(float)0.5,0);
+                }
             }
             else {
                 state = 12.5;
                 angle = orientation.firstAngle;
-                start_angle = angle;
             }
         }//right
         else if (state == 12.5) {
@@ -175,16 +194,29 @@ public class AutoBlue extends TestHardwareMap {
             }
             else {
                 state++;
-                timer = getRuntime();
             }
         }
         else if (state == 14) {
             pickup1.setPosition(0.8);
             pickup2.setPosition(0.3);
+            state = 14.5;
+            timer = getRuntime();
+        }
+        else if (state == 14.5) {
+            timer2 = getRuntime() - timer;
+            if (timer2 < 0.3) {
+                move(0.5);
+            }
+            else {
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                state = 15;
+                timer = getRuntime();
+            }
         }
         else if (state == 15) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 0.2) {
+            if (timer2 < 0.3) {
                 move(-0.5);
             }
             else {
@@ -192,25 +224,31 @@ public class AutoBlue extends TestHardwareMap {
             }
         }
         else {
-            turn (0.5, 90);
+            turn (0.2, 90);
         }
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        relicTrackables.activate();
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        if (vuMark == RelicRecoveryVuMark.LEFT) {
-            pictograph = "left";
+        if (pictograph == null) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_HIGH_SS,200);
+                pictograph = "left";
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                pictograph = "center";
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                pictograph = "right";
+            }
         }
-        else if (vuMark == RelicRecoveryVuMark.CENTER) {
-            pictograph = "center";
-        }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            pictograph = "right";
-        }
+
+        range1Cache = range1Reader.read(0x04, 2);
+        range1Value = range1Cache[0] & 0xFF;
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("start_angle = " + start_angle);
+        telemetry.addLine("Curr_angle = " + angle);
         telemetry.addLine("gyro z = " + orientation.firstAngle);
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");

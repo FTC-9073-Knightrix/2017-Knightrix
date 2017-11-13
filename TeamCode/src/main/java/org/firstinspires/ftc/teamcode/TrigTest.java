@@ -88,10 +88,10 @@ public class TrigTest extends TestHardwareMap{
         // Left Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
         if (gamepad1.left_trigger > 0) {
-            pickup2.setPosition(Range.clip( 0.2 + ((gamepad1.left_trigger)*(0.9-0.2))  , 0.2, 0.9));
+            pickup2.setPosition(Range.clip( 0.3 + ((gamepad1.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
         }
         else {
-            pickup2.setPosition(Range.clip( 0.2 + ((gamepad2.left_trigger)*(0.9-0.2))  , 0.2, 0.9));
+            pickup2.setPosition(Range.clip( 0.3 + ((gamepad2.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
         }
 
 
@@ -100,7 +100,7 @@ public class TrigTest extends TestHardwareMap{
         else {hand.setPosition(0.5);}
 
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
-        //else {side.setPosition(1);}
+        side.setPosition(1);
 
         if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
             leftstick_x = gamepad1.left_stick_x;
@@ -167,7 +167,7 @@ public class TrigTest extends TestHardwareMap{
             myangle += 360;
         }
 
-        telemetry.addLine("angle = " + myangle);
+        /*telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
@@ -181,7 +181,7 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
+        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");*/
 
 
         mech_move(myangle,mypower,myrot);

@@ -54,6 +54,8 @@ public class AutoRed extends TestHardwareMap {
         // START
         // DOWN Claw
         if (state == 0) {
+            pickup1.setPosition(0.8);
+            pickup2.setPosition(0.3);
             updownMotor.setPower(0);
             timer = getRuntime();  // Sets timer = accumulated time
             angle = orientation.firstAngle;
@@ -88,7 +90,14 @@ public class AutoRed extends TestHardwareMap {
                 pickup2.setPosition(0.9); // Left close
                 updownMotor.setPower(0);
                 timer = getRuntime();
-                state++;
+                state = 1.5;
+            }
+        }
+        else if (state == 1.5) {
+            timer2 = getRuntime() - timer;
+            if (timer2 >= 0.5) {
+                state = 2;
+                timer = getRuntime();
             }
         }
         //  Up Claw for time. Then stop motor
@@ -161,7 +170,7 @@ public class AutoRed extends TestHardwareMap {
         // Goes forward for one second
         else if (state == 9) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 1.5) {
+            if (timer2 < 0.7) {
                 move(0.5);
             }
             else {
@@ -180,10 +189,17 @@ public class AutoRed extends TestHardwareMap {
             }
         }
         else if (state == 10) {//left
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 100) {
+            if (range1Value < 86) {
                 mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
+            }
+            else {
+                state = 10.5; // Pushes block forward
+            }
+        }
+        else if (state == 10.5) {//left
+            if (range1Value > 86) {
+                mech_move(90,(float)-0.35,0);
 //                strafe(-0.3);
             }
             else {
@@ -192,10 +208,17 @@ public class AutoRed extends TestHardwareMap {
             }
         }
         else if (state == 11) {//center
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 80) {
+            if (range1Value < 69) {
                 mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
+            }
+            else {
+                state = 11.5; // Pushes block forward
+            }
+        }
+        else if (state == 11.5) {//center
+            if (range1Value > 69) {
+                mech_move(90,(float)-0.35,0);
 //                strafe(-0.3);
             }
             else {
@@ -204,10 +227,17 @@ public class AutoRed extends TestHardwareMap {
             }
         }
         else if (state == 12) {
-            range1Cache = range1Reader.read(0x04, 2);
-            range1Value = range1Cache[0] & 0xFF;
-            if (range1Value < 60) {
+            if (range1Value < 51) {
                 mech_move(90,(float)0.5,0);
+//                strafe(-0.3);
+            }
+            else {
+                state = 12.5; // Pushes block forward
+            }
+        }
+        else if (state == 12.5) {
+            if (range1Value > 51) {
+                mech_move(90,(float)-0.35,0);
 //                strafe(-0.3);
             }
             else {
@@ -227,7 +257,7 @@ public class AutoRed extends TestHardwareMap {
         }
         // Open the pickup mechanism
         else if (state == 14) {
-            pickup1.setPosition(0.8);
+            pickup1.setPosition(0.95);
             pickup2.setPosition(0.3);
             state = 14.5;
             timer = getRuntime();
@@ -235,8 +265,8 @@ public class AutoRed extends TestHardwareMap {
         // Wait 1 second
         else if (state == 14.5) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 1) {
-                move(0);
+            if (timer2 < 0.3) {
+                move(0.5);
             }
             else {
                 //Play a sound
@@ -249,7 +279,7 @@ public class AutoRed extends TestHardwareMap {
         // Moves backward
         else if (state == 15) {
             timer2 = getRuntime() - timer;
-            if (timer2 < 0.2) {
+            if (timer2 < 0.3) {
                 move(-0.5);
             }
             else {
@@ -268,14 +298,6 @@ public class AutoRed extends TestHardwareMap {
         if (pictograph == null) {
             // Checks Vuforia
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
-            }
-
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
                 pictograph = "left";
@@ -297,6 +319,8 @@ public class AutoRed extends TestHardwareMap {
 
 //        range1Cache = range1Reader.read(0x04, 2);
 //        range1Value = range1Cache[0] & 0xFF;
+        range1Cache = range1Reader.read(0x04, 2);
+        range1Value = range1Cache[0] & 0xFF;
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("start_angle = " + start_angle);
