@@ -159,7 +159,8 @@ public class TrigTest extends TestHardwareMap{
             myangle = (float) 270;
 
 
-        mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
+        // Controls the power of the drive train with an array. Easier to maneuver at slower speeds
+        mypower = (float) scaleInput( Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y) );
 
         //myangle = myangle - angle that the gyro is at
         myangle -= gyroDegrees;
