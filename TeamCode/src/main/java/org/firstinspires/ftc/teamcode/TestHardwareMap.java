@@ -88,6 +88,8 @@ public abstract class TestHardwareMap extends OpMode {
 
     @Override
     public void init(){
+
+
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
@@ -100,6 +102,16 @@ public abstract class TestHardwareMap extends OpMode {
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor = hardwareMap.dcMotor.get("ARM");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
+
+/*
+        //Reset encoders
+        LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+*/
+
+
 
         // servos
         pickup1 = hardwareMap.servo.get("pickup1"); //Right
@@ -122,7 +134,10 @@ public abstract class TestHardwareMap extends OpMode {
         //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
         range1Reader.engage();
         //range2Reader.engage();
+
+/*
         // Vuforia
+        // Only enable in Autonomous
         OpenGLMatrix lastLocation = null;
         VuforiaLocalizer vuforia;
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -133,7 +148,7 @@ public abstract class TestHardwareMap extends OpMode {
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         relicTrackables.activate();
-
+*/
     }
 
     @Override
