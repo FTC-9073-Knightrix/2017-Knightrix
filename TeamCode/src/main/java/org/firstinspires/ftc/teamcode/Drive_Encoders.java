@@ -30,14 +30,23 @@ public class Drive_Encoders extends TestHardwareMap{
     public void loop() {
 
         // Update variables
-        timer = getRuntime() - timer;
+        prevtimer = timer;
+        timer = getRuntime();
         double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
 
         // Get position of the 4 encoders
-        lfEnc = LeftFrontDrive.getCurrentPosition();
-        lbEnc = LeftBackDrive.getCurrentPosition();
-        rfEnc = -RightFrontDrive.getCurrentPosition();
-        rbEnc = -RightBackDrive.getCurrentPosition();
+        lfEnc =  LeftFrontDrive.getCurrentPosition()   + lfEncAdj;
+        lbEnc =  LeftBackDrive.getCurrentPosition()    + lbEncAdj;
+        rfEnc = -RightFrontDrive.getCurrentPosition()  + rfEncAdj;
+        rbEnc = -RightBackDrive.getCurrentPosition()   + rbEncAdj;
+
+        //Validate reset of the encoders
+        if (gamepad1.x){
+            lfEncAdj = -lfEnc;
+            lbEncAdj = -lbEnc;
+            rfEncAdj = -rfEnc;
+            rbEncAdj = -rbEnc;
+        }
 
         double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
         double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
@@ -168,7 +177,7 @@ public class Drive_Encoders extends TestHardwareMap{
 
 
 
-        telemetry.addLine("Cycle Time: " + Math.round(timer));
+        telemetry.addLine("Cycle Time: " + (1/timer-prevtimer));
         telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
         telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower +"/" + myrot);
         telemetry.addLine("LF: " + lfEnc);

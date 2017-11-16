@@ -52,6 +52,9 @@ public abstract class TestHardwareMap extends OpMode {
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+
+    // Encoders
+    double lfEncAdj = 0.0, lbEncAdj = 0.0, rfEncAdj = 0.0, rbEncAdj = 0.0;
     /*float lastX = gamepad1.left_stick_x;
     float lastY = gamepad1.left_stick_y;*/
     float lastX = 0;
@@ -65,8 +68,11 @@ public abstract class TestHardwareMap extends OpMode {
     double leftstick_x = 0;
     double leftstick_y = 0;
     double state = 0;
+    // Time Variables
     double timer = 0;
     double timer2 = 0;
+    double prevtimer = 0;
+
     /*int color1red;
     int color1green;
     int color1blue;*/
