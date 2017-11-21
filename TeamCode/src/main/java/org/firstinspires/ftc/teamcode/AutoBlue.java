@@ -23,6 +23,7 @@ public class AutoBlue extends TestHardwareMap {
     @Override
     public void start() {
         super.start();
+        auto = true;
     }
 
     @Override

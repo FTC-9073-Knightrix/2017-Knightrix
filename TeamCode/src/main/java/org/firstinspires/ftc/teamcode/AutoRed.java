@@ -29,6 +29,7 @@ public class AutoRed extends TestHardwareMap {
     @Override
     public void start() {
         super.start();
+        auto = true;
     }
 
     /*VuforiaTrackable relicTemplate = null;

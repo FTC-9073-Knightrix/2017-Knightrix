@@ -72,6 +72,7 @@ public abstract class TestHardwareMap extends OpMode {
     double timer = 0;
     double timer2 = 0;
     double prevtimer = 0;
+    boolean auto = false;
 
     /*int color1red;
     int color1green;
@@ -109,13 +110,10 @@ public abstract class TestHardwareMap extends OpMode {
         armMotor = hardwareMap.dcMotor.get("ARM");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
 
-/*
-        //Reset encoders
-        LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-*/
+        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
@@ -141,20 +139,21 @@ public abstract class TestHardwareMap extends OpMode {
         range1Reader.engage();
         //range2Reader.engage();
 
-/*
-        // Vuforia
-        // Only enable in Autonomous
-        OpenGLMatrix lastLocation = null;
-        VuforiaLocalizer vuforia;
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        relicTrackables.activate();
-*/
+
+        if (auto) {
+            // Vuforia
+            // Only enable in Autonomous
+            OpenGLMatrix lastLocation = null;
+            VuforiaLocalizer vuforia;
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+            parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
+            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+            this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+            VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+            relicTemplate = relicTrackables.get(0);
+            relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+            relicTrackables.activate();
+        }
     }
 
     @Override

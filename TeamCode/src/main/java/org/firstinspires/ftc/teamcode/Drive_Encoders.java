@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,9 +27,22 @@ public class Drive_Encoders extends TestHardwareMap{
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     */
+
+    public void init() {
+        //Reset encoders
+        LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     @Override
     public void loop() {
-
         // Update variables
         prevtimer = timer;
         timer = getRuntime();
@@ -39,6 +53,16 @@ public class Drive_Encoders extends TestHardwareMap{
         lbEnc =  LeftBackDrive.getCurrentPosition()    + lbEncAdj;
         rfEnc = -RightFrontDrive.getCurrentPosition()  + rfEncAdj;
         rbEnc = -RightBackDrive.getCurrentPosition()   + rbEncAdj;
+
+        double average = (lfEnc + lbEnc + rfEnc + rbEnc) / 4;
+        double lfPow = average / lfEnc;
+        LeftFrontDrive.setPower(LeftFrontDrive.getPower() * lfPow);
+        double lbPow = average / lbEnc;
+        LeftBackDrive.setPower(LeftBackDrive.getPower() * lbPow);
+        double rfPow = average / rfEnc;
+        RightFrontDrive.setPower(RightFrontDrive.getPower() * rfPow);
+        double rbPow = average / rbEnc;
+        RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
 
         //Validate reset of the encoders
         if (gamepad1.x){

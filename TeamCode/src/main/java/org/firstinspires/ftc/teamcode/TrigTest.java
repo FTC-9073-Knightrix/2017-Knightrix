@@ -61,7 +61,7 @@ public class TrigTest extends TestHardwareMap{
             left = gamepad1.dpad_left;
         }
         else {
-            left = gamepad1.dpad_left;
+            left = gamepad2.dpad_left;
         }
         if (gamepad1.dpad_right) {
             right = gamepad1.dpad_right;
@@ -129,8 +129,8 @@ public class TrigTest extends TestHardwareMap{
         else {updownPower = 0;}
         updownMotor.setPower(updownPower);
 
-        if(left) {armMotor.setPower(-0.2);}
-        else if(right) {armMotor.setPower(0.2);}
+        if(left) {armMotor.setPower(-0.4);}
+        else if(right) {armMotor.setPower(0.4);}
         else {armMotor.setPower(0);}
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
