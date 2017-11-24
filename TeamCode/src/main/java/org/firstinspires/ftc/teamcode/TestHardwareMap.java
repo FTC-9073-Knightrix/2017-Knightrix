@@ -55,6 +55,8 @@ public abstract class TestHardwareMap extends OpMode {
 
     // Encoders
     double lfEncAdj = 0.0, lbEncAdj = 0.0, rfEncAdj = 0.0, rbEncAdj = 0.0;
+    double xPos = 0, yPos=0, rotPos = 0;
+
     /*float lastX = gamepad1.left_stick_x;
     float lastY = gamepad1.left_stick_y;*/
     float lastX = 0;
@@ -97,24 +99,42 @@ public abstract class TestHardwareMap extends OpMode {
     public void init(){
 
 
+        // Name the motors
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
-        LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
-        LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
-        RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive = hardwareMap.dcMotor.get("RB");
-        RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         updownMotor = hardwareMap.dcMotor.get("UD");
-        updownMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor = hardwareMap.dcMotor.get("ARM");
+
+        // Set motor direction
+        LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
+        LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
+        RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        updownMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Set driving mode
+        if (auto) {
+            // Reset encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+            // Run using encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        }
 
 
         // servos
