@@ -102,6 +102,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
             RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
 */
 
+            if (lfEnc < 5000) {
+                LeftFrontDrive.setPower(0.1);
+            } else
+                LeftFrontDrive.setPower(0);
+            
+
             // Determines the X-Y-Rotation position of the robot
             double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
             double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
