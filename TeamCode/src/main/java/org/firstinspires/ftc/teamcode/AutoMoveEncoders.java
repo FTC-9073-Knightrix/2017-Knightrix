@@ -22,8 +22,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class AutoMoveEncoders extends TestHardwareMap {
     @Override
     public void start() {
-        super.start();
         auto = true;
+        super.start();
+
     }
 
     @Override
@@ -31,7 +32,15 @@ public class AutoMoveEncoders extends TestHardwareMap {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         // Variables
-        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
+        double MyPower = 0;
+//        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
+
+
+        // Get position of the 4 encoders
+        double lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
+        double lbEnc =  LeftBackDrive.getCurrentPosition()    ;
+        double rfEnc = -RightFrontDrive.getCurrentPosition()  ;
+        double rbEnc = -RightBackDrive.getCurrentPosition()   ;
 
         // START
         // DOWN Claw
@@ -42,6 +51,15 @@ public class AutoMoveEncoders extends TestHardwareMap {
             timer = getRuntime();  // Sets timer = accumulated time
             angle = orientation.firstAngle;
             start_angle = angle;
+
+            // Get Starting position of the 4 encoders
+            lfEncStart =  lfEnc   ;
+            lbEncStart =  lbEnc   ;
+            rfEncStart =  rfEnc   ;
+            rbEncStart =  rbEnc   ;
+
+
+
             state++;
         }
 
@@ -82,12 +100,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
         //move forwards 500 Encoders counts
         else if (state == 4) {
 
-            // Get position of the 4 encoders
-            lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
-            lbEnc =  LeftBackDrive.getCurrentPosition()    ;
-            rfEnc = -RightFrontDrive.getCurrentPosition()  ;
-            rbEnc = -RightBackDrive.getCurrentPosition()   ;
-
         /*
             // Section to compensate the over/under rotation of one motor
             // in relation to all the motors in average
@@ -101,6 +113,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
             double rbPow = average / rbEnc;
             RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
 */
+
+            if (lfEnc - lfEncStart < 50000) {LeftFrontDrive.setPower(0.3); } else {LeftFrontDrive.setPower(0); }
+            if (lbEnc - lbEncStart < 50000) {LeftBackDrive.setPower(0.3);  } else {LeftBackDrive.setPower(0);  }
+            if (rfEnc - rfEncStart < 50000) {RightFrontDrive.setPower(0.3);} else {RightFrontDrive.setPower(0);}
+            if (rbEnc - rbEncStart < 50000) {RightBackDrive.setPower(0.3); } else {RightBackDrive.setPower(0); }
+
 
             // Determines the X-Y-Rotation position of the robot
             double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
@@ -117,12 +135,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
-
         telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower +"/" + myrot);
-        telemetry.addLine("LF: " + lfEnc);
-        telemetry.addLine("LB: " + lbEnc);
-        telemetry.addLine("RF: " + rfEnc);
-        telemetry.addLine("RB: " + rbEnc);
+        telemetry.addLine("LF: " + (lfEnc-lfEncStart) + "Real" + lfEnc);
+        telemetry.addLine("LB: " + (lbEnc-lbEncStart) + "Real" + lbEnc);
+        telemetry.addLine("RF: " + (rfEnc-rfEncStart) + "Real" + rfEnc);
+        telemetry.addLine("RB: " + (rbEnc-rbEncStart) + "Real" + rbEnc);
+//        telemetry.addLine("LF-Pow: " + lfEnc + "Power: " + MyPower);
 
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("Curr_angle = " + angle);

@@ -94,6 +94,10 @@ public abstract class TestHardwareMap extends OpMode {
     public double range1Value;
     //public double range2Value;
     VuforiaTrackable relicTemplate = null;
+    double lfEncStart = 0;
+    double lbEncStart = 0;
+    double rfEncStart = 0;
+    double rbEncStart = 0;
 
     @Override
     public void init(){
