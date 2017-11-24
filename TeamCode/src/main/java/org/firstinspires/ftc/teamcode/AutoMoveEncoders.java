@@ -30,6 +30,9 @@ public class AutoMoveEncoders extends TestHardwareMap {
     public void loop() {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
+        // Variables
+        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
+
         // START
         // DOWN Claw
         if (state == 0) {
@@ -78,7 +81,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
 
         //move forwards 500 Encoders counts
         else if (state == 4) {
-            double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
 
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
@@ -86,6 +88,7 @@ public class AutoMoveEncoders extends TestHardwareMap {
             rfEnc = -RightFrontDrive.getCurrentPosition()  ;
             rbEnc = -RightBackDrive.getCurrentPosition()   ;
 
+        /*
             // Section to compensate the over/under rotation of one motor
             // in relation to all the motors in average
             double average = (lfEnc + lbEnc + rfEnc + rbEnc) / 4;
@@ -97,13 +100,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
             RightFrontDrive.setPower(RightFrontDrive.getPower() * rfPow);
             double rbPow = average / rbEnc;
             RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
+*/
 
             // Determines the X-Y-Rotation position of the robot
             double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
             double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
             double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-
-
 
         }
         else {
@@ -114,9 +116,14 @@ public class AutoMoveEncoders extends TestHardwareMap {
         range1Value = range1Cache[0] & 0xFF;
 
         telemetry.addLine("State: " + state);
-        telemetry.addLine("xPos = " + xPos);
-        telemetry.addLine("yPos = " + yPos);
-        telemetry.addLine("rotPos = " + rotPos);
+        telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
+
+        telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower +"/" + myrot);
+        telemetry.addLine("LF: " + lfEnc);
+        telemetry.addLine("LB: " + lbEnc);
+        telemetry.addLine("RF: " + rfEnc);
+        telemetry.addLine("RB: " + rbEnc);
+
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("Curr_angle = " + angle);
         telemetry.addLine("gyro z = " + orientation.firstAngle);

@@ -54,6 +54,9 @@ public class Drive_Encoders extends TestHardwareMap{
         rfEnc = -RightFrontDrive.getCurrentPosition()  + rfEncAdj;
         rbEnc = -RightBackDrive.getCurrentPosition()   + rbEncAdj;
 
+
+/*
+        // Use Averages to calculate deviation from each motor
         double average = (lfEnc + lbEnc + rfEnc + rbEnc) / 4;
         double lfPow = average / lfEnc;
         LeftFrontDrive.setPower(LeftFrontDrive.getPower() * lfPow);
@@ -63,6 +66,7 @@ public class Drive_Encoders extends TestHardwareMap{
         RightFrontDrive.setPower(RightFrontDrive.getPower() * rfPow);
         double rbPow = average / rbEnc;
         RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
+*/
 
         //Validate reset of the encoders
         if (gamepad1.x){
