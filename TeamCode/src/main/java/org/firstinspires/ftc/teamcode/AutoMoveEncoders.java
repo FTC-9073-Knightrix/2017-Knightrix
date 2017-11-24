@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -31,7 +32,15 @@ public class AutoMoveEncoders extends TestHardwareMap {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         // Variables
-        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
+        // Get position of the 4 encoders
+        double lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
+        double lbEnc =  LeftBackDrive.getCurrentPosition()    ;
+        double rfEnc = -RightFrontDrive.getCurrentPosition()  ;
+        double rbEnc = -RightBackDrive.getCurrentPosition()   ;
+
+        double lfEnc2 =  LeftFrontDrive.getCurrentPosition()   ;
+        double MyPower =0;
+
 
         // START
         // DOWN Claw
@@ -43,10 +52,23 @@ public class AutoMoveEncoders extends TestHardwareMap {
             angle = orientation.firstAngle;
             start_angle = angle;
             state++;
+
+            // Reset encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // Run using encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         }
 
         //  DOWN Claw for time. Then stop motor
-        else if (state == 1) {
+        else if (state == 1) { 
             timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
             if (timer2 < 1) {
                 updownMotor.setPower(-0.2);
@@ -82,12 +104,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
         //move forwards 500 Encoders counts
         else if (state == 4) {
 
-            // Get position of the 4 encoders
-            lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
-            lbEnc =  LeftBackDrive.getCurrentPosition()    ;
-            rfEnc = -RightFrontDrive.getCurrentPosition()  ;
-            rbEnc = -RightBackDrive.getCurrentPosition()   ;
-
         /*
             // Section to compensate the over/under rotation of one motor
             // in relation to all the motors in average
@@ -103,10 +119,11 @@ public class AutoMoveEncoders extends TestHardwareMap {
 */
 
             if (lfEnc < 5000) {
-                LeftFrontDrive.setPower(0.1);
-            } else
-                LeftFrontDrive.setPower(0);
-            
+                MyPower = 0.6;
+            } else {
+                MyPower = 0;
+            }
+
 
             // Determines the X-Y-Rotation position of the robot
             double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
@@ -118,6 +135,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
             turn (0.2, 90);
         }
 
+        // Move based on Power
+        LeftFrontDrive.setPower(MyPower);
+        RightFrontDrive.setPower(MyPower);
+
+
+
         range1Cache = range1Reader.read(0x04, 2);
         range1Value = range1Cache[0] & 0xFF;
 
@@ -125,7 +148,9 @@ public class AutoMoveEncoders extends TestHardwareMap {
         telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
 
         telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower +"/" + myrot);
-        telemetry.addLine("LF: " + lfEnc);
+        telemetry.addLine("LF: " + lfEnc +"Other:" + LeftFrontDrive.getCurrentPosition()  );
+        telemetry.addLine("LF2: " + lfEnc2 +"Power:" + MyPower  );
+
         telemetry.addLine("LB: " + lbEnc);
         telemetry.addLine("RF: " + rfEnc);
         telemetry.addLine("RB: " + rbEnc);
