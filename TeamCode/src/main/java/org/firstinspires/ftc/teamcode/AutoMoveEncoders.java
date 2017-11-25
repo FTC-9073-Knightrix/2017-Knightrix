@@ -32,15 +32,22 @@ public class AutoMoveEncoders extends TestHardwareMap {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         // Variables
-        double MyPower = 0;
+//        double MyPower = 0;
 //        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
 
 
         // Get position of the 4 encoders
-        double lfEnc =  LeftFrontDrive.getCurrentPosition()   ;
-        double lbEnc =  LeftBackDrive.getCurrentPosition()    ;
-        double rfEnc = -RightFrontDrive.getCurrentPosition()  ;
-        double rbEnc = -RightBackDrive.getCurrentPosition()   ;
+        double lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+        double lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+        double rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+        double rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+        double MaxValue = Math.max(Math.max(Math.abs(lfEnc-lfEncStart),Math.abs(lbEnc-lbEncStart)),Math.max(Math.abs(rfEnc-rfEncStart),Math.abs(rbEnc-rbEncStart)));
+        if (MaxValue == 0) {MaxValue = 1;}
+
+        // Determines the X-Y-Rotation position of the robot
+        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
 
         // START
         // DOWN Claw
@@ -113,17 +120,15 @@ public class AutoMoveEncoders extends TestHardwareMap {
             double rbPow = average / rbEnc;
             RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
 */
-
-            if (lfEnc - lfEncStart < 50000) {LeftFrontDrive.setPower(0.3); } else {LeftFrontDrive.setPower(0); }
-            if (lbEnc - lbEncStart < 50000) {LeftBackDrive.setPower(0.3);  } else {LeftBackDrive.setPower(0);  }
-            if (rfEnc - rfEncStart < 50000) {RightFrontDrive.setPower(0.3);} else {RightFrontDrive.setPower(0);}
-            if (rbEnc - rbEncStart < 50000) {RightBackDrive.setPower(0.3); } else {RightBackDrive.setPower(0); }
+            double MyDistance = 3500;
+            double MyPower = 0.2;
 
 
-            // Determines the X-Y-Rotation position of the robot
-            double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-            double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-            double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+            if (lfEnc - lfEncStart <  MyDistance) {LeftFrontDrive.setPower(MyPower   * MaxValue / Math.abs(lfEnc-lfEncStart+1)); } else {LeftFrontDrive.setPower(0); }
+            if (lbEnc - lbEncStart <  MyDistance) {LeftBackDrive.setPower(MyPower    * MaxValue / Math.abs(lbEnc-lbEncStart+1)); } else {LeftBackDrive.setPower(0);  }
+            if (rfEnc - rfEncStart > -MyDistance) {RightFrontDrive.setPower(-MyPower * MaxValue / Math.abs(rfEnc-rfEncStart+1)); } else {RightFrontDrive.setPower(0);}
+            if (rbEnc - rbEncStart > -MyDistance) {RightBackDrive.setPower(-MyPower  * MaxValue / Math.abs(rbEnc-rbEncStart+1)); } else {RightBackDrive.setPower(0); }
+
 
         }
         else {
@@ -135,11 +140,11 @@ public class AutoMoveEncoders extends TestHardwareMap {
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
-        telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower +"/" + myrot);
-        telemetry.addLine("LF: " + (lfEnc-lfEncStart) + "Real" + lfEnc);
-        telemetry.addLine("LB: " + (lbEnc-lbEncStart) + "Real" + lbEnc);
-        telemetry.addLine("RF: " + (rfEnc-rfEncStart) + "Real" + rfEnc);
-        telemetry.addLine("RB: " + (rbEnc-rbEncStart) + "Real" + rbEnc);
+        telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower + "/" + myrot);
+        telemetry.addLine("LF: " + (lfEnc-lfEncStart) + "Real" + lfEnc + "P:" + MaxValue / Math.abs(lfEnc-lfEncStart+1));
+        telemetry.addLine("LB: " + (lbEnc-lbEncStart) + "Real" + lbEnc + "P:" + MaxValue / Math.abs(lbEnc-lbEncStart+1));
+        telemetry.addLine("RF: " + (rfEnc-rfEncStart) + "Real" + rfEnc + "P:" + MaxValue / Math.abs(rfEnc-rfEncStart+1));
+        telemetry.addLine("RB: " + (rbEnc-rbEncStart) + "Real" + rbEnc + "P:" + MaxValue / Math.abs(rbEnc-rbEncStart+1));
 //        telemetry.addLine("LF-Pow: " + lfEnc + "Power: " + MyPower);
 
         telemetry.addLine("start_angle = " + start_angle);
