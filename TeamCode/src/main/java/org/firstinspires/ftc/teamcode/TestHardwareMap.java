@@ -94,6 +94,7 @@ public abstract class TestHardwareMap extends OpMode {
     public double range1Value;
     //public double range2Value;
     VuforiaTrackable relicTemplate = null;
+    double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
     double lfEncStart = 0;
     double lbEncStart = 0;
     double rfEncStart = 0;
@@ -220,6 +221,43 @@ public abstract class TestHardwareMap extends OpMode {
             RightFrontDrive.setPower(-power);
             RightBackDrive.setPower(-power);
         }
+    }
+
+    boolean AutoFrontBack (double MyDistance, double MyPower) {
+        if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+            double[] MotorOnTarget = {0,0,0,0};
+
+            double lfEncVar = Math.abs(lfEnc-lfEncStart);
+            double lbEncVar = Math.abs(lbEnc-lbEncStart);
+            double rfEncVar = Math.abs(rfEnc-rfEncStart);
+            double rbEncVar = Math.abs(rbEnc-rbEncStart);
+            double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
+            if (MaxValue == 0) {MaxValue = 1;}
+
+            if (lfEncVar <  MyDistance) {LeftFrontDrive.setPower(MyPower  * MaxValue / (lfEncVar + 1)); } else {
+                LeftFrontDrive.setPower(0);
+                MotorOnTarget[0] = 1;
+            }
+            if (lbEncVar <  MyDistance) {LeftBackDrive.setPower(MyPower   * MaxValue / (lbEncVar +1)); } else {
+                LeftBackDrive.setPower(0);
+                MotorOnTarget[1] = 1;
+            }
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(-MyPower  * MaxValue / (rfEncVar+1)); } else {
+                RightFrontDrive.setPower(0);
+                MotorOnTarget[2] = 1;
+            }
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+                RightBackDrive.setPower(0);
+                MotorOnTarget[3] = 1;
+            }
+            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else {return false;}
+
     }
 
     boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=

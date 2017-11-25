@@ -104,7 +104,7 @@ public class AutoMoveEncoders extends TestHardwareMap {
             }
         }
 
-        //move forwards 500 Encoders counts
+        //move forwards 3500 Encoders counts / about 99 cm / 39 inches
         else if (state == 4) {
 
         /*
@@ -120,19 +120,126 @@ public class AutoMoveEncoders extends TestHardwareMap {
             double rbPow = average / rbEnc;
             RightBackDrive.setPower(RightBackDrive.getPower() * rbPow);
 */
+            // Move Forwards
             double MyDistance = 3500;
             double MyPower = 0.2;
+            double[] MotorOnTarget = {0,0,0,0};
 
 
+            if (lfEnc - lfEncStart <  MyDistance) {LeftFrontDrive.setPower(MyPower   * MaxValue / Math.abs(lfEnc-lfEncStart+1)); } else {
+                LeftFrontDrive.setPower(0);
+                MotorOnTarget[0] = 1;
+            }
+            if (lbEnc - lbEncStart <  MyDistance) {LeftBackDrive.setPower(MyPower    * MaxValue / Math.abs(lbEnc-lbEncStart+1)); } else {
+                LeftBackDrive.setPower(0);
+                MotorOnTarget[1] = 1;
+            }
+            if (rfEnc - rfEncStart > -MyDistance) {RightFrontDrive.setPower(-MyPower * MaxValue / Math.abs(rfEnc-rfEncStart+1)); } else {
+                RightFrontDrive.setPower(0);
+                MotorOnTarget[2] = 1;
+            }
+            if (rbEnc - rbEncStart > -MyDistance) {RightBackDrive.setPower(-MyPower  * MaxValue / Math.abs(rbEnc-rbEncStart+1)); } else {
+                RightBackDrive.setPower(0);
+                MotorOnTarget[3] = 1;
+            }
+            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state++;
+                state++; // Go to 6 directly
+            }
+
+        }
+
+        // Turn
+        else if (state == 5) {
+            if (turn (0.2, 90)) {
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state++;
+            };
+        }
+
+        //move backwards 3500 Encoders counts / about 99 cm / 39 inches
+        else if (state == 6) {
+
+            // Move Backwards
+            double MyDistance = -1500;
+            double MyPower = 0.2;
+            double[] MotorOnTarget = {0,0,0,0};
+
+            if (lfEnc - lfEncStart >  MyDistance) {LeftFrontDrive.setPower(-MyPower  * MaxValue / Math.abs(lfEnc-lfEncStart+1)); } else {
+                LeftFrontDrive.setPower(0);
+                MotorOnTarget[0] = 1;
+            }
+            if (lbEnc - lbEncStart >  MyDistance) {LeftBackDrive.setPower(-MyPower   * MaxValue / Math.abs(lbEnc-lbEncStart+1)); } else {
+                LeftBackDrive.setPower(0);
+                MotorOnTarget[1] = 1;
+            }
+            if (rfEnc - rfEncStart < -MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / Math.abs(rfEnc-rfEncStart+1)); } else {
+                RightFrontDrive.setPower(0);
+                MotorOnTarget[2] = 1;
+            }
+            if (rbEnc - rbEncStart < -MyDistance) {RightBackDrive.setPower(MyPower   * MaxValue / Math.abs(rbEnc-rbEncStart+1)); } else {
+                RightBackDrive.setPower(0);
+                MotorOnTarget[3] = 1;
+            }
+            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {
+                // Robot reached destination
+                // Reset Encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state++; // Advance state
+            }
+
+            /*Forwards
             if (lfEnc - lfEncStart <  MyDistance) {LeftFrontDrive.setPower(MyPower   * MaxValue / Math.abs(lfEnc-lfEncStart+1)); } else {LeftFrontDrive.setPower(0); }
             if (lbEnc - lbEncStart <  MyDistance) {LeftBackDrive.setPower(MyPower    * MaxValue / Math.abs(lbEnc-lbEncStart+1)); } else {LeftBackDrive.setPower(0);  }
             if (rfEnc - rfEncStart > -MyDistance) {RightFrontDrive.setPower(-MyPower * MaxValue / Math.abs(rfEnc-rfEncStart+1)); } else {RightFrontDrive.setPower(0);}
             if (rbEnc - rbEncStart > -MyDistance) {RightBackDrive.setPower(-MyPower  * MaxValue / Math.abs(rbEnc-rbEncStart+1)); } else {RightBackDrive.setPower(0); }
-
-
+            */
         }
+
+        //move forwards 500 Encoders counts
+        else if (state == 7) {
+            // Move Forwards 500 clicks
+            if (AutoFrontBack(900,0.2)) {
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+//                state++;
+            }
+        }
+
+        //move backwards 800 Encoders counts
+        else if (state == 8) {
+
+            if (AutoFrontBack(800,-0.2)) {
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state++;
+            }
+        }
+
         else {
-            turn (0.2, 90);
+//            turn (0.2, 90);
+            LeftFrontDrive.setPower(0);
+            LeftBackDrive.setPower(0);
+            RightFrontDrive.setPower(0);
+            RightBackDrive.setPower(0);
         }
 
         range1Cache = range1Reader.read(0x04, 2);
