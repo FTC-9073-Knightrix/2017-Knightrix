@@ -232,9 +232,7 @@ public abstract class TestHardwareMap extends OpMode {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
 
             twoago = oneago;
-            oneago = (1 + Math.abs(xPos)) * (1 + Math.abs(yPos));
-
-            if (oneago == twoago) {return true;}
+            oneago = Math.abs(lfEnc)+Math.abs(lbEnc)+Math.abs(rfEnc)+Math.abs(rbEnc);
 
 //            if (twoago == xPos && onesec == -1) {
 //                onesec = getRuntime();
@@ -266,8 +264,20 @@ public abstract class TestHardwareMap extends OpMode {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
+            // Exit True Conditions:
+            // 1. MotorOnTarget  = 4
+            // 2. 1 second with motors not moving
+
+            if (oneago != twoago) { // Motors moving
+                onesec = getRuntime();
+            } else { // Motors NOT moving
+                if ((getRuntime()-onesec) > 1)  { // More than one second stalling
+                    return true;
+                }
+            }
             if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {return true;}
             else {return false;}
+
 //            else if (getRuntime() - onesec >= 2 && onesec != -1) {
 //                onesec = -1;
 //                if (oldxPos == xPos) {

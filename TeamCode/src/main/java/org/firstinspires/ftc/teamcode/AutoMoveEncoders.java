@@ -101,9 +101,9 @@ public class AutoMoveEncoders extends TestHardwareMap {
             }
         }
 
-        //move forwards 3000 Encoders counts / about 99 cm / 39 inches
+        //move forwards 3000 Encoders counts / about 90 cm / 35 inches
         else if (state == 4) {
-            // Move Forwards 3000 clicks / about xx cm / xx inches
+            // Move Forwards 3000 clicks / about xx cm / 35 inches
             if (AutoFrontBack(3000,0.4)) {
                 // Get Starting position of the 4 encoders
                 lfEncStart =  lfEnc   ;
@@ -112,11 +112,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
                 rbEncStart =  rbEnc   ;
                 state++;
                 state++;
-                LeftFrontDrive.setPower(0);
-                LeftBackDrive.setPower(0);
-                RightFrontDrive.setPower(0);
-                RightBackDrive.setPower(0);
-
             }
         }
 
@@ -128,9 +123,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
                 lbEncStart =  lbEnc   ;
                 rfEncStart =  rfEnc   ;
                 rbEncStart =  rbEnc   ;
-                state++;
-                state++;
-                state++;
                 state++;
             };
         }
@@ -144,43 +136,11 @@ public class AutoMoveEncoders extends TestHardwareMap {
                 lbEncStart =  lbEnc   ;
                 rfEncStart =  rfEnc   ;
                 rbEncStart =  rbEnc   ;
-//                state++;
-                LeftFrontDrive.setPower(0);
-                LeftBackDrive.setPower(0);
-                RightFrontDrive.setPower(0);
-                RightBackDrive.setPower(0);
-            }
-
-        }
-
-        //move forwards 500 Encoders counts
-        else if (state == 7) {
-            // Move Forwards 500 clicks
-            if (AutoFrontBack(2500,0.4)) {
-                // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
-                state++;
-            }
-        }
-
-        //move backwards 800 Encoders counts
-        else if (state == 8) {
-
-            if (AutoFrontBack(2000,-0.2)) {
-                // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
                 state++;
             }
         }
 
         else {
-//            turn (0.2, 90);
             LeftFrontDrive.setPower(0);
             LeftBackDrive.setPower(0);
             RightFrontDrive.setPower(0);
@@ -197,7 +157,6 @@ public class AutoMoveEncoders extends TestHardwareMap {
         telemetry.addLine("LB: " + (lbEnc-lbEncStart) + "Real" + lbEnc + "P:" + MaxValue / Math.abs(lbEnc-lbEncStart+1));
         telemetry.addLine("RF: " + (rfEnc-rfEncStart) + "Real" + rfEnc + "P:" + MaxValue / Math.abs(rfEnc-rfEncStart+1));
         telemetry.addLine("RB: " + (rbEnc-rbEncStart) + "Real" + rbEnc + "P:" + MaxValue / Math.abs(rbEnc-rbEncStart+1));
-//        telemetry.addLine("LF-Pow: " + lfEnc + "Power: " + MyPower);
 
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("Curr_angle = " + angle);
