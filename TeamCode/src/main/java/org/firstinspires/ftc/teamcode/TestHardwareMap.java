@@ -99,6 +99,11 @@ public abstract class TestHardwareMap extends OpMode {
     double lbEncStart = 0;
     double rfEncStart = 0;
     double rbEncStart = 0;
+    int counter = 0;
+    double oneago = 0;
+    double twoago = 0;
+    double onesec = -1;
+    double oldxPos = 0;
 
     @Override
     public void init(){
@@ -225,6 +230,17 @@ public abstract class TestHardwareMap extends OpMode {
 
     boolean AutoFrontBack (double MyDistance, double MyPower) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+
+            twoago = oneago;
+            oneago = (1 + Math.abs(xPos)) * (1 + Math.abs(yPos));
+
+            if (oneago == twoago) {return true;}
+
+//            if (twoago == xPos && onesec == -1) {
+//                onesec = getRuntime();
+//                oldxPos = xPos;
+//            }
+
             double[] MotorOnTarget = {0,0,0,0};
 
             double lfEncVar = Math.abs(lfEnc-lfEncStart);
@@ -234,7 +250,7 @@ public abstract class TestHardwareMap extends OpMode {
             double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
             if (MaxValue == 0) {MaxValue = 1;}
 
-            if (lfEncVar <  MyDistance) {LeftFrontDrive.setPower(MyPower  * MaxValue / (lfEncVar + 1)); } else {
+            if (lfEncVar <  MyDistance) {LeftFrontDrive.setPower(MyPower  * MaxValue / (lfEncVar + 1));} else {
                 LeftFrontDrive.setPower(0);
                 MotorOnTarget[0] = 1;
             }
@@ -250,14 +266,21 @@ public abstract class TestHardwareMap extends OpMode {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
-            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {
-                return true;
-            } else {
-                return false;
-            }
+            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {return true;}
+            else {return false;}
+//            else if (getRuntime() - onesec >= 2 && onesec != -1) {
+//                onesec = -1;
+//                if (oldxPos == xPos) {
+//                    return true;
+//                }
+//                else {
+//                    return false;
+//                }
+//            }
         }
-        else {return false;}
-
+        else {
+            return false;
+        }
     }
 
     boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=
