@@ -102,16 +102,6 @@ public class TrigTest extends TestHardwareMap{
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
         side.setPosition(1);
 
-        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
-            leftstick_x = gamepad1.left_stick_x;
-            leftstick_y = -gamepad1.left_stick_y;
-        }
-        else {
-            leftstick_x = -gamepad1.left_stick_x;
-            leftstick_y = gamepad1.left_stick_y;
-        }
-        float myrot = gamepad1.right_stick_x/2;
-
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         double gyroDegrees = orientation.firstAngle - gyroResetValue;
         double gyroTilt = orientation.secondAngle;
@@ -119,6 +109,22 @@ public class TrigTest extends TestHardwareMap{
         if (gamepad1.a) {
             gyroResetValue = orientation.firstAngle;
         }
+        leftstick_x = -gamepad1.left_stick_x;
+        leftstick_y = gamepad1.left_stick_y;
+
+        /*if (gyroResetValue > 45 && gyroResetValue < 135) {
+            leftstick_x = -gamepad1.left_stick_x;
+            leftstick_y = gamepad1.left_stick_y;
+        }
+        else if (gyroResetValue > 225 && gyroResetValue < 315) {
+            leftstick_x = -gamepad1.left_stick_x;
+            leftstick_y = -gamepad1.left_stick_y;
+        }
+        else {
+            leftstick_x = gamepad1.left_stick_x;
+            leftstick_y = -gamepad1.left_stick_y;
+        }*/
+        float myrot = gamepad1.right_stick_x/2;
 
         if (upclaw){
             updownPower = .8;
@@ -166,7 +172,9 @@ public class TrigTest extends TestHardwareMap{
         if (myangle < -359) {
             myangle += 360;
         }
-
+        telemetry.addLine("x: " + leftstick_x);
+        telemetry.addLine("y: " + leftstick_y);
+        telemetry.addLine("gyroResetValue: " + gyroResetValue);
         /*telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
