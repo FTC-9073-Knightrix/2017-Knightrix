@@ -165,14 +165,12 @@ public class AutoRed extends TestHardwareMap {
             side.setPosition(1); // Move side UP
             if (turn(0.2,0)) {
                 state++;
-                timer = getRuntime();
+                AutoFrontBackReset();
             }
         }
         // Goes forward for one second
         else if (state == 9) {
-            timer2 = getRuntime() - timer;
-            if (timer2 < 0.7) {
-                move(0.5);
+            if (!AutoFrontBack(28, 0.5)) {
             }
             else {
                 if (pictograph == null) {

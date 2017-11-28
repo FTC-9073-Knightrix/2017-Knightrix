@@ -228,8 +228,16 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
+    void AutoFrontBackReset() {
+        lfEncStart = lfEnc;
+        lbEncStart = lbEnc;
+        rfEncStart = rfEnc;
+        rbEncStart = rbEnc;
+    }
+
     boolean AutoFrontBack (double MyDistance, double MyPower) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+            MyDistance *= 85.714;
 
             twoago = oneago;
             oneago = Math.abs(lfEnc)+Math.abs(lbEnc)+Math.abs(rfEnc)+Math.abs(rbEnc);
