@@ -48,6 +48,7 @@ public abstract class TestHardwareMap extends OpMode {
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
+    DigitalChannel limitSwitch;
 
     //Variables
     float myangle = 0;
@@ -91,7 +92,6 @@ public abstract class TestHardwareMap extends OpMode {
     String pictograph = null;
     public I2cDeviceSynch range1Reader;
     public I2cDeviceSynch range2Reader;
-    public DigitalChannel limitSwitch;
     public byte[] range1Cache;
     //public byte[] range2Cache;
     public double range1Value;
@@ -172,7 +172,7 @@ public abstract class TestHardwareMap extends OpMode {
         //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
         range1Reader.engage();
         //range2Reader.engage();
-        limitSwitch = hardwareMap.digitalChannel.get("LS");
+        limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
 

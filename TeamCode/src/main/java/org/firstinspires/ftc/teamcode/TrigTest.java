@@ -198,7 +198,7 @@ public class TrigTest extends TestHardwareMap{
         pickup1.setPosition(handpos);
         hand.setPosition(handpos);
 
-        if (limitSwitch.equals(true)) {
+        if (!limitSwitch.getState()) {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
         }
@@ -210,6 +210,7 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("handpos" + handpos);
         telemetry.addLine("LS toString(): " + limitSwitch.toString());
         telemetry.addLine("LS boolean: " + limitSwitch.equals(true));
+        telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
         /*telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
