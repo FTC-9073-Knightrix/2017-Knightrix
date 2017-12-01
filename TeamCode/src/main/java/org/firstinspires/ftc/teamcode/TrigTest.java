@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
@@ -78,12 +81,12 @@ public class TrigTest extends TestHardwareMap{
 
         // Right Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
-        if (gamepad1.right_trigger > 0) {
+        /*if (gamepad1.right_trigger > 0) {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
-        }
+        }*/
 
         // Left Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
@@ -102,6 +105,16 @@ public class TrigTest extends TestHardwareMap{
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
         side.setPosition(1);
 
+        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
+            leftstick_x = gamepad1.left_stick_x;
+            leftstick_y = -gamepad1.left_stick_y;
+        }
+        else {
+            leftstick_x = -gamepad1.left_stick_x;
+            leftstick_y = gamepad1.left_stick_y;
+        }
+        float myrot = gamepad1.right_stick_x/2;
+
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         double gyroDegrees = orientation.firstAngle - gyroResetValue;
         double gyroTilt = orientation.secondAngle;
@@ -109,22 +122,6 @@ public class TrigTest extends TestHardwareMap{
         if (gamepad1.a) {
             gyroResetValue = orientation.firstAngle;
         }
-        leftstick_x = -gamepad1.left_stick_x;
-        leftstick_y = gamepad1.left_stick_y;
-
-        /*if (gyroResetValue > 45 && gyroResetValue < 135) {
-            leftstick_x = -gamepad1.left_stick_x;
-            leftstick_y = gamepad1.left_stick_y;
-        }
-        else if (gyroResetValue > 225 && gyroResetValue < 315) {
-            leftstick_x = -gamepad1.left_stick_x;
-            leftstick_y = -gamepad1.left_stick_y;
-        }
-        else {
-            leftstick_x = gamepad1.left_stick_x;
-            leftstick_y = -gamepad1.left_stick_y;
-        }*/
-        float myrot = gamepad1.right_stick_x/2;
 
         if (upclaw){
             updownPower = .8;
@@ -172,9 +169,47 @@ public class TrigTest extends TestHardwareMap{
         if (myangle < -359) {
             myangle += 360;
         }
-        telemetry.addLine("x: " + leftstick_x);
-        telemetry.addLine("y: " + leftstick_y);
-        telemetry.addLine("gyroResetValue: " + gyroResetValue);
+
+        /*if (gamepad2.left_bumper && arm.getPosition() >= 0.05) {
+            arm.setPosition(arm.getPosition() - 0.05);
+        }
+        else if (gamepad2.right_bumper && arm.getPosition() <= 0.95) {
+            arm.setPosition(arm.getPosition() + 0.05);
+        }
+        else {
+            arm.setPosition(arm.getPosition());
+        }*/
+
+
+        // Close and open continuous servo
+        if (gamepad2.a) {
+            //hand.setPosition(hand.getPosition() - 0.01);
+            handpos = 0.45;
+            //  pickup1.setPosition(0.53)
+            }
+        else if (gamepad2.b) {
+            //hand.setPosition(hand.getPosition() + 0.01);
+            handpos = 0.60;
+//            pickup1.setPosition(0.48);
+        }
+        else{
+            handpos = 0.5;
+        }
+        pickup1.setPosition(handpos);
+        hand.setPosition(handpos);
+
+        if (limitSwitch.equals(true)) {
+            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+        }
+
+
+
+        //arm.setPosition(0.5);
+        telemetry.addLine("" + pickup1.getPosition());
+        telemetry.addLine("handpos" + handpos);
+        telemetry.addLine("LS toString(): " + limitSwitch.toString());
+        telemetry.addLine("LS boolean: " + limitSwitch.equals(true));
         /*telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);

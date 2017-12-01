@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -52,6 +53,7 @@ public abstract class TestHardwareMap extends OpMode {
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    double handpos = 0.5;
 
     // Encoders
     double lfEncAdj = 0.0, lbEncAdj = 0.0, rfEncAdj = 0.0, rbEncAdj = 0.0;
@@ -89,6 +91,7 @@ public abstract class TestHardwareMap extends OpMode {
     String pictograph = null;
     public I2cDeviceSynch range1Reader;
     public I2cDeviceSynch range2Reader;
+    public DigitalChannel limitSwitch;
     public byte[] range1Cache;
     //public byte[] range2Cache;
     public double range1Value;
@@ -157,6 +160,7 @@ public abstract class TestHardwareMap extends OpMode {
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
 
+
         //sensors
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
@@ -168,6 +172,8 @@ public abstract class TestHardwareMap extends OpMode {
         //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
         range1Reader.engage();
         //range2Reader.engage();
+        limitSwitch = hardwareMap.digitalChannel.get("LS");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
 
         if (auto) {
