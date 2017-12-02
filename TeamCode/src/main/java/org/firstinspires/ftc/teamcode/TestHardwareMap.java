@@ -108,6 +108,11 @@ public abstract class TestHardwareMap extends OpMode {
     double twoago = 0;
     double onesec = -1;
     double oldxPos = 0;
+    boolean firstEdge = false;
+    boolean secondEdge = false;
+    boolean thirdEdge = false;
+    boolean fourthEdge = false;
+    boolean touchingEdge = false;
 
     @Override
     public void init(){

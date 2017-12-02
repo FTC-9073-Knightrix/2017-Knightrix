@@ -97,13 +97,6 @@ public class TrigTest extends TestHardwareMap{
             pickup2.setPosition(Range.clip( 0.3 + ((gamepad2.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
         }
 
-        if (gamepad1.x) {
-            switchServo.setPosition(0.6);
-        }
-        else {
-            switchServo.setPosition(0);
-        }
-
         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
        // if (gamepad2.left_bumper) {hand.setPosition(0.55);}
        // else {hand.setPosition(0.5);}
@@ -198,8 +191,7 @@ public class TrigTest extends TestHardwareMap{
             handpos = 0.5;
         }
         hand.setPosition(handpos);
-
-
+      
         if(gamepad2.x){
             armpos = 0.45;
         }

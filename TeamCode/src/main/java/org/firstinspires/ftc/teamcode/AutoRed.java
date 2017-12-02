@@ -189,7 +189,7 @@ public class AutoRed extends TestHardwareMap {
                 }
             }
         }
-        else if (state == 10) {//left
+        /*else if (state == 10) {//left
             if (range1Value < 86) {
                 mech_move(90,(float)0.5,0);
 //                strafe(-0.3);
@@ -207,14 +207,60 @@ public class AutoRed extends TestHardwareMap {
                 state = 13; // Pushes block forward
                 timer = getRuntime();
             }
+        }*/
+        else if (state == 10) { //left
+            if (fourthEdge) {
+                state = 13;
+                timer = getRuntime();
+            }
+            else if (thirdEdge) {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else if (secondEdge) {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else if (firstEdge) {
+                if (limitSwitch.getState()) {
+                    touchingEdge = false;
+                    mech_move(90,(float)0.5,0);
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    secondEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    firstEdge = true;
+                    touchingEdge = true;
+                }
+            }
         }
-        else if (state == 11) {//center
+        /*else if (state == 11) {//center
             if (range1Value < 69) {
                 mech_move(90,(float)0.5,0);
 //                strafe(-0.3);
             }
             else {
-                state = 11.5; // Pushes block forward
+                state = 11.5; //center
             }
         }
         else if (state == 11.5) {//center
@@ -226,24 +272,86 @@ public class AutoRed extends TestHardwareMap {
                 state = 13; // Pushes block forward
                 timer = getRuntime();
             }
+        }*/
+        else if (state == 11) { //center
+            if (thirdEdge) {
+                state = 13;
+                timer = getRuntime();
+            }
+            else if (secondEdge) {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else if (firstEdge) {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
         }
-        else if (state == 12) {
+        /*else if (state == 12) {//right
             if (range1Value < 51) {
                 mech_move(90,(float)0.5,0);
 //                strafe(-0.3);
             }
             else {
-                state = 12.5; // Pushes block forward
+                state = 12.5; // right
             }
         }
         else if (state == 12.5) {
-            if (range1Value > 51) {
+            if (range1Value > 51) {//right
                 mech_move(90,(float)-0.35,0);
 //                strafe(-0.3);
             }
             else {
                 state = 13; // Pushes block forward
                 timer = getRuntime();
+            }
+        }*/
+        else if (state == 12) { //right
+            if (secondEdge) {
+                state = 13;
+                timer = getRuntime();
+            }
+            else if (firstEdge) {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
+            }
+            else {
+                if (limitSwitch.getState()) {
+                    mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
+                }
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
+                }
             }
         }
         // Moves forward with the block
