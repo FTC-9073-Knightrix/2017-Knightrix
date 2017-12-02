@@ -54,8 +54,8 @@ public abstract class TestHardwareMap extends OpMode {
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    double armpos = 0.5;
     double handpos = 0.5;
-
     // Encoders
     double lfEncAdj = 0.0, lbEncAdj = 0.0, rfEncAdj = 0.0, rbEncAdj = 0.0;
     double xPos = 0, yPos=0, rotPos = 0;
