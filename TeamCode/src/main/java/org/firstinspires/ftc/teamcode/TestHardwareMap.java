@@ -42,6 +42,7 @@ public abstract class TestHardwareMap extends OpMode {
     Servo hand;
     Servo side;
     Servo arm;
+    Servo switchServo;
     ColorSensor color1;
     I2cDevice range1;
     //I2cDevice range2;
@@ -107,6 +108,10 @@ public abstract class TestHardwareMap extends OpMode {
     double twoago = 0;
     double onesec = -1;
     double oldxPos = 0;
+    boolean firstEdge = false;
+    boolean secondEdge = false;
+    boolean thirdEdge = false;
+    boolean fourthEdge = false;
 
     @Override
     public void init(){
@@ -159,6 +164,7 @@ public abstract class TestHardwareMap extends OpMode {
         //hand.setPosition(0.5);
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
+        switchServo = hardwareMap.servo.get("SS");
 
 
         //sensors
