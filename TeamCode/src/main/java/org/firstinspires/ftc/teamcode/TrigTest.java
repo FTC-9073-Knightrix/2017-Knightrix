@@ -205,10 +205,10 @@ public class TrigTest extends TestHardwareMap{
         }
         arm.setPosition(armpos);
 
-        /*if (!limitSwitch.getState()) {
+        if (!limitSwitch.getState()) {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-        }*/
+        }
 
 
 
