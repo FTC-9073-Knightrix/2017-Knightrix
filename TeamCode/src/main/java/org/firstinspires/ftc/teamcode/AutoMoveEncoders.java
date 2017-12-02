@@ -104,14 +104,46 @@ public class AutoMoveEncoders extends TestHardwareMap {
         //move forwards 3000 Encoders counts / about 90 cm / 35 inches
         else if (state == 4) {
             // Move Forwards 3000 clicks / about xx cm / 35 inches
-            if (AutoFrontBack(3000,0.4)) {
+            if (AutoFrontBack(1500,0.4)) { //1500 = 18 inches
                 // Get Starting position of the 4 encoders
                 lfEncStart =  lfEnc   ;
                 lbEncStart =  lbEnc   ;
                 rfEncStart =  rfEnc   ;
                 rbEncStart =  rbEnc   ;
-                state++;
-                state++;
+                state=4.1;
+            }
+        }
+        else if (state == 4.1) {
+            // Move Right 1500 clicks / about xx cm / 35 inches
+            if (AutoRightLeft(1500,0.4)) { //1500 = 18 inches
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state=4.2;
+            }
+        }
+        else if (state == 4.2) {
+            // Move Backwards 1500 clicks / about xx cm / 35 inches
+            if (AutoFrontBack(1500,-0.4)) { //1500 = 18 inches
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state=4.3;
+            }
+        }
+        else if (state == 4.3) {
+            // Move Left 1500 clicks / about xx cm / 35 inches
+            if (AutoRightLeft(1500,-0.4)) { //1500 = 18 inches
+                // Get Starting position of the 4 encoders
+                lfEncStart =  lfEnc   ;
+                lbEncStart =  lbEnc   ;
+                rfEncStart =  rfEnc   ;
+                rbEncStart =  rbEnc   ;
+                state=9;
             }
         }
 
