@@ -81,12 +81,12 @@ public class TrigTest extends TestHardwareMap{
 
         // Right Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
-        /*if (gamepad1.right_trigger > 0) {
+        if (gamepad1.right_trigger > 0) {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
-        }*/
+        }
 
         // Left Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
@@ -99,8 +99,8 @@ public class TrigTest extends TestHardwareMap{
 
 
         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
-        if (gamepad2.left_bumper) {hand.setPosition(0.55);}
-        else {hand.setPosition(0.5);}
+       // if (gamepad2.left_bumper) {hand.setPosition(0.55);}
+       // else {hand.setPosition(0.5);}
 
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
         side.setPosition(1);
@@ -181,31 +181,37 @@ public class TrigTest extends TestHardwareMap{
         }*/
 
 
-        // Close and open continuous servo
-        if (gamepad2.a) {
-            //hand.setPosition(hand.getPosition() - 0.01);
-            handpos = 0.45;
-            //  pickup1.setPosition(0.53)
+        // Close and open continuous servo HAND = ELBOW
+        if (gamepad2.left_bumper) {
+            handpos = 0.40;
             }
-        else if (gamepad2.b) {
-            //hand.setPosition(hand.getPosition() + 0.01);
+        else if (gamepad2.right_bumper) {
             handpos = 0.60;
-//            pickup1.setPosition(0.48);
         }
         else{
             handpos = 0.5;
         }
-        pickup1.setPosition(handpos);
         hand.setPosition(handpos);
 
-        if (!limitSwitch.getState()) {
+
+        if(gamepad2.x){
+            armpos = 0.45;
+        }
+        else if(gamepad2.y){
+            armpos = 0.60;
+        }
+        else{
+            armpos = 0.5;
+        }
+        arm.setPosition(armpos);
+
+        /*if (!limitSwitch.getState()) {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-        }
+        }*/
 
 
 
-        //arm.setPosition(0.5);
         telemetry.addLine("" + pickup1.getPosition());
         telemetry.addLine("handpos" + handpos);
         telemetry.addLine("LS toString(): " + limitSwitch.toString());
