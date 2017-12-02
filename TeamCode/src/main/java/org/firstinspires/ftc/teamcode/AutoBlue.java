@@ -180,33 +180,41 @@ public class AutoBlue extends TestHardwareMap {
             else if (thirdEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    fourthEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else if (secondEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
+                else if (!limitSwitch.getState() && !touchingEdge){
                     thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else if (firstEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    secondEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    firstEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
         }
@@ -229,25 +237,31 @@ public class AutoBlue extends TestHardwareMap {
             else if (secondEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
+                else if (!limitSwitch.getState() && !touchingEdge){
                     thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else if (firstEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    secondEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    firstEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
         }
@@ -272,17 +286,21 @@ public class AutoBlue extends TestHardwareMap {
             else if (firstEdge) {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    secondEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
             else {
                 if (limitSwitch.getState()) {
                     mech_move(90,(float)0.5,0);
+                    touchingEdge = false;
                 }
-                else {
-                    firstEdge = true;
+                else if (!limitSwitch.getState() && !touchingEdge){
+                    thirdEdge = true;
+                    touchingEdge = true;
                 }
             }
         }
