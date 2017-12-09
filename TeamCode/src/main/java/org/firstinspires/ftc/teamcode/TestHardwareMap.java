@@ -39,9 +39,9 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor armMotor;
     Servo pickup1;
     Servo pickup2;
-    Servo hand;
-    Servo side;
-    Servo arm;
+    Servo side; // Color Sensor
+    Servo hand; // Relic pickup
+    Servo arm;  // Relic pickup
     Servo switchServo;
     ColorSensor color1;
     I2cDevice range1;
