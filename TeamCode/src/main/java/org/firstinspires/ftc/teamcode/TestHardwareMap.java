@@ -42,6 +42,7 @@ public abstract class TestHardwareMap extends OpMode {
     Servo hand;
     Servo side;
     Servo arm;
+    Servo switchServo;
     ColorSensor color1;
     I2cDevice range1;
     //I2cDevice range2;
@@ -107,6 +108,11 @@ public abstract class TestHardwareMap extends OpMode {
     double twoago = 0;
     double onesec = -1;
     double oldxPos = 0;
+    boolean firstEdge = false;
+    boolean secondEdge = false;
+    boolean thirdEdge = false;
+    boolean fourthEdge = false;
+    boolean touchingEdge = false;
 
     @Override
     public void init(){
@@ -159,6 +165,7 @@ public abstract class TestHardwareMap extends OpMode {
         //hand.setPosition(0.5);
         arm = hardwareMap.servo.get("arm");
         //arm.setPosition(0);
+        switchServo = hardwareMap.servo.get("SS");
 
 
         //sensors
@@ -234,6 +241,66 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
+    boolean AutoRightLeft ( double MyDistance, double MyPower) {
+        if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+            // Calculates counters
+            twoago = oneago;
+            oneago = Math.abs(lfEnc)+Math.abs(lbEnc)+Math.abs(rfEnc)+Math.abs(rbEnc);
+
+            double[] MotorOnTarget = {0,0,0,0};
+
+            // Calculates movement from prior position
+            double lfEncVar = Math.abs(lfEnc-lfEncStart);
+            double lbEncVar = Math.abs(lbEnc-lbEncStart);
+            double rfEncVar = Math.abs(rfEnc-rfEncStart);
+            double rbEncVar = Math.abs(rbEnc-rbEncStart);
+            double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
+            if (MaxValue == 0) {MaxValue = 1;} // To ensure there is no div/0
+
+            // Direction        LF  RF  |   LF  RF
+            //                  LB  RB  |   LB  RB
+            //
+            // Forward/Back     1   -1  |   -1  1
+            // Forward/Back     1   -1  |   -1  1
+            //
+            // Right/Left       1   1   |   -1  -1
+            // Right/Left       -1  -1  |   1   1
+
+
+            if (lfEncVar <  MyDistance) {LeftFrontDrive.setPower(MyPower  * MaxValue / (lfEncVar + 1));} else {
+                LeftFrontDrive.setPower(0);
+                MotorOnTarget[0] = 1;
+            }
+            if (lbEncVar <  MyDistance) {LeftBackDrive.setPower(-MyPower   * MaxValue / (lbEncVar +1)); } else {
+                LeftBackDrive.setPower(0);
+                MotorOnTarget[1] = 1;
+            }
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / (rfEncVar+1)); } else {
+                RightFrontDrive.setPower(0);
+                MotorOnTarget[2] = 1;
+            }
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+                RightBackDrive.setPower(0);
+                MotorOnTarget[3] = 1;
+            }
+
+            if (oneago != twoago) { // Motors moving
+                onesec = getRuntime();
+            } else { // Motors NOT moving
+                if ((getRuntime()-onesec) > 1)  { // More than one second stalling
+                    return true;
+                }
+            }
+            if (MotorOnTarget[0]+MotorOnTarget[1]+MotorOnTarget[2]+MotorOnTarget[3] == 4) {return true;}
+            else {return false;}
+
+        }
+        else {
+            return false;
+        }
+    }
+
+
     boolean AutoFrontBack (double MyDistance, double MyPower) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
 
@@ -254,6 +321,14 @@ public abstract class TestHardwareMap extends OpMode {
             double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
             if (MaxValue == 0) {MaxValue = 1;}
 
+            // Direction        LF  RF  |   LF  RF
+            //                  LB  RB  |   LB  RB
+            //
+            // Forward/Back     1   -1  |   -1  1
+            // Forward/Back     1   -1  |   -1  1
+            //
+            // Right/Left       1   1   |   -1  -1
+            // Right/Left       -1  -1  |   1   1
             if (lfEncVar <  MyDistance) {LeftFrontDrive.setPower(MyPower  * MaxValue / (lfEncVar + 1));} else {
                 LeftFrontDrive.setPower(0);
                 MotorOnTarget[0] = 1;
