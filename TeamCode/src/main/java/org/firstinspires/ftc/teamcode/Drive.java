@@ -131,8 +131,8 @@ public class Drive extends TestHardwareMap{
         // Change Left/Right Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if(left) {armMotor.setPower(-0.4);}
-        else if(right) {armMotor.setPower(0.4);}
+        if(left) {armMotor.setPower(-0.4);}         // IN
+        else if(right) {armMotor.setPower(0.6);}    // OUT
         else {armMotor.setPower(0);}
         // ------------------  END  -----------------------------
 
@@ -328,23 +328,25 @@ public class Drive extends TestHardwareMap{
         // ------------------  END  -----------------------------
 
 
-        telemetry.addLine("" + switchServo.getPosition());
+        telemetry.addLine("SS: " + switchServo.getPosition());
         telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
-        /*telemetry.addLine("angle = " + myangle);
+        telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
         telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
         telemetry.addLine("Side: " + side.getPosition());
-        telemetry.addLine("gyro z = " + orientation.firstAngle);
-        telemetry.addLine("new 0: " + gyroResetValue);
-        telemetry.addLine("gyro x = " + orientation.secondAngle);
-        telemetry.addLine("gyro y = " + orientation.thirdAngle);
+        telemetry.addLine("Hand: " + hand.getPosition());
+        telemetry.addLine("Arm: " + arm.getPosition());
+        //telemetry.addLine("gyro z = " + orientation.firstAngle);
+        //telemetry.addLine("new 0: " + gyroResetValue);
+        //telemetry.addLine("gyro x = " + orientation.secondAngle);
+        //telemetry.addLine("gyro y = " + orientation.thirdAngle);
         telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");*/
+        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
 
     }
