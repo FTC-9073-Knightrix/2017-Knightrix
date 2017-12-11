@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
@@ -37,6 +38,7 @@ public class Drive extends TestHardwareMap{
     // Send telemetry message to signify robot waiting;
 //        telemetry.addData("Say", "Hello Driver");    //
 //    }
+
 
 
 
@@ -314,6 +316,18 @@ public class Drive extends TestHardwareMap{
         arm.setPosition(armpos);
         // ------------------  END  -----------------------------
 
+        // --------------- DESCRIPTION --------------------------
+        // Moves Switch Servo
+        // Switch Servo for the switch that discovers columns
+        // ------------------ START -----------------------------
+        if(gamepad2.b){ // Down
+            switchServo.setPosition(0.9);
+        }
+        else{
+            switchServo.setPosition(0.2);
+        }
+        // ------------------  END  -----------------------------
+
 
         // --------------- DESCRIPTION --------------------------
         // Validates column Switch
@@ -342,6 +356,9 @@ public class Drive extends TestHardwareMap{
         //telemetry.addLine("new 0: " + gyroResetValue);
         //telemetry.addLine("gyro x = " + orientation.secondAngle);
         //telemetry.addLine("gyro y = " + orientation.thirdAngle);
+        //Range Sensor
+        telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
+
         telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
