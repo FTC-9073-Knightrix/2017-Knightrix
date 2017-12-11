@@ -48,6 +48,8 @@ public class TrigTest extends TestHardwareMap{
     @Override
     public void loop() {
 
+        switchServo.setPosition(0);
+
         if (gamepad1.dpad_up) {
             upclaw = gamepad1.dpad_up;
         }
@@ -181,10 +183,10 @@ public class TrigTest extends TestHardwareMap{
 
 
         // Close and open continuous servo HAND = ELBOW
-        if (gamepad2.left_bumper) {
+        if (gamepad2.right_bumper) {
             handpos = 0.40;
             }
-        else if (gamepad2.right_bumper) {
+        else if (gamepad2.left_bumper) {
             handpos = 0.60;
         }
         else{
@@ -210,9 +212,11 @@ public class TrigTest extends TestHardwareMap{
             }
         }
 
-        telemetry.addLine("" + switchServo.getPosition());
+        telemetry.addLine("Encoder wheel frontleft: " + LeftFrontDrive.getCurrentPosition());
+        telemetry.addLine("Range front: " + range1Value);
+        /*telemetry.addLine("" + switchServo.getPosition());
         telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
-        /*telemetry.addLine("angle = " + myangle);
+        telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
