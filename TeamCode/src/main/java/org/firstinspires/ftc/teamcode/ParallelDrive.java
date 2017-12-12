@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
@@ -35,18 +36,19 @@ public class ParallelDrive extends TestHardwareMap{
         if(state == 1){
             timer2 = getRuntime() - timer;
             if(timer2 >= 10) {
-                if (range1Value < 15 && range1Value > 30) {
+                if (range1.getDistance(DistanceUnit.CM)< 15 && range1.getDistance(DistanceUnit.CM) > 17) {
                     mech_move(90, (float) 0.5, 0);
                     angle = orientation.firstAngle;
                     mydist = 90 - (float) angle;
-                    if (angle < 90 || angle > 90) {
+                    if (angle < 87 || angle > 93) {
                         mech_move(90, (float) 0.5, mydist);
-                    } else {
+                    }
+                    else{
                         mech_move(90, (float) 0.5, 0);
                     }
 
                 } else {
-                    mech_move(90, (float) 0.5, 0);
+                    mech_move(0, (float) 0.2, 0);
                 }
             }
             else{
