@@ -54,6 +54,7 @@ public abstract class TestHardwareMap extends OpMode {
 
     //Variables
     float myangle = 0;
+    float myangleright = 0;
     float mypower = 0;
     float myrot = 0;
     double armpos = 0.5;
@@ -74,6 +75,8 @@ public abstract class TestHardwareMap extends OpMode {
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
+    double rightstick_x = 0;
+    double rightstick_y = 0;
     double state = 0;
     // Time Variables
     double timer = 0;
