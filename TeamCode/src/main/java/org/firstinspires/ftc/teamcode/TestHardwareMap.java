@@ -55,6 +55,7 @@ public abstract class TestHardwareMap extends OpMode {
     float myangle = 0;
     float mypower = 0;
     float myrot = 0;
+    float mydist = 0;
     double armpos = 0.5;
     double handpos = 0.5;
     // Encoders
@@ -225,7 +226,7 @@ public abstract class TestHardwareMap extends OpMode {
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
                 LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+                LeftBackDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
                 RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
                 RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
