@@ -30,7 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 public abstract class TestHardwareMap extends OpMode {
-// Remove Hardware Section
+    // Remove Hardware Section
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
@@ -39,12 +39,13 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor armMotor;
     Servo pickup1;
     Servo pickup2;
-    Servo hand;
-    Servo side;
-    Servo arm;
+    Servo side; // Color Sensor
+    Servo hand; // Relic pickup
+    Servo arm;  // Relic pickup
     Servo switchServo;
     ColorSensor color1;
-    I2cDevice range1;
+    ModernRoboticsI2cRangeSensor range1;
+    //    I2cDevice range1;
     //I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -53,7 +54,6 @@ public abstract class TestHardwareMap extends OpMode {
 
     //Variables
     float myangle = 0;
-    float myangleright = 0;
     float mypower = 0;
     float myrot = 0;
     double armpos = 0.5;
@@ -74,8 +74,6 @@ public abstract class TestHardwareMap extends OpMode {
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
-    double rightstick_x = 0;
-    double rightstick_y = 0;
     double state = 0;
     // Time Variables
     double timer = 0;
@@ -176,12 +174,17 @@ public abstract class TestHardwareMap extends OpMode {
         gyro = (IntegratingGyroscope) navxGyro;
         color1 = hardwareMap.colorSensor.get("C1");
         color1.enableLed(true);
-        range1 = hardwareMap.i2cDevice.get("R1");
-        //range2 = hardwareMap.i2cDevice.get("R2");
-        range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x16), false);
-        //range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
-        range1Reader.engage();
-        //range2Reader.engage();
+
+        // Range Sensor
+        range1 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "R1");
+        // Old Range Sensor Code
+        //    range1 = hardwareMap.i2cDevice.get("R1");
+        //    range2 = hardwareMap.i2cDevice.get("R2");
+        //    range1Reader = new I2cDeviceSynchImpl(range1, I2cAddr.create8bit(0x16), false);
+        //    range2Reader = new I2cDeviceSynchImpl(range2, I2cAddr.create8bit(0x28), false);
+        //    range1Reader.engage();
+        //    range2Reader.engage();
+
         limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
@@ -227,14 +230,14 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
-    
+
     void move (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             LeftFrontDrive.setPower(power);
