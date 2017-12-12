@@ -83,21 +83,13 @@ public class TrigTest extends TestHardwareMap{
 
         // Right Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
-        if (gamepad1.right_trigger > 0) {
-            pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
-        }
-        else {
-            pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
-        }
+        pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
+
 
         // Left Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
-        if (gamepad1.left_trigger > 0) {
-            pickup2.setPosition(Range.clip( 0.3 + ((gamepad1.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
-        }
-        else {
-            pickup2.setPosition(Range.clip( 0.3 + ((gamepad2.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
-        }
+        pickup2.setPosition(Range.clip( 0.3 + ((gamepad2.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
+
 
         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
        // if (gamepad2.left_bumper) {hand.setPosition(0.55);}
@@ -109,12 +101,16 @@ public class TrigTest extends TestHardwareMap{
         if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
             leftstick_x = gamepad1.left_stick_x;
             leftstick_y = -gamepad1.left_stick_y;
+            rightstick_x = gamepad1.right_stick_x;
+            rightstick_y = -gamepad1.right_stick_y;
         }
         else {
             leftstick_x = -gamepad1.left_stick_x;
             leftstick_y = gamepad1.left_stick_y;
+            rightstick_x = -gamepad1.right_stick_x;
+            rightstick_y = gamepad1.right_stick_y;
         }
-        float myrot = gamepad1.right_stick_x/2;
+        float myrot = (gamepad1.right_trigger - gamepad1.left_trigger)/2;
 
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         double gyroDegrees = orientation.firstAngle - gyroResetValue;
@@ -162,6 +158,30 @@ public class TrigTest extends TestHardwareMap{
         else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
             myangle = (float) 270;
 
+        if (rightstick_x > 0 && rightstick_y < 0) {//quadrant up/right
+            myangleright = (float) (90 + Math.toDegrees(Math.atan(rightstick_y / rightstick_x))); //90 to 0
+        }
+        else if (rightstick_x > 0 && rightstick_y > 0) {//quadrant down/right
+            myangleright = (float) (90 + Math.toDegrees(Math.atan(rightstick_y / rightstick_x))); //180 to 90}
+        }
+        else if(rightstick_x < 0 && rightstick_y > 0) {//quadrant down/left
+            myangleright = (float) (270 + Math.toDegrees(Math.atan(rightstick_y / rightstick_x))); //360-270
+        }
+        else if(rightstick_x < 0 && rightstick_y < 0) { //quadrant up/left
+            myangleright = (float) (270 + Math.toDegrees(Math.atan(rightstick_y / rightstick_x))); //270-180
+        }
+        else if(rightstick_x == 0 && rightstick_y == 0) //(0,0)
+            myangleright = (float) 0;
+        else if(rightstick_x == 0 && rightstick_y < 0) //(0,-1)
+            myangleright = (float) 0;
+        else if(rightstick_x > 0  && rightstick_y == 0) //(1,0)
+            myangleright = (float) 90;
+        else if(rightstick_x == 0 && rightstick_y > 0) //(0,1)
+            myangleright = (float) 180;
+        else if(rightstick_x < 0 && rightstick_y == 0) //(-1,0)
+            myangleright = (float) 270;
+
+        turn(1,myangleright);
 
         mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
 
