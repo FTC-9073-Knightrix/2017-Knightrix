@@ -30,7 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 public abstract class TestHardwareMap extends OpMode {
-// Remove Hardware Section
+    // Remove Hardware Section
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
@@ -45,7 +45,7 @@ public abstract class TestHardwareMap extends OpMode {
     Servo switchServo;
     ColorSensor color1;
     ModernRoboticsI2cRangeSensor range1;
-//    I2cDevice range1;
+    //    I2cDevice range1;
     //I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -54,7 +54,6 @@ public abstract class TestHardwareMap extends OpMode {
 
     //Variables
     float myangle = 0;
-    float myangleright = 0;
     float mypower = 0;
     float myrot = 0;
     double armpos = 0.5;
@@ -75,8 +74,6 @@ public abstract class TestHardwareMap extends OpMode {
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
-    double rightstick_x = 0;
-    double rightstick_y = 0;
     double state = 0;
     // Time Variables
     double timer = 0;
@@ -233,14 +230,14 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
-    
+
     void move (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             LeftFrontDrive.setPower(power);
