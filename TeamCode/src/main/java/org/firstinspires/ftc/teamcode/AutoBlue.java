@@ -30,6 +30,19 @@ public class AutoBlue extends TestHardwareMap {
     public void loop() {
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
+        // Get position of the 4 encoders
+        lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+        lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+        rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+        rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+        double MaxValue = Math.max(Math.max(Math.abs(lfEnc-lfEncStart),Math.abs(lbEnc-lbEncStart)),Math.max(Math.abs(rfEnc-rfEncStart),Math.abs(rbEnc-rbEncStart)));
+        if (MaxValue == 0) {MaxValue = 1;}
+
+        // Determines the X-Y-Rotation position of the robot
+        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+
         // START
         // DOWN Claw
         if (state == 0) {
@@ -87,7 +100,7 @@ public class AutoBlue extends TestHardwareMap {
                 angle = orientation.firstAngle;
                 //start_angle = angle;
             } else {
-                move(0.1);
+                move(0.15);
             }
         }
         // Turns Left
@@ -104,7 +117,7 @@ public class AutoBlue extends TestHardwareMap {
             turn(0.2, 0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
             if (turn(0.2, 0)) {
-                state = 9;
+                state = 8.1;
                 timer = getRuntime();
             }
         }
@@ -120,31 +133,31 @@ public class AutoBlue extends TestHardwareMap {
             turn(0.2, 0); // Positive value, turns right; Negative turns LEFT
             side.setPosition(1); // Move side UP
             if (turn(0.2, 0)) {
-                state++;
-                timer = getRuntime();
+                state = 8.1;
+                lfEncStart =  lfEnc;
+                lbEncStart =  lbEnc;
+                rfEncStart =  rfEnc;
+                rbEncStart =  rbEnc;
             }
         }
         else if (state == 8.1) {
-            if (range1Value < 100) {
-                mech_move(-90, (float) -0.5, 0);
-            }
-            else {
+            if (AutoRightLeft(3900,-0.4)) {
                 state = 8.2;
             }
         }
         else if (state == 8.2) {
             turn(0.2, 180);
             if (turn(0.2, 180)) {
-                timer = getRuntime();
                 state = 9;
+                lfEncStart =  lfEnc;
+                lbEncStart =  lbEnc;
+                rfEncStart =  rfEnc;
+                rbEncStart =  rbEnc;
             }
         }
         else if (state == 9) {
-            timer2 = getRuntime() - timer;
-            if (timer2 < 0.9) {
-                move(0.5);
-            }
-            else {
+            switchServo.setPosition(0.6);
+            if (AutoFrontBack(2250,0.4)) {
                 if (pictograph == null) {
                     state = 11;
                 }
@@ -157,6 +170,10 @@ public class AutoBlue extends TestHardwareMap {
                 else if (pictograph.equals("right")) {
                     state = 10;
                 }
+                lfEncStart =  lfEnc;
+                lbEncStart =  lbEnc;
+                rfEncStart =  rfEnc;
+                rbEncStart =  rbEnc;
             }
         }
         /*else if (state == 10) {//left
@@ -175,6 +192,7 @@ public class AutoBlue extends TestHardwareMap {
         else if (state == 10) { //left
             if (fourthEdge) {
                 state = 13;
+                switchServo.setPosition(0);
                 timer = getRuntime();
             }
             else if (thirdEdge) {
@@ -232,6 +250,7 @@ public class AutoBlue extends TestHardwareMap {
         else if (state == 11) { //center
             if (thirdEdge) {
                 state = 13;
+                switchServo.setPosition(0);
                 timer = getRuntime();
             }
             else if (secondEdge) {
@@ -281,6 +300,7 @@ public class AutoBlue extends TestHardwareMap {
         else if (state == 12) { //right
             if (secondEdge) {
                 state = 13;
+                switchServo.setPosition(0);
                 timer = getRuntime();
             }
             else if (firstEdge) {
@@ -306,6 +326,7 @@ public class AutoBlue extends TestHardwareMap {
         }
         else if (state == 13) {
             timer2 = getRuntime() - timer;
+            switchServo.setPosition(0);
             if (timer2 < 0.4) {
                 move(0.3);
             }
