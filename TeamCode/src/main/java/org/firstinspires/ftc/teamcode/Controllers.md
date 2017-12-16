@@ -15,8 +15,12 @@
 |x||
 |select||
 |start||
-|left stick|driving|
-|right stick|turning|
+|left stick up|drive forwards|
+|left stick down|drive back|
+|left stick right|drive right|
+|left stick left|drive left|
+|right stick right|turn right|
+|right stick left|turn left|
 |right trigger|pickup 1|
 |left trigger|pickup 2|
 |right bumper||
@@ -29,16 +33,22 @@
 |:-------------:|:-------------:|
 |dpad up|up pickup|
 |dpad down|down pickup|
-|dpad left|arm left|
-|dpad right|arm right|
+|dpad left||
+|dpad right||
 |y|arm servo|
 |b||
 |a||
 |x|arm servo|
 |select||
 |start||
-|left stick||
-|right stick||
+|left stick up|arm out|
+|left stick down|arm back|
+|left stick right||
+|left stick left||
+|right stick up||
+|right stick down||
+|right stick left|turn slowly left|
+|right stick right|turn slowly left|
 |right trigger|pickup 1|
 |left trigger|pickup 2|
 |right bumper|hand|

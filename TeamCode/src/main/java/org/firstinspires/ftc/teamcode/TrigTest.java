@@ -60,18 +60,6 @@ public class TrigTest extends TestHardwareMap{
         else {
             downclaw = gamepad2.dpad_down;
         }
-        if (gamepad1.dpad_left) {
-            left = gamepad1.dpad_left;
-        }
-        else {
-            left = gamepad2.dpad_left;
-        }
-        if (gamepad1.dpad_right) {
-            right = gamepad1.dpad_right;
-        }
-        else {
-            right = gamepad2.dpad_right;
-        }
 
         // Configure value for the side
         // Default position is DOWN
@@ -112,7 +100,13 @@ public class TrigTest extends TestHardwareMap{
             leftstick_x = -gamepad1.left_stick_x;
             leftstick_y = gamepad1.left_stick_y;
         }
-        float myrot = gamepad1.right_stick_x/2;
+
+        if (gamepad2.right_stick_x != 0) {
+            myrot = gamepad2.right_stick_x / 5;
+        }
+        else {
+            myrot = gamepad1.right_stick_x;
+        }
 
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         double gyroDegrees = orientation.firstAngle - gyroResetValue;
@@ -131,9 +125,7 @@ public class TrigTest extends TestHardwareMap{
         else {updownPower = 0;}
         updownMotor.setPower(updownPower);
 
-        if(left) {armMotor.setPower(-0.4);}
-        else if(right) {armMotor.setPower(0.4);}
-        else {armMotor.setPower(0);}
+        armMotor.setPower(0.4*gamepad2.left_stick_y);
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);

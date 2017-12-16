@@ -69,8 +69,6 @@ public abstract class TestHardwareMap extends OpMode {
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
-    boolean left = false;
-    boolean right = false;
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
