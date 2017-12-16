@@ -125,7 +125,7 @@ public class TrigTest extends TestHardwareMap{
         else {updownPower = 0;}
         updownMotor.setPower(updownPower);
 
-        armMotor.setPower(0.4*gamepad2.left_stick_y);
+        armMotor.setPower(-0.4*gamepad2.left_stick_y);
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -174,18 +174,15 @@ public class TrigTest extends TestHardwareMap{
 
         // Close and open continuous servo HAND = ELBOW
         if (gamepad2.left_bumper) {
-            handpos = 0.40;
+            handpos = 0.0;
         }
         else if (gamepad2.right_bumper) {
             handpos = 0.60;
         }
-        else{
-            handpos = 0.5;
-        }
         hand.setPosition(handpos);
 
         if(gamepad2.x){
-            armpos = 0.45;
+            armpos = 0.40;
         }
         else if(gamepad2.y){
             armpos = 0.60;
@@ -204,6 +201,7 @@ public class TrigTest extends TestHardwareMap{
 
         telemetry.addLine("" + switchServo.getPosition());
         telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
+        telemetry.addLine("Hand: " + handpos);
         /*telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);

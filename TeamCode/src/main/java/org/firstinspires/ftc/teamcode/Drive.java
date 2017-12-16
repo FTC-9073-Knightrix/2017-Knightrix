@@ -115,7 +115,7 @@ public class Drive extends TestHardwareMap{
         // Left/Right relic recovery
         // Use GamePad1 as master, GamePad2 as slave
         // ------------------ START -----------------------------
-        if (gamepad1.dpad_left) {
+        /*if (gamepad1.dpad_left) {
             left = gamepad1.dpad_left;
         }
         else {
@@ -126,16 +126,17 @@ public class Drive extends TestHardwareMap{
         }
         else {
             right = gamepad2.dpad_right;
-        }
+        }*/
         // -----------------------------------------------------
 
         // --------------- DESCRIPTION --------------------------
         // Change Left/Right Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if(left) {armMotor.setPower(-0.4);}         // IN
+        /*if(left) {armMotor.setPower(-0.4);}         // IN
         else if(right) {armMotor.setPower(0.6);}    // OUT
-        else {armMotor.setPower(0);}
+        else {armMotor.setPower(0);}*/
+        armMotor.setPower(0.4*gamepad2.left_stick_y);
         // ------------------  END  -----------------------------
 
 
