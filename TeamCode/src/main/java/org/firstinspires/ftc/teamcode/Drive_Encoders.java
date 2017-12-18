@@ -93,7 +93,7 @@ public class Drive_Encoders extends TestHardwareMap{
         else {
             downclaw = gamepad2.dpad_down;
         }
-        if (gamepad1.dpad_left) {
+        /*if (gamepad1.dpad_left) {
             left = gamepad1.dpad_left;
         }
         else {
@@ -104,7 +104,7 @@ public class Drive_Encoders extends TestHardwareMap{
         }
         else {
             right = gamepad2.dpad_right;
-        }
+        }*/
 
         // Configure value for the side
         // Default position is DOWN
@@ -165,9 +165,10 @@ public class Drive_Encoders extends TestHardwareMap{
         else {updownPower = 0;}
         updownMotor.setPower(updownPower);
 
-        if(left) {armMotor.setPower(-0.2);}
+        /*if(left) {armMotor.setPower(-0.2);}
         else if(right) {armMotor.setPower(0.2);}
-        else {armMotor.setPower(0);}
+        else {armMotor.setPower(0);}*/
+        armMotor.setPower(0.4*gamepad2.left_stick_y);
 
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
