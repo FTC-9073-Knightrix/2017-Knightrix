@@ -40,6 +40,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
@@ -47,10 +48,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -108,17 +111,96 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
+import java.io.File;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import ftc.vision.FrameGrabber;
 
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
   {
-  public static final String TAG = "RCActivity";
+    ////////////// START VISION PROCESSING CODE //////////////
+
+    // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
+    private CameraBridgeViewBase cameraBridgeViewBase;
+
+    void myOnCreate(){
+      getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+      cameraBridgeViewBase = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
+      new FrameGrabber(cameraBridgeViewBase);
+    }
+
+    //when the "Grab" button is pressed
+    public void frameButtonOnClick(View v){
+    }
+
+    void myOnPause(){
+      if (cameraBridgeViewBase != null) {
+        cameraBridgeViewBase.disableView();
+      }
+    }
+
+    void myOnResume(){
+      if (!OpenCVLoader.initDebug()) {
+        Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+      } else {
+        Log.d(TAG, "OpenCV library found inside package. Using it!");
+        mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+      }
+    }
+
+    public void myOnDestroy() {
+      if (cameraBridgeViewBase != null) {
+        cameraBridgeViewBase.disableView();
+      }
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+      @Override
+      public void onManagerConnected(int status) {
+        switch (status) {
+          case LoaderCallbackInterface.SUCCESS:
+            Log.i(TAG, "OpenCV Manager Connected");
+            //from now onwards, you can use OpenCV API
+//          Mat m = new Mat(5, 10, CvType.CV_8UC1, new Scalar(0));
+            cameraBridgeViewBase.enableView();
+            break;
+          case LoaderCallbackInterface.INIT_FAILED:
+            Log.i(TAG, "Init Failed");
+            break;
+          case LoaderCallbackInterface.INSTALL_CANCELED:
+            Log.i(TAG, "Install Cancelled");
+            break;
+          case LoaderCallbackInterface.INCOMPATIBLE_MANAGER_VERSION:
+            Log.i(TAG, "Incompatible Version");
+            break;
+          case LoaderCallbackInterface.MARKET_ERROR:
+            Log.i(TAG, "Market Error");
+            break;
+          default:
+            Log.i(TAG, "OpenCV Manager Install");
+            super.onManagerConnected(status);
+            break;
+        }
+      }
+    };
+
+    ////////////// END VISION PROCESSING CODE //////////////
+
+    public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
+  private static final int REQUEST_IMAGE_CAPTURE = 10;
   private static final int NUM_GAMEPADS = 2;
 
   protected WifiManager.WifiLock wifiLock;
@@ -153,6 +235,7 @@ public class FtcRobotControllerActivity extends Activity
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
+  public static volatile Bitmap bitmap = null;
 
   protected class RobotRestarter implements Restarter {
 
@@ -528,6 +611,10 @@ public class FtcRobotControllerActivity extends Activity
     if (request == RequestCode.CONFIGURE_ROBOT_CONTROLLER.ordinal() || request == RequestCode.SETTINGS_ROBOT_CONTROLLER.ordinal()) {
       // We always do a refresh, whether it was a cancel or an OK, for robustness
       cfgFileMgr.getActiveConfigAndUpdateUI();
+    }
+    if (request == REQUEST_IMAGE_CAPTURE && result == RESULT_OK) {
+      Bundle extras = intent.getExtras();
+      FtcRobotControllerActivity.bitmap = (Bitmap) extras.get("data");
     }
   }
 
