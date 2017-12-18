@@ -36,20 +36,32 @@ public class ParallelDrive extends TestHardwareMap{
         if(state == 1){
             timer2 = getRuntime() - timer;
             if(timer2 >= 10) {
-                if (range1.getDistance(DistanceUnit.CM)< 15 && range1.getDistance(DistanceUnit.CM) > 17) {
-                    mech_move(90, (float) 0.5, 0);
-                    angle = orientation.firstAngle;
-                    mydist = 90 - (float) angle;
-                    if (angle < 87 || angle > 93) {
-                        mech_move(90, (float) 0.5, mydist);
-                    }
-                    else{
-                        mech_move(90, (float) 0.5, 0);
-                    }
+//                if (range1.getDistance(DistanceUnit.CM)< 15 && range1.getDistance(DistanceUnit.CM) > 17) {
+//                    mech_move(90, (float) 0.5, 0);
+//                    angle = orientation.firstAngle;
+//                    mydist = 90 - (float) angle;
+//                    if (angle < 87 || angle > 93) {
+//                        mech_move(90, (float) 0.5, mydist);
+//                    }
+//                    else{
+//                        mech_move(90, (float) 0.5, 0);
+//                    }
+//
+//                } else {
+//                    mech_move(0, (float) 0.2, 0);
+//                }
+                double tilt = 90;
+                double speed = 0.5;
+                double direction = 90;
+                double distance = 16;
 
-                } else {
-                    mech_move(0, (float) 0.2, 0);
-                }
+                double range = range1.getDistance(DistanceUnit.CM);
+                angle = orientation.firstAngle;
+
+                direction = direction + (((range - distance) / distance) * 90);
+                tilt = tilt - angle;
+
+                mech_move((float) direction, (float) speed,(float) tilt);
             }
             else{
                 state++;
