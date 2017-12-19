@@ -34,7 +34,7 @@ public class ExampleBlueVision extends OpenCVPipeline {
         // is the blues listed in the specified range
 
         // Yellow:
-        Core.inRange(hsv, new Scalar(20, 100, 100), new Scalar(30, 255, 255), thresholded);
+        Core.inRange(hsv, new Scalar(15, 100, 100), new Scalar(30, 255, 255), thresholded);
         // Blue: Core.inRange(hsv, new Scalar(90, 128, 30), new Scalar(170, 255, 255), thresholded);
         // Then we display our nice little binary threshold on screen
         if (showBlue) {
