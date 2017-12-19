@@ -141,7 +141,7 @@ public class AutoBlue extends TestHardwareMap {
             }
         }
         else if (state == 8.1) {
-            if (AutoRightLeft(3900,-0.4)) {
+            if (AutoFrontBack(2250,0.4)) {
                 state = 8.2;
             }
         }
@@ -156,8 +156,8 @@ public class AutoBlue extends TestHardwareMap {
             }
         }
         else if (state == 9) {
-            switchServo.setPosition(0.6);
-            if (AutoFrontBack(2250,0.4)) {
+            if (AutoRightLeft(3900,0.4)) {
+                switchServo.setPosition(0.6);
                 if (pictograph == null) {
                     state = 11;
                 }
@@ -381,8 +381,8 @@ public class AutoBlue extends TestHardwareMap {
             }
         }
 
-        range1Cache = range1Reader.read(0x04, 2);
-        range1Value = range1Cache[0] & 0xFF;
+        //range1Cache = range1Reader.read(0x04, 2);
+        //range1Value = range1Cache[0] & 0xFF;
 
         telemetry.addLine("State: " + state);
         telemetry.addLine("start_angle = " + start_angle);
@@ -390,7 +390,7 @@ public class AutoBlue extends TestHardwareMap {
         telemetry.addLine("gyro z = " + orientation.firstAngle);
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
-        telemetry.addLine("Range = " + range1Value);
+        //telemetry.addLine("Range = " + range1Value);
         telemetry.addLine("Vuforia = " + pictograph);
     }
 }
