@@ -132,8 +132,8 @@ public class Drive_Encoders extends TestHardwareMap{
 
 
         //arm.setPosition(Range.clip(gamepad2.left_trigger,0,1));
-        if (gamepad2.left_bumper) {hand.setPosition(0.55);}
-        else {hand.setPosition(0.5);}
+        //if (gamepad2.left_bumper) {hand.setPosition(0.55);}
+        //else {hand.setPosition(0.5);}
 
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
         side.setPosition(1);

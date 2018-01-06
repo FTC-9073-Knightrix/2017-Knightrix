@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -40,8 +41,10 @@ public abstract class TestHardwareMap extends OpMode {
     Servo pickup1;
     Servo pickup2;
     Servo side; // Color Sensor
-    Servo hand; // Relic pickup
-    Servo arm;  // Relic pickup
+    //Servo hand; // Relic pickup
+    //Servo arm;  // Relic pickup
+    CRServo hand;
+    CRServo arm;
     Servo switchServo;
     ColorSensor color1;
     ModernRoboticsI2cRangeSensor range1;
@@ -78,7 +81,8 @@ public abstract class TestHardwareMap extends OpMode {
     double timer2 = 0;
     double prevtimer = 0;
     boolean auto = false;
-
+    boolean ran = false;
+    static final double ROT_MM = 3.93897638;
     /*int color1red;
     int color1green;
     int color1blue;*/
@@ -112,6 +116,7 @@ public abstract class TestHardwareMap extends OpMode {
     boolean thirdEdge = false;
     boolean fourthEdge = false;
     boolean touchingEdge = false;
+
 
     @Override
     public void init(){
@@ -147,6 +152,13 @@ public abstract class TestHardwareMap extends OpMode {
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
+            // Reset encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // Run without encoders
             LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -160,9 +172,11 @@ public abstract class TestHardwareMap extends OpMode {
         pickup2 = hardwareMap.servo.get("pickup2"); //Left
         side = hardwareMap.servo.get("side");
         //side.setPosition(1); // Set ARM up
-        hand = hardwareMap.servo.get("hand");
+        //hand = hardwareMap.servo.get("hand");
+        hand = hardwareMap.crservo.get("hand");
         //hand.setPosition(0.5);
-        arm = hardwareMap.servo.get("arm");
+        //arm = hardwareMap.servo.get("arm");
+        arm = hardwareMap.crservo.get("arm");
         //arm.setPosition(0);
         switchServo = hardwareMap.servo.get("SS");
 
