@@ -59,13 +59,14 @@ public class ParallelDrive extends TestHardwareMap{
 //                    mech_move(0, (float) 0.2, 0);
 //                }
 
+            // Update Values
+            angle = orientation.firstAngle;
+            // direction = direction + (((range - distance) / distance) * 90);
+            tilt = (angle - tilt) / 75;
 
-
-                angle = orientation.firstAngle;
-
-
-//                direction = direction + (((range - distance) / distance) * 90);
-                tilt = (angle - tilt) / 75;
+            // Update distance if robot is not at proper distance from the wall
+            if (range > (distance + 0.5)) direction = 0;   // If robot too far away, get closer
+            if (range < (distance - 0.5)) direction = 180; // If robot too close, go backwards
 
                 mech_move((float) direction, (float) speed,(float) tilt);
         }
