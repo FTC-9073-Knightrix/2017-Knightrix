@@ -43,8 +43,8 @@ public abstract class TestHardwareMap extends OpMode {
     Servo side; // Color Sensor
     Servo hand; // Relic pickup
     Servo arm;  // Relic pickup
-    CRServo LeftIntakeDrive;
-    CRServo RightIntakeDrive;
+    //CRServo LeftIntakeDrive;
+    //CRServo RightIntakeDrive;
     Servo switchServo;
     ColorSensor color1;
     ModernRoboticsI2cRangeSensor range1;
@@ -174,10 +174,10 @@ public abstract class TestHardwareMap extends OpMode {
         side = hardwareMap.servo.get("side");
         //side.setPosition(1); // Set ARM up
         hand = hardwareMap.servo.get("hand");
-        LeftIntakeDrive = hardwareMap.crservo.get("LI");
+        //LeftIntakeDrive = hardwareMap.crservo.get("LI");
         //hand.setPosition(0.5);
         arm = hardwareMap.servo.get("arm");
-        RightIntakeDrive = hardwareMap.crservo.get("RI");
+        //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
         switchServo = hardwareMap.servo.get("SS");
 

@@ -193,16 +193,16 @@ public class TrigTest extends TestHardwareMap{
         arm.setPosition(armpos);
 
         if (gamepad2.a) {
-            LeftIntakeDrive.setPower(-1);
-            RightIntakeDrive.setPower(1);
+            //LeftIntakeDrive.setPower(-1);
+            //RightIntakeDrive.setPower(1);
         }
         else if (gamepad2.b) {
-            LeftIntakeDrive.setPower(1);
-            RightIntakeDrive.setPower(-1);
+            //LeftIntakeDrive.setPower(1);
+            //RightIntakeDrive.setPower(-1);
         }
         else {
-            LeftIntakeDrive.setPower(0);
-            RightIntakeDrive.setPower(0);
+            //LeftIntakeDrive.setPower(0);
+            //RightIntakeDrive.setPower(0);
         }
 
         if (limitSwitch != null) {
