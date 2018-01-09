@@ -116,14 +116,14 @@ public class TrigTest extends TestHardwareMap{
             gyroResetValue = orientation.firstAngle;
         }
 
-        if (upclaw){
+        /*if (upclaw){
             updownPower = .8;
         }
         else if(downclaw){
             updownPower = -.8;
         }
         else {updownPower = 0;}
-        updownMotor.setPower(updownPower);
+        updownMotor.setPower(updownPower);*/
 
         armMotor.setPower(-0.4*gamepad2.left_stick_y);
 
@@ -193,16 +193,20 @@ public class TrigTest extends TestHardwareMap{
         //arm.setPosition(armpos);
 
         if (gamepad2.a) {
-            LeftIntakeDrive.setPower(-1);
-            RightIntakeDrive.setPower(1);
+            intakeBoolean = true;
         }
-        else if (gamepad2.b) {
-            LeftIntakeDrive.setPower(1);
-            RightIntakeDrive.setPower(-1);
+        if (intakeBoolean) {
+            if (intake()) {
+                intakeBoolean = false;
+            }
         }
-        else {
-            LeftIntakeDrive.setPower(0);
-            RightIntakeDrive.setPower(0);
+        if (!intakeBoolean && gamepad2.b) {
+            reverseIntakeBoolean = true;
+        }
+        if (reverseIntakeBoolean) {
+            if (reverseIntake()) {
+                reverseIntakeBoolean = false;
+            }
         }
 
         if (limitSwitch != null) {

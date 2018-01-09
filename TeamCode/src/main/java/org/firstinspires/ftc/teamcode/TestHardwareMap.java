@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -117,7 +118,11 @@ public abstract class TestHardwareMap extends OpMode {
     boolean thirdEdge = false;
     boolean fourthEdge = false;
     boolean touchingEdge = false;
-
+    int intakeSteps = 0;
+    int reverseIntakeSteps = 0;
+    double intakeTimer;
+    boolean intakeBoolean = false;
+    boolean reverseIntakeBoolean = false;
 
     @Override
     public void init(){
@@ -431,6 +436,121 @@ public abstract class TestHardwareMap extends OpMode {
             RightFrontDrive.setPower(power);
             RightBackDrive.setPower(-power);
             //add gyro adjustment
+        }
+    }
+
+    boolean intake() {
+        //Intakes block into wheels if distance greater than 3
+        if (intakeSteps == 0 && range1.getDistance(DistanceUnit.CM) > 5) {
+            LeftIntakeDrive.setPower(-1);
+            RightIntakeDrive.setPower(1);
+            intakeSteps = 1;
+            return false;
+        }
+        //Drops block if there is one
+        else if (intakeSteps == 1) {
+            LeftIntakeDrive.setPower(0);
+            RightIntakeDrive.setPower(0);
+            pickup1.setPosition(Range.clip( 0.2 + ((1)*(0.9-0.2))  , 0.2, 0.9));
+            pickup2.setPosition(Range.clip( 0.3 + ((0)*(0.95-0.3))  , 0.3, 0.95));
+            intakeTimer = getRuntime();
+            intakeSteps = 2;
+            return false;
+        }
+        //Makes pickup go down
+        else if (intakeSteps == 2) {
+            if (getRuntime() - intakeTimer < 1) {
+                updownMotor.setPower(-0.5);
+                return false;
+            }
+            //Closes pickup
+            else {
+                pickup1.setPosition(Range.clip( 0.2 + ((0)*(0.9-0.2))  , 0.2, 0.9));
+                pickup2.setPosition(Range.clip( 0.3 + ((1)*(0.95-0.3))  , 0.3, 0.95));
+                intakeTimer = getRuntime();
+                intakeSteps = 3;
+                return false;
+            }
+        }
+        //Raises pickup
+        else if (intakeSteps == 3) {
+            if (getRuntime() - intakeTimer < 1.5) {
+                updownMotor.setPower(0.5);
+                return false;
+            }
+            else {
+                intakeSteps = 4;
+                return false;
+            }
+        }
+        else {
+            intakeSteps = 0;
+            return true;
+        }
+    }
+    boolean reverseIntake() {
+        //Reset timer
+        if (reverseIntakeSteps == 0) {
+            intakeTimer = getRuntime();
+            reverseIntakeSteps = 1;
+            return false;
+        }
+        //Make pickup go down
+        else if (reverseIntakeSteps == 1) {
+            if (getRuntime() - intakeTimer < 1) {
+                updownMotor.setPower(-0.5);
+                return false;
+            }
+            else {
+                reverseIntakeSteps = 2;
+                return false;
+            }
+        }
+        //Release blocks
+        else if (reverseIntakeSteps == 2) {
+            pickup1.setPosition(Range.clip( 0.2 + ((1)*(0.9-0.2))  , 0.2, 0.9));
+            pickup2.setPosition(Range.clip( 0.3 + ((0)*(0.95-0.3))  , 0.3, 0.95));
+            reverseIntakeSteps = 3;
+            intakeTimer = getRuntime();
+            return false;
+        }
+        //Raise pickup a slight bit
+        else if (reverseIntakeSteps == 3) {
+            if (getRuntime() - intakeTimer < 0.5) {
+                updownMotor.setPower(0.5);
+                return false;
+            }
+            else {
+                pickup1.setPosition(Range.clip( 0.2 + ((0)*(0.9-0.2))  , 0.2, 0.9));
+                pickup2.setPosition(Range.clip( 0.3 + ((1)*(0.95-0.3))  , 0.3, 0.95));
+                reverseIntakeSteps = 4;
+                intakeTimer = getRuntime();
+                return false;
+            }
+        }
+        //Raise pickup to top with only one or no blocks
+        else if (reverseIntakeSteps == 4) {
+            if (getRuntime() - intakeTimer < 1) {
+                updownMotor.setPower(0.5);
+                return false;
+            }
+            else {
+                reverseIntakeSteps = 5;
+                intakeTimer = getRuntime();
+                return false;
+            }
+        }
+        //Throw out block
+        else if (range1.getDistance(DistanceUnit.CM) < 8 && reverseIntakeSteps == 5) {
+            LeftIntakeDrive.setPower(1);
+            RightIntakeDrive.setPower(-1);
+            return false;
+        }
+        else {
+            LeftIntakeDrive.setPower(0);
+            RightIntakeDrive.setPower(0);
+            reverseIntakeSteps = 0;
+            return true;
         }
     }
 
