@@ -179,18 +179,24 @@ public class TrigTest extends TestHardwareMap{
         else if (gamepad2.right_bumper) {
             handpos = 0.60;
         }
-        hand.setPosition(handpos);
+        //hand.setPosition(handpos);
 
         if(gamepad2.x){
-            armpos = 0.40;
+            //armpos = 0.40;
+            arm.setPower(1);
+            hand.setPower(-1);
         }
         else if(gamepad2.y){
-            armpos = 0.60;
+            //armpos = 0.60;
+            arm.setPower(-1);
+            hand.setPower(1);
         }
         else{
-            armpos = 0.5;
+            //armpos = 0.5;
+            arm.setPower(0);
+            hand.setPower(0);
         }
-        arm.setPosition(armpos);
+        //arm.setPosition(armpos);
 
         if (limitSwitch != null) {
             if (!limitSwitch.getState()) {

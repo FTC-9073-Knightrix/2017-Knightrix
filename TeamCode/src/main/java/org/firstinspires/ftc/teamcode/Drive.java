@@ -297,7 +297,7 @@ public class Drive extends TestHardwareMap{
         else{
             handpos = 0.5;
         }
-        hand.setPosition(handpos);
+        //hand.setPosition(handpos);
         // ------------------  END  -----------------------------
 
 
@@ -314,7 +314,7 @@ public class Drive extends TestHardwareMap{
         else{
             armpos = 0.5;
         }
-        arm.setPosition(armpos);
+        //arm.setPosition(armpos);
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -351,8 +351,8 @@ public class Drive extends TestHardwareMap{
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
         telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
         telemetry.addLine("Side: " + side.getPosition());
-        telemetry.addLine("Hand: " + hand.getPosition());
-        telemetry.addLine("Arm: " + arm.getPosition());
+        //telemetry.addLine("Hand: " + hand.getPosition());
+        //telemetry.addLine("Arm: " + arm.getPosition());
         //telemetry.addLine("gyro z = " + orientation.firstAngle);
         //telemetry.addLine("new 0: " + gyroResetValue);
         //telemetry.addLine("gyro x = " + orientation.secondAngle);
