@@ -23,10 +23,11 @@ public class ParallelDrive extends TestHardwareMap{
 
         // Set up variables
         double tilt = 0;  //adjust for direction
-        double speed = 0.5; //speed of movement
+        double speed = 0.3; //speed of movement
         double direction = 90; //desired direction 90=left;180=back ; 270=right ; 360/0=front
-        double distance = 16; //desired distance from wall
-        double range = range1.getDistance(DistanceUnit.CM); //distance
+        double distance = 16;  //desired distance from wall
+        double dist_adj = 1;   // error to adjust distance by
+        double myrange = range1.getDistance(DistanceUnit.CM); //distance
 
         // Get Gyro direction
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
@@ -65,8 +66,8 @@ public class ParallelDrive extends TestHardwareMap{
             tilt = (angle - tilt) / 75;
 
             // Update distance if robot is not at proper distance from the wall
-            if (range > (distance + 0.5)) direction = 0;   // If robot too far away, get closer
-            if (range < (distance - 0.5)) direction = 180; // If robot too close, go backwards
+            if (myrange > (distance + dist_adj)) direction = (  0 + direction*3)/4;   // If robot too far away, get closer
+            if (myrange < (distance - dist_adj)) direction = (180 + direction*3)/4;   // If robot too close, go backwards
 
                 mech_move((float) direction, (float) speed,(float) tilt);
         }
@@ -75,7 +76,7 @@ public class ParallelDrive extends TestHardwareMap{
         telemetry.addLine("tilt " + tilt);
         telemetry.addLine("direction: " + direction);
         telemetry.addLine("distance: " + distance);
-        telemetry.addLine("distance adjustment: " + ((range - distance) / distance) * 90);
+        telemetry.addLine("distance adjustment: " + ((myrange - distance) / distance) * 90);
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("Curr_angle = " + angle);
         telemetry.addLine("gyro z = " + orientation.firstAngle);
