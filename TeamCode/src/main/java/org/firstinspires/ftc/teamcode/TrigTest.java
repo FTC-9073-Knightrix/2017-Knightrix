@@ -179,24 +179,31 @@ public class TrigTest extends TestHardwareMap{
         else if (gamepad2.right_bumper) {
             handpos = 0.60;
         }
-        //hand.setPosition(handpos);
+        hand.setPosition(handpos);
 
         if(gamepad2.x){
-            //armpos = 0.40;
-            arm.setPower(1);
-            hand.setPower(-1);
+            armpos = 0.40;
         }
         else if(gamepad2.y){
-            //armpos = 0.60;
-            arm.setPower(-1);
-            hand.setPower(1);
+            armpos = 0.60;
         }
         else{
-            //armpos = 0.5;
-            arm.setPower(0);
-            hand.setPower(0);
+            armpos = 0.5;
         }
-        //arm.setPosition(armpos);
+        arm.setPosition(armpos);
+
+        if (gamepad2.a) {
+            LeftIntakeDrive.setPower(-1);
+            RightIntakeDrive.setPower(1);
+        }
+        else if (gamepad2.b) {
+            LeftIntakeDrive.setPower(1);
+            RightIntakeDrive.setPower(-1);
+        }
+        else {
+            LeftIntakeDrive.setPower(0);
+            RightIntakeDrive.setPower(0);
+        }
 
         if (limitSwitch != null) {
             if (!limitSwitch.getState()) {
@@ -223,7 +230,6 @@ public class TrigTest extends TestHardwareMap{
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");*/
-
 
         mech_move(myangle,mypower,myrot);
     }
