@@ -179,7 +179,7 @@ public class TrigTest extends TestHardwareMap{
         else if (gamepad2.right_bumper) {
             handpos = 0.60;
         }
-        hand.setPosition(handpos);
+        //hand.setPosition(handpos);
 
         if(gamepad2.x){
             armpos = 0.40;
@@ -190,7 +190,7 @@ public class TrigTest extends TestHardwareMap{
         else{
             armpos = 0.5;
         }
-        arm.setPosition(armpos);
+        //arm.setPosition(armpos);
 
         if (gamepad2.a) {
             LeftIntakeDrive.setPower(-1);
