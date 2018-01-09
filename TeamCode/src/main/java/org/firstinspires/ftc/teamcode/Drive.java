@@ -115,7 +115,8 @@ public class Drive extends TestHardwareMap{
         // Left/Right relic recovery
         // Use GamePad1 as master, GamePad2 as slave
         // ------------------ START -----------------------------
-        if (gamepad1.dpad_left) {
+
+        /*if (gamepad1.dpad_left) {
             left = gamepad1.dpad_left;
         }
         else {
@@ -126,16 +127,17 @@ public class Drive extends TestHardwareMap{
         }
         else {
             right = gamepad2.dpad_right;
-        }
+        }*/
         // -----------------------------------------------------
 
         // --------------- DESCRIPTION --------------------------
         // Change Left/Right Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if(left) {armMotor.setPower(-0.4);}         // IN
+        /*if(left) {armMotor.setPower(-0.4);}         // IN
         else if(right) {armMotor.setPower(0.6);}    // OUT
-        else {armMotor.setPower(0);}
+        else {armMotor.setPower(0);}*/
+        armMotor.setPower(0.4*gamepad2.left_stick_y); 
         // ------------------  END  -----------------------------
 
 
@@ -296,7 +298,7 @@ public class Drive extends TestHardwareMap{
         else{
             handpos = 0.5;
         }
-        hand.setPosition(handpos);
+        //hand.setPosition(handpos);
         // ------------------  END  -----------------------------
 
 
@@ -313,7 +315,7 @@ public class Drive extends TestHardwareMap{
         else{
             armpos = 0.5;
         }
-        arm.setPosition(armpos);
+        //arm.setPosition(armpos);
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -350,8 +352,8 @@ public class Drive extends TestHardwareMap{
         telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
         telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
         telemetry.addLine("Side: " + side.getPosition());
-        telemetry.addLine("Hand: " + hand.getPosition());
-        telemetry.addLine("Arm: " + arm.getPosition());
+        //telemetry.addLine("Hand: " + hand.getPosition());
+        //telemetry.addLine("Arm: " + arm.getPosition());
         //telemetry.addLine("gyro z = " + orientation.firstAngle);
         //telemetry.addLine("new 0: " + gyroResetValue);
         //telemetry.addLine("gyro x = " + orientation.secondAngle);

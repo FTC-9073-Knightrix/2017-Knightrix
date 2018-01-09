@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,7 +31,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 public abstract class TestHardwareMap extends OpMode {
-// Remove Hardware Section
+    // Remove Hardware Section
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
@@ -42,10 +43,12 @@ public abstract class TestHardwareMap extends OpMode {
     Servo side; // Color Sensor
     Servo hand; // Relic pickup
     Servo arm;  // Relic pickup
+    CRServo LeftIntakeDrive;
+    CRServo RightIntakeDrive;
     Servo switchServo;
     ColorSensor color1;
     ModernRoboticsI2cRangeSensor range1;
-//    I2cDevice range1;
+    //    I2cDevice range1;
     //I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
@@ -58,8 +61,7 @@ public abstract class TestHardwareMap extends OpMode {
     float myrot = 0;
     float mydist = 0;
     double armpos = 0.5;
-    double handpos = 0.5;
-
+    double handpos = 0.52;
     // Encoders
     double lfEncAdj = 0.0, lbEncAdj = 0.0, rfEncAdj = 0.0, rbEncAdj = 0.0;
     double xPos = 0, yPos=0, rotPos = 0;
@@ -71,8 +73,6 @@ public abstract class TestHardwareMap extends OpMode {
     double updownPower;
     boolean upclaw = false;
     boolean downclaw = false;
-    boolean left = false;
-    boolean right = false;
     double gyroResetValue = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
@@ -82,7 +82,8 @@ public abstract class TestHardwareMap extends OpMode {
     double timer2 = 0;
     double prevtimer = 0;
     boolean auto = false;
-
+    boolean ran = false;
+    static final double ROT_MM = 3.93897638;
     /*int color1red;
     int color1green;
     int color1blue;*/
@@ -116,6 +117,7 @@ public abstract class TestHardwareMap extends OpMode {
     boolean thirdEdge = false;
     boolean fourthEdge = false;
     boolean touchingEdge = false;
+
 
     @Override
     public void init(){
@@ -151,6 +153,13 @@ public abstract class TestHardwareMap extends OpMode {
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
+            // Reset encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // Run without encoders
             LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -165,8 +174,10 @@ public abstract class TestHardwareMap extends OpMode {
         side = hardwareMap.servo.get("side");
         //side.setPosition(1); // Set ARM up
         hand = hardwareMap.servo.get("hand");
+        LeftIntakeDrive = hardwareMap.crservo.get("LI");
         //hand.setPosition(0.5);
         arm = hardwareMap.servo.get("arm");
+        RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
         switchServo = hardwareMap.servo.get("SS");
 
@@ -232,14 +243,14 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-                LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-                LeftBackDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-                RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
-    
+
     void move (double power) {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             LeftFrontDrive.setPower(power);
