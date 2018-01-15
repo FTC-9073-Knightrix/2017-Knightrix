@@ -36,8 +36,8 @@
 |dpad left||
 |dpad right||
 |y|arm servo|
-|b||
-|a||
+|b|intake out|
+|a|intake in|
 |x|arm servo|
 |select||
 |start||
