@@ -134,7 +134,7 @@ public abstract class TestHardwareMap extends OpMode {
         // Set motor direction
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
-        RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        RightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         updownMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setDirection(DcMotor.Direction.FORWARD);
