@@ -36,24 +36,24 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
-    DcMotor updownMotor;
-    DcMotor armMotor;
-    Servo pickup1;
-    Servo pickup2;
-    Servo side; // Color Sensor
-    Servo hand; // Relic pickup
-    Servo arm;  // Relic pickup
+    //DcMotor updownMotor;
+    //DcMotor armMotor;
+    //Servo pickup1;
+    //Servo pickup2;
+    //Servo side; // Color Sensor
+    //Servo hand; // Relic pickup
+    //Servo arm;  // Relic pickup
     //CRServo LeftIntakeDrive;
     //CRServo RightIntakeDrive;
-    Servo switchServo;
-    ColorSensor color1;
-    ModernRoboticsI2cRangeSensor range1;
+    //Servo switchServo;
+    //ColorSensor color1;
+    //ModernRoboticsI2cRangeSensor range1;
     //    I2cDevice range1;
     //I2cDevice range2;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
-    DigitalChannel limitSwitch;
+    //DigitalChannel limitSwitch;
 
     //Variables
     float myangle = 0;
@@ -128,16 +128,16 @@ public abstract class TestHardwareMap extends OpMode {
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightBackDrive = hardwareMap.dcMotor.get("RB");
-        updownMotor = hardwareMap.dcMotor.get("UD");
-        armMotor = hardwareMap.dcMotor.get("ARM");
+        //updownMotor = hardwareMap.dcMotor.get("UD");
+        //armMotor = hardwareMap.dcMotor.get("ARM");
 
         // Set motor direction
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        updownMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        //updownMotor.setDirection(DcMotor.Direction.FORWARD);
+        //armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set driving mode
         if (auto) {
@@ -169,27 +169,27 @@ public abstract class TestHardwareMap extends OpMode {
 
 
         // servos
-        pickup1 = hardwareMap.servo.get("pickup1"); //Right
-        pickup2 = hardwareMap.servo.get("pickup2"); //Left
-        side = hardwareMap.servo.get("side");
+        //pickup1 = hardwareMap.servo.get("pickup1"); //Right
+        //pickup2 = hardwareMap.servo.get("pickup2"); //Left
+        //side = hardwareMap.servo.get("side");
         //side.setPosition(1); // Set ARM up
-        hand = hardwareMap.servo.get("hand");
+        //hand = hardwareMap.servo.get("hand");
         //LeftIntakeDrive = hardwareMap.crservo.get("LI");
         //hand.setPosition(0.5);
-        arm = hardwareMap.servo.get("arm");
+        //arm = hardwareMap.servo.get("arm");
         //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
-        switchServo = hardwareMap.servo.get("SS");
+        //switchServo = hardwareMap.servo.get("SS");
 
 
         //sensors
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
-        color1 = hardwareMap.colorSensor.get("C1");
-        color1.enableLed(true);
+        //color1 = hardwareMap.colorSensor.get("C1");
+        //color1.enableLed(true);
 
         // Range Sensor
-        range1 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "R1");
+        //range1 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "R1");
         // Old Range Sensor Code
         //    range1 = hardwareMap.i2cDevice.get("R1");
         //    range2 = hardwareMap.i2cDevice.get("R2");
@@ -198,8 +198,8 @@ public abstract class TestHardwareMap extends OpMode {
         //    range1Reader.engage();
         //    range2Reader.engage();
 
-        limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        //limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
+        //limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
 
         if (auto) {
@@ -434,7 +434,7 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-    String color() {
+    /*String color() {
         String returnvalue = null;
         if (color1 != null) {
             if (color1.blue() > color1.red()) {
@@ -451,5 +451,5 @@ public abstract class TestHardwareMap extends OpMode {
             }
         }
         return returnvalue;
-    }
+    }*/
 }

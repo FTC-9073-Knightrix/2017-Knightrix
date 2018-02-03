@@ -76,12 +76,11 @@ public class Drive extends TestHardwareMap{
         double gyroTilt = orientation.secondAngle;
         // ------------------  END  -----------------------------
 
-
         // --------------- DESCRIPTION --------------------------
         // Up/Down grabber
         // Use GamePad1 as master, GamePad2 as slave
         // ------------------ START -----------------------------
-        if (gamepad1.dpad_up) {
+        /*if (gamepad1.dpad_up) {
             upclaw = gamepad1.dpad_up;
         }
         else {
@@ -92,7 +91,7 @@ public class Drive extends TestHardwareMap{
         }
         else {
             downclaw = gamepad2.dpad_down;
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
@@ -100,7 +99,7 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (upclaw){
+        /*if (upclaw){
             updownPower = .8;
         }
         else if(downclaw){
@@ -108,6 +107,7 @@ public class Drive extends TestHardwareMap{
         }
         else {updownPower = 0;}
         updownMotor.setPower(updownPower);
+        */
         // ------------------  END  -----------------------------
 
 
@@ -137,7 +137,7 @@ public class Drive extends TestHardwareMap{
         /*if(left) {armMotor.setPower(-0.4);}         // IN
         else if(right) {armMotor.setPower(0.6);}    // OUT
         else {armMotor.setPower(0);}*/
-        armMotor.setPower(0.4*gamepad2.left_stick_y); 
+        /*armMotor.setPower(0.4*gamepad2.left_stick_y);*/
         // ------------------  END  -----------------------------
 
 
@@ -153,12 +153,12 @@ public class Drive extends TestHardwareMap{
         // Right Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
         // ------------------ START -----------------------------
-        if (gamepad1.right_trigger > 0) {
+        /*if (gamepad1.right_trigger > 0) {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad1.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
         }
         else {
             pickup1.setPosition(Range.clip( 0.2 + ((1 - gamepad2.right_trigger)*(0.9-0.2))  , 0.2, 0.9));
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
@@ -166,12 +166,12 @@ public class Drive extends TestHardwareMap{
         // Moves Left Glyth grabber
         // Use GamePad1 as master, GamePad1 has precedence
         // ------------------ START -----------------------------
-        if (gamepad1.left_trigger > 0) {
+        /*if (gamepad1.left_trigger > 0) {
             pickup2.setPosition(Range.clip( 0.3 + ((gamepad1.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
         }
         else {
             pickup2.setPosition(Range.clip( 0.3 + ((gamepad2.left_trigger)*(0.95-0.3))  , 0.3, 0.95));
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
@@ -180,7 +180,7 @@ public class Drive extends TestHardwareMap{
         // Position 1 = color sensor UP ; Position 0.6 = color sensor DOWN
         // ------------------ START -----------------------------
         //if (gamepad2.right_bumper) {side.setPosition(0.6);}
-        side.setPosition(1);
+        /*side.setPosition(1);*/
         // ------------------  END  -----------------------------
 
 
@@ -289,7 +289,7 @@ public class Drive extends TestHardwareMap{
         // Moves HAND = ELBOW for Relic Recovery
         // Close and open continuous servo HAND
         // ------------------ START -----------------------------
-        if (gamepad2.left_bumper) {
+        /*if (gamepad2.left_bumper) {
             handpos = 0.40;
         }
         else if (gamepad2.right_bumper) {
@@ -297,7 +297,7 @@ public class Drive extends TestHardwareMap{
         }
         else{
             handpos = 0.5;
-        }
+        }*/
         //hand.setPosition(handpos);
         // ------------------  END  -----------------------------
 
@@ -306,7 +306,7 @@ public class Drive extends TestHardwareMap{
         // Moves ARM = xx for Relic Recovery
         // Close and open continuous servo ARM
         // ------------------ START -----------------------------
-        if(gamepad2.x){
+        /*if(gamepad2.x){
             armpos = 0.45;
         }
         else if(gamepad2.y){
@@ -314,7 +314,7 @@ public class Drive extends TestHardwareMap{
         }
         else{
             armpos = 0.5;
-        }
+        }*/
         //arm.setPosition(armpos);
         // ------------------  END  -----------------------------
 
@@ -322,12 +322,12 @@ public class Drive extends TestHardwareMap{
         // Moves Switch Servo
         // Switch Servo for the switch that discovers columns
         // ------------------ START -----------------------------
-        if(gamepad2.b){ // Down
+        /*if(gamepad2.b){ // Down
             switchServo.setPosition(0.9);
         }
         else{
             switchServo.setPosition(0.2);
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
@@ -335,12 +335,12 @@ public class Drive extends TestHardwareMap{
         // Validates column Switch
         // No touch = null; Touch != null
         // ------------------ START -----------------------------
-        if (limitSwitch != null) {
+        /*if (limitSwitch != null) {
             if (!limitSwitch.getState()) {
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             }
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
