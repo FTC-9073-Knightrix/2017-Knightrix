@@ -99,15 +99,50 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        /*if (upclaw){
-            updownPower = .8;
+        if (gamepad2.left_stick_y == 1){
+            updownPower = -.5;
         }
-        else if(downclaw){
-            updownPower = -.8;
+        else if(gamepad2.left_stick_y == -1){
+            updownPower = .5;
         }
-        else {updownPower = 0;}
+        else {
+            updownPower = 0;
+        }
         updownMotor.setPower(updownPower);
-        */
+
+        // ------------------  END  -----------------------------
+
+        // --------------- DESCRIPTION --------------------------
+        // Changes Up/Down Power based on direction
+        // Description
+        // ------------------ START -----------------------------
+        if (gamepad1.right_trigger > 0) {
+            plate.setPosition(Range.clip( 0.3 + ((gamepad1.left_trigger)*(1.0-0.3))  , 0.3, 0.95));
+        }
+        else {
+            plate.setPosition(Range.clip(0.3 + ((gamepad2.left_trigger) * (1.0 - 0.3)), 0.3, 0.95));
+        }
+        // ------------------  END  -----------------------------
+
+        // --------------- DESCRIPTION --------------------------
+        // Changes Intake Power based on direction
+        // Description
+        // ------------------ START -----------------------------
+        if (gamepad2.a){
+            leftIntakePower = -1;
+            rightIntakePower = 1;
+        }
+        else if(gamepad2.b){
+            leftIntakePower = 1;
+            rightIntakePower = -1;
+        }
+        else {
+            leftIntakePower = 0;
+            rightIntakePower = 0;
+        }
+        LeftIntakeDrive.setPower(leftIntakePower);
+        RightIntakeDrive.setPower(rightIntakePower);
+
         // ------------------  END  -----------------------------
 
 
@@ -196,7 +231,7 @@ public class Drive extends TestHardwareMap{
             leftstick_x = -gamepad1.left_stick_x;
             leftstick_y = gamepad1.left_stick_y;
         }
-        float myrot = gamepad1.right_stick_x/2;
+        float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
 
 
@@ -344,14 +379,15 @@ public class Drive extends TestHardwareMap{
         // ------------------  END  -----------------------------
 
 
-        telemetry.addLine("SS: " + switchServo.getPosition());
-        telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
+        //telemetry.addLine("SS: " + switchServo.getPosition());
+        //telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
         telemetry.addLine("angle = " + myangle);
         telemetry.addLine("power = " + mypower);
         telemetry.addLine("Rotation = " + myrot);
-        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
-        telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
-        telemetry.addLine("Side: " + side.getPosition());
+        telemetry.addLine("Rev:" + plate.getPosition());
+//        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
+//        telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
+//        telemetry.addLine("Side: " + side.getPosition());
         //telemetry.addLine("Hand: " + hand.getPosition());
         //telemetry.addLine("Arm: " + arm.getPosition());
         //telemetry.addLine("gyro z = " + orientation.firstAngle);
@@ -359,13 +395,13 @@ public class Drive extends TestHardwareMap{
         //telemetry.addLine("gyro x = " + orientation.secondAngle);
         //telemetry.addLine("gyro y = " + orientation.thirdAngle);
         //Range Sensor
-        telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
+        //telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
 
         telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
+        //telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
 
     }

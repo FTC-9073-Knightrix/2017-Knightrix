@@ -50,416 +50,416 @@ public class AutoRed extends TestHardwareMap {
 
     @Override
     public void loop() {
-        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-
-        // Get position of the 4 encoders
-        lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
-        lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
-        rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
-        rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-        double MaxValue = Math.max(Math.max(Math.abs(lfEnc-lfEncStart),Math.abs(lbEnc-lbEncStart)),Math.max(Math.abs(rfEnc-rfEncStart),Math.abs(rbEnc-rbEncStart)));
-        if (MaxValue == 0) {MaxValue = 1;}
-
-        // Determines the X-Y-Rotation position of the robot
-        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-
-        // START
-        // DOWN Claw
-        if (state == 0) {
-            pickup1.setPosition(0.8);
-            pickup2.setPosition(0.3);
-            updownMotor.setPower(0);
-            timer = getRuntime();  // Sets timer = accumulated time
-            angle = orientation.firstAngle;
-            start_angle = angle;
-//            state= 99;
-            state++;
-        }
-
-        // State 99 => Test
-        else if (state == 99) {
-            turn(0.3, 90); // Positive value, turns left; Negative turns right.... Positive is shortest distance, negative is outside circle
-            if (turn(0.3, 30)) {
-                move(0);
-                state++;
-            }
-        }
-        // State 99 => Test
-        else if (state == 100) {
-            turn(0.3, -30); // Positive value, turns left; Negative turns right
-            if (turn(0.3, -30)) {
-                move(0);
-            }
-        }
-
-        //  DOWN Claw for time. Then stop motor
-        else if (state == 1) {
-            timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
-            if (timer2 < 1) {
-                updownMotor.setPower(-0.2);
-            } else {
-                pickup1.setPosition(0.2); // Right close
-                pickup2.setPosition(0.9); // Left close
-                updownMotor.setPower(0);
-                timer = getRuntime();
-                state = 1.5;
-            }
-        }
-        else if (state == 1.5) {
-            timer2 = getRuntime() - timer;
-            if (timer2 >= 0.5) {
-                state = 2;
-                timer = getRuntime();
-            }
-        }
-        //  Up Claw for time. Then stop motor
-        else if (state == 2) {
-            timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
-            if (timer2 < 0.5) {
-                updownMotor.setPower(0.5);
-            }
-            else {
-                updownMotor.setPower(0);
-                angle = orientation.firstAngle;
-                side.setPosition(0.4); // Move side DOWN
-                state++;
-                state++;
-            }
-        }
-        //move robot side to side
-        //and check position of balls: range sensor
-        else if (state == 4) {
-            if (color().equals("red")) {
-                state = 7;
-                angle = orientation.firstAngle;
-        //        start_angle = angle;
-            }
-            else if (color().equals("blue")) {
-                state = 5;
-                angle = orientation.firstAngle;
-      //          start_angle = angle;
-            }
-            else {
-                move(0.15);
-            }
-        }
-        // Ball IS blue => Turns Left
-        else if (state == 5){
-            turn(0.2,10); // Positive value, turns right; Negative turns LEFT
-            if (turn(0.2,10)) {
-                state++;
-                angle = orientation.firstAngle;
-    //            start_angle = angle;
-            }
-        }
-        // lifts Side and Turns Right
-        else if (state == 6){
-            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
-            side.setPosition(1); // Move side UP
-            if (turn(0.2,0)) {
-                state = 9;
-                lfEncStart =  lfEnc;
-                lbEncStart =  lbEnc;
-                rfEncStart =  rfEnc;
-                rbEncStart =  rbEnc;
-                timer = getRuntime();
-            }
-        }
-        // Ball IS Red => Turns Right
-        else if (state == 7) {
-            turn(0.2,-10);
-            if (turn(0.2,-10)) {
-                angle = orientation.firstAngle;
-                state++;
-  //              start_angle = angle;
-            }
-        }
-        // lifts Side and Turns Left
-        else if (state == 8){
-            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
-            side.setPosition(1); // Move side UP
-            if (turn(0.2,0)) {
-                lfEncStart =  lfEnc;
-                lbEncStart =  lbEnc;
-                rfEncStart =  rfEnc;
-                rbEncStart =  rbEnc;
-                state++;
-            }
-        }
-        // Goes forward for one second
-        else if (state == 9) {
-            switchServo.setPosition(0.6);
-            if (AutoFrontBack(2230,0.4)) {
-                if (pictograph == null) {
-                    state = 11;
-                }
-                else if (pictograph.equals("left")) {
-                    state = 10;
-                }
-                else if (pictograph.equals("center")) {
-                    state = 11;
-                }
-                else if (pictograph.equals("right")) {
-                    state = 12;
-                }
-                lfEncStart =  lfEnc;
-                lbEncStart =  lbEnc;
-                rfEncStart =  rfEnc;
-                rbEncStart =  rbEnc;
-            }
-        }
-        /*else if (state == 10) {//left
-            if (range1Value < 86) {
-                mech_move(90,(float)0.5,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 10.5; // Pushes block forward
-            }
-        }
-        else if (state == 10.5) {//left
-            if (range1Value > 86) {
-                mech_move(90,(float)-0.35,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 13; // Pushes block forward
-                timer = getRuntime();
-            }
-        }*/
-        else if (state == 10) { //left
-            if (fourthEdge) {
-                state = 13;
-                timer = getRuntime();
-            }
-            else if (thirdEdge) {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else if (secondEdge) {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else if (firstEdge) {
-                if (limitSwitch.getState()) {
-                    touchingEdge = false;
-                    mech_move(90,(float)0.5,0);
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    secondEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    firstEdge = true;
-                    touchingEdge = true;
-                }
-            }
-        }
-        /*else if (state == 11) {//center
-            if (range1Value < 69) {
-                mech_move(90,(float)0.5,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 11.5; //center
-            }
-        }
-        else if (state == 11.5) {//center
-            if (range1Value > 69) {
-                mech_move(90,(float)-0.35,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 13; // Pushes block forward
-                timer = getRuntime();
-            }
-        }*/
-        else if (state == 11) { //center
-            if (thirdEdge) {
-                state = 13;
-                timer = getRuntime();
-            }
-            else if (secondEdge) {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else if (firstEdge) {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-        }
-        /*else if (state == 12) {//right
-            if (range1Value < 51) {
-                mech_move(90,(float)0.5,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 12.5; // right
-            }
-        }
-        else if (state == 12.5) {
-            if (range1Value > 51) {//right
-                mech_move(90,(float)-0.35,0);
-//                strafe(-0.3);
-            }
-            else {
-                state = 13; // Pushes block forward
-                timer = getRuntime();
-            }
-        }*/
-        else if (state == 12) { //right
-            if (secondEdge) {
-                state = 13;
-                timer = getRuntime();
-            }
-            else if (firstEdge) {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-            else {
-                if (limitSwitch.getState()) {
-                    mech_move(90,(float)0.5,0);
-                    touchingEdge = false;
-                }
-                else if (!limitSwitch.getState() && !touchingEdge){
-                    thirdEdge = true;
-                    touchingEdge = true;
-                }
-            }
-        }
-        // Moves forward with the block
-        else if (state == 13) {
-            timer2 = getRuntime() - timer;
-            switchServo.setPosition(0);
-            if (timer2 < 0.4) {
-                move(0.3);
-            }
-            else {
-                state++;
-            }
-        }
-        // Open the pickup mechanism
-        else if (state == 14) {
-            pickup1.setPosition(0.95);
-            pickup2.setPosition(0.3);
-            state = 14.5;
-            timer = getRuntime();
-        }
-        // Wait 1 second
-        else if (state == 14.5) {
-            timer2 = getRuntime() - timer;
-            if (timer2 < 0.3) {
-                move(0.5);
-            }
-            else {
-                //Play a sound
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                state = 15;
-                timer = getRuntime();
-            }
-        }
-        // Moves backward
-        else if (state == 15) {
-            timer2 = getRuntime() - timer;
-            if (timer2 < 0.3) {
-                move(-0.5);
-            }
-            else {
-                state++;
-//                start_angle = orientation.firstAngle;
-            }
-        }
-        // Turns 90 degrees
-        else {
-            turn(0.2, 90); // (direction,angle)
-            //move(0);
-        }
-
-
-        // Look for pictograph value until finds a match
-        if (pictograph == null) {
-            // Checks Vuforia
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-            if (vuMark == RelicRecoveryVuMark.LEFT) {
-                pictograph = "left";
-                //Play a sound
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_CDMA_HIGH_SS,200);
-            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                pictograph = "center";
-                //Play a sound
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                pictograph = "right";
-                //Play a sound
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
-            }
-        }
-
+//        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+//
+//        // Get position of the 4 encoders
+//        lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+//        lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+//        rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+//        rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+//        double MaxValue = Math.max(Math.max(Math.abs(lfEnc-lfEncStart),Math.abs(lbEnc-lbEncStart)),Math.max(Math.abs(rfEnc-rfEncStart),Math.abs(rbEnc-rbEncStart)));
+//        if (MaxValue == 0) {MaxValue = 1;}
+//
+//        // Determines the X-Y-Rotation position of the robot
+//        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+//        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+//        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+//
+//        // START
+//        // DOWN Claw
+//        if (state == 0) {
+//            pickup1.setPosition(0.8);
+//            pickup2.setPosition(0.3);
+//            updownMotor.setPower(0);
+//            timer = getRuntime();  // Sets timer = accumulated time
+//            angle = orientation.firstAngle;
+//            start_angle = angle;
+////            state= 99;
+//            state++;
+//        }
+//
+//        // State 99 => Test
+//        else if (state == 99) {
+//            turn(0.3, 90); // Positive value, turns left; Negative turns right.... Positive is shortest distance, negative is outside circle
+//            if (turn(0.3, 30)) {
+//                move(0);
+//                state++;
+//            }
+//        }
+//        // State 99 => Test
+//        else if (state == 100) {
+//            turn(0.3, -30); // Positive value, turns left; Negative turns right
+//            if (turn(0.3, -30)) {
+//                move(0);
+//            }
+//        }
+//
+//        //  DOWN Claw for time. Then stop motor
+//        else if (state == 1) {
+//            timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
+//            if (timer2 < 1) {
+//                updownMotor.setPower(-0.2);
+//            } else {
+//                pickup1.setPosition(0.2); // Right close
+//                pickup2.setPosition(0.9); // Left close
+//                updownMotor.setPower(0);
+//                timer = getRuntime();
+//                state = 1.5;
+//            }
+//        }
+//        else if (state == 1.5) {
+//            timer2 = getRuntime() - timer;
+//            if (timer2 >= 0.5) {
+//                state = 2;
+//                timer = getRuntime();
+//            }
+//        }
+//        //  Up Claw for time. Then stop motor
+//        else if (state == 2) {
+//            timer2 = getRuntime() - timer;   // Calculates difference between current stage and accumulated timer
+//            if (timer2 < 0.5) {
+//                updownMotor.setPower(0.5);
+//            }
+//            else {
+//                updownMotor.setPower(0);
+//                angle = orientation.firstAngle;
+//                side.setPosition(0.4); // Move side DOWN
+//                state++;
+//                state++;
+//            }
+//        }
+//        //move robot side to side
+//        //and check position of balls: range sensor
+//        else if (state == 4) {
+//            if (color().equals("red")) {
+//                state = 7;
+//                angle = orientation.firstAngle;
+//        //        start_angle = angle;
+//            }
+//            else if (color().equals("blue")) {
+//                state = 5;
+//                angle = orientation.firstAngle;
+//      //          start_angle = angle;
+//            }
+//            else {
+//                move(0.15);
+//            }
+//        }
+//        // Ball IS blue => Turns Left
+//        else if (state == 5){
+//            turn(0.2,10); // Positive value, turns right; Negative turns LEFT
+//            if (turn(0.2,10)) {
+//                state++;
+//                angle = orientation.firstAngle;
+//    //            start_angle = angle;
+//            }
+//        }
+//        // lifts Side and Turns Right
+//        else if (state == 6){
+//            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
+//            side.setPosition(1); // Move side UP
+//            if (turn(0.2,0)) {
+//                state = 9;
+//                lfEncStart =  lfEnc;
+//                lbEncStart =  lbEnc;
+//                rfEncStart =  rfEnc;
+//                rbEncStart =  rbEnc;
+//                timer = getRuntime();
+//            }
+//        }
+//        // Ball IS Red => Turns Right
+//        else if (state == 7) {
+//            turn(0.2,-10);
+//            if (turn(0.2,-10)) {
+//                angle = orientation.firstAngle;
+//                state++;
+//  //              start_angle = angle;
+//            }
+//        }
+//        // lifts Side and Turns Left
+//        else if (state == 8){
+//            turn(0.2,0); // Positive value, turns right; Negative turns LEFT
+//            side.setPosition(1); // Move side UP
+//            if (turn(0.2,0)) {
+//                lfEncStart =  lfEnc;
+//                lbEncStart =  lbEnc;
+//                rfEncStart =  rfEnc;
+//                rbEncStart =  rbEnc;
+//                state++;
+//            }
+//        }
+//        // Goes forward for one second
+//        else if (state == 9) {
+//            switchServo.setPosition(0.6);
+//            if (AutoFrontBack(2230,0.4)) {
+//                if (pictograph == null) {
+//                    state = 11;
+//                }
+//                else if (pictograph.equals("left")) {
+//                    state = 10;
+//                }
+//                else if (pictograph.equals("center")) {
+//                    state = 11;
+//                }
+//                else if (pictograph.equals("right")) {
+//                    state = 12;
+//                }
+//                lfEncStart =  lfEnc;
+//                lbEncStart =  lbEnc;
+//                rfEncStart =  rfEnc;
+//                rbEncStart =  rbEnc;
+//            }
+//        }
+//        /*else if (state == 10) {//left
+//            if (range1Value < 86) {
+//                mech_move(90,(float)0.5,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 10.5; // Pushes block forward
+//            }
+//        }
+//        else if (state == 10.5) {//left
+//            if (range1Value > 86) {
+//                mech_move(90,(float)-0.35,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 13; // Pushes block forward
+//                timer = getRuntime();
+//            }
+//        }*/
+//        else if (state == 10) { //left
+//            if (fourthEdge) {
+//                state = 13;
+//                timer = getRuntime();
+//            }
+//            else if (thirdEdge) {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else if (secondEdge) {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else if (firstEdge) {
+//                if (limitSwitch.getState()) {
+//                    touchingEdge = false;
+//                    mech_move(90,(float)0.5,0);
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    secondEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    firstEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//        }
+//        /*else if (state == 11) {//center
+//            if (range1Value < 69) {
+//                mech_move(90,(float)0.5,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 11.5; //center
+//            }
+//        }
+//        else if (state == 11.5) {//center
+//            if (range1Value > 69) {
+//                mech_move(90,(float)-0.35,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 13; // Pushes block forward
+//                timer = getRuntime();
+//            }
+//        }*/
+//        else if (state == 11) { //center
+//            if (thirdEdge) {
+//                state = 13;
+//                timer = getRuntime();
+//            }
+//            else if (secondEdge) {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else if (firstEdge) {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//        }
+//        /*else if (state == 12) {//right
+//            if (range1Value < 51) {
+//                mech_move(90,(float)0.5,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 12.5; // right
+//            }
+//        }
+//        else if (state == 12.5) {
+//            if (range1Value > 51) {//right
+//                mech_move(90,(float)-0.35,0);
+////                strafe(-0.3);
+//            }
+//            else {
+//                state = 13; // Pushes block forward
+//                timer = getRuntime();
+//            }
+//        }*/
+//        else if (state == 12) { //right
+//            if (secondEdge) {
+//                state = 13;
+//                timer = getRuntime();
+//            }
+//            else if (firstEdge) {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//            else {
+//                if (limitSwitch.getState()) {
+//                    mech_move(90,(float)0.5,0);
+//                    touchingEdge = false;
+//                }
+//                else if (!limitSwitch.getState() && !touchingEdge){
+//                    thirdEdge = true;
+//                    touchingEdge = true;
+//                }
+//            }
+//        }
+//        // Moves forward with the block
+//        else if (state == 13) {
+//            timer2 = getRuntime() - timer;
+//            switchServo.setPosition(0);
+//            if (timer2 < 0.4) {
+//                move(0.3);
+//            }
+//            else {
+//                state++;
+//            }
+//        }
+//        // Open the pickup mechanism
+//        else if (state == 14) {
+//            pickup1.setPosition(0.95);
+//            pickup2.setPosition(0.3);
+//            state = 14.5;
+//            timer = getRuntime();
+//        }
+//        // Wait 1 second
+//        else if (state == 14.5) {
+//            timer2 = getRuntime() - timer;
+//            if (timer2 < 0.3) {
+//                move(0.5);
+//            }
+//            else {
+//                //Play a sound
+//                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+//                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+//                state = 15;
+//                timer = getRuntime();
+//            }
+//        }
+//        // Moves backward
+//        else if (state == 15) {
+//            timer2 = getRuntime() - timer;
+//            if (timer2 < 0.3) {
+//                move(-0.5);
+//            }
+//            else {
+//                state++;
+////                start_angle = orientation.firstAngle;
+//            }
+//        }
+//        // Turns 90 degrees
+//        else {
+//            turn(0.2, 90); // (direction,angle)
+//            //move(0);
+//        }
+//
+//
+//        // Look for pictograph value until finds a match
+//        if (pictograph == null) {
+//            // Checks Vuforia
+//            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+//
+//            if (vuMark == RelicRecoveryVuMark.LEFT) {
+//                pictograph = "left";
+//                //Play a sound
+//                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+//                toneG.startTone(ToneGenerator.TONE_CDMA_HIGH_SS,200);
+//            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+//                pictograph = "center";
+//                //Play a sound
+//                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+//                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+//                pictograph = "right";
+//                //Play a sound
+//                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+//                toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+//            }
+//        }
+//
+////        range1Cache = range1Reader.read(0x04, 2);
+////        range1Value = range1Cache[0] & 0xFF;
 //        range1Cache = range1Reader.read(0x04, 2);
 //        range1Value = range1Cache[0] & 0xFF;
-        range1Cache = range1Reader.read(0x04, 2);
-        range1Value = range1Cache[0] & 0xFF;
-
-        telemetry.addLine("State: " + state);
-        telemetry.addLine("start_angle = " + start_angle);
-        telemetry.addLine("Curr_angle = " + angle);
-        telemetry.addLine("gyro z = " + orientation.firstAngle);
-        telemetry.addLine("Color: " + color());
-        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
-        telemetry.addLine("Range = " + range1Value);
-        telemetry.addLine("Vuforia = " + pictograph);
+//
+//        telemetry.addLine("State: " + state);
+//        telemetry.addLine("start_angle = " + start_angle);
+//        telemetry.addLine("Curr_angle = " + angle);
+//        telemetry.addLine("gyro z = " + orientation.firstAngle);
+//        telemetry.addLine("Color: " + color());
+//        telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
+//        telemetry.addLine("Range = " + range1Value);
+//        telemetry.addLine("Vuforia = " + pictograph);
     }
 }

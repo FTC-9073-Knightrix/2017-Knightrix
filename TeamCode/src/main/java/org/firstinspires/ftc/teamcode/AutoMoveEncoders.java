@@ -34,23 +34,26 @@ public class AutoMoveEncoders extends TestHardwareMap {
         // Variables
 //        double MyPower = 0;
 //        double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
-
+        /*
 
         // Get position of the 4 encoders
-        lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
-        lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
-        rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
-        rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-        double MaxValue = Math.max(Math.max(Math.abs(lfEnc-lfEncStart),Math.abs(lbEnc-lbEncStart)),Math.max(Math.abs(rfEnc-rfEncStart),Math.abs(rbEnc-rbEncStart)));
-        if (MaxValue == 0) {MaxValue = 1;}
+        lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+        lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+        rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+        rbEnc = RightBackDrive.getCurrentPosition() + 1;
+        double MaxValue = Math.max(Math.max(Math.abs(lfEnc - lfEncStart), Math.abs(lbEnc - lbEncStart)), Math.max(Math.abs(rfEnc - rfEncStart), Math.abs(rbEnc - rbEncStart)));
+        if (MaxValue == 0) {
+            MaxValue = 1;
+        }
 
         // Determines the X-Y-Rotation position of the robot
-        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+        double xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc)) * 1 / 4.0;
+        double yPos = (lfEnc + lbEnc + rfEnc + rbEnc) * 1 / 4.0;
+        double rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc)) * 1 / 4.0;
 
         // START
         // DOWN Claw
+
         if (state == 0) {
             pickup1.setPosition(0.8);
             pickup2.setPosition(0.3);
@@ -60,10 +63,10 @@ public class AutoMoveEncoders extends TestHardwareMap {
             start_angle = angle;
 
             // Get Starting position of the 4 encoders
-            lfEncStart =  lfEnc   ;
-            lbEncStart =  lbEnc   ;
-            rfEncStart =  rfEnc   ;
-            rbEncStart =  rbEnc   ;
+            lfEncStart = lfEnc;
+            lbEncStart = lbEnc;
+            rfEncStart = rfEnc;
+            rbEncStart = rbEnc;
             state++;
         }
 
@@ -79,8 +82,7 @@ public class AutoMoveEncoders extends TestHardwareMap {
                 timer = getRuntime();
                 state = 1.5;
             }
-        }
-        else if (state == 1.5) {
+        } else if (state == 1.5) {
             timer2 = getRuntime() - timer;
             if (timer2 >= 0.5) {
                 state = 2;
@@ -104,75 +106,71 @@ public class AutoMoveEncoders extends TestHardwareMap {
         //move forwards 3000 Encoders counts / about 90 cm / 35 inches
         else if (state == 4) {
             // Move Forwards 3000 clicks / about xx cm / 35 inches
-            if (AutoFrontBack(1500,0.4)) { //1500 = 18 inches
+            if (AutoFrontBack(1500, 0.4)) { //1500 = 18 inches
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
-                state=4.1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = 4.1;
             }
-        }
-        else if (state == 4.1) {
+        } else if (state == 4.1) {
             // Move Right 1500 clicks / about xx cm / 35 inches
-            if (AutoRightLeft(1500,0.4)) { //1500 = 18 inches
+            if (AutoRightLeft(1500, 0.4)) { //1500 = 18 inches
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
-                state=4.2;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = 4.2;
             }
-        }
-        else if (state == 4.2) {
+        } else if (state == 4.2) {
             // Move Backwards 1500 clicks / about xx cm / 35 inches
-            if (AutoFrontBack(1500,-0.4)) { //1500 = 18 inches
+            if (AutoFrontBack(1500, -0.4)) { //1500 = 18 inches
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
-                state=4.3;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = 4.3;
             }
-        }
-        else if (state == 4.3) {
+        } else if (state == 4.3) {
             // Move Left 1500 clicks / about xx cm / 35 inches
-            if (AutoRightLeft(1500,-0.4)) { //1500 = 18 inches
+            if (AutoRightLeft(1500, -0.4)) { //1500 = 18 inches
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
-                state=9;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = 9;
             }
         }
 
         // Turn
         else if (state == 5) {
-            if (turn (0.2, 90)) {
+            if (turn(0.2, 90)) {
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
                 state++;
-            };
+            }
+            ;
         }
 
         //move backwards 3000 Encoders counts / about xx cm / xx inches
         else if (state == 6) {
             // Move Backwards 3000 clicks /  inches
-            if (AutoFrontBack(3000,-0.2)) {
+            if (AutoFrontBack(3000, -0.2)) {
                 // Get Starting position of the 4 encoders
-                lfEncStart =  lfEnc   ;
-                lbEncStart =  lbEnc   ;
-                rfEncStart =  rfEnc   ;
-                rbEncStart =  rbEnc   ;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
                 state++;
             }
-        }
-
-        else {
+        } else {
             LeftFrontDrive.setPower(0);
             LeftBackDrive.setPower(0);
             RightFrontDrive.setPower(0);
@@ -183,12 +181,12 @@ public class AutoMoveEncoders extends TestHardwareMap {
         range1Value = range1Cache[0] & 0xFF;
 
         telemetry.addLine("State: " + state);
-        telemetry.addLine("X/Y/Rot: " + xPos +"/"+ yPos +"/" + rotPos);
-        telemetry.addLine("Angle/Power/Rot: " + myangle +"/"+ mypower + "/" + myrot);
-        telemetry.addLine("LF: " + (lfEnc-lfEncStart) + "Real" + lfEnc + "P:" + MaxValue / Math.abs(lfEnc-lfEncStart+1));
-        telemetry.addLine("LB: " + (lbEnc-lbEncStart) + "Real" + lbEnc + "P:" + MaxValue / Math.abs(lbEnc-lbEncStart+1));
-        telemetry.addLine("RF: " + (rfEnc-rfEncStart) + "Real" + rfEnc + "P:" + MaxValue / Math.abs(rfEnc-rfEncStart+1));
-        telemetry.addLine("RB: " + (rbEnc-rbEncStart) + "Real" + rbEnc + "P:" + MaxValue / Math.abs(rbEnc-rbEncStart+1));
+        telemetry.addLine("X/Y/Rot: " + xPos + "/" + yPos + "/" + rotPos);
+        telemetry.addLine("Angle/Power/Rot: " + myangle + "/" + mypower + "/" + myrot);
+        telemetry.addLine("LF: " + (lfEnc - lfEncStart) + "Real" + lfEnc + "P:" + MaxValue / Math.abs(lfEnc - lfEncStart + 1));
+        telemetry.addLine("LB: " + (lbEnc - lbEncStart) + "Real" + lbEnc + "P:" + MaxValue / Math.abs(lbEnc - lbEncStart + 1));
+        telemetry.addLine("RF: " + (rfEnc - rfEncStart) + "Real" + rfEnc + "P:" + MaxValue / Math.abs(rfEnc - rfEncStart + 1));
+        telemetry.addLine("RB: " + (rbEnc - rbEncStart) + "Real" + rbEnc + "P:" + MaxValue / Math.abs(rbEnc - rbEncStart + 1));
 
         telemetry.addLine("start_angle = " + start_angle);
         telemetry.addLine("Curr_angle = " + angle);
@@ -197,5 +195,10 @@ public class AutoMoveEncoders extends TestHardwareMap {
         telemetry.addLine("Color: " + color());
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
         telemetry.addLine("Range = " + range1Value);
+
+
+    }
+
+    */
     }
 }
