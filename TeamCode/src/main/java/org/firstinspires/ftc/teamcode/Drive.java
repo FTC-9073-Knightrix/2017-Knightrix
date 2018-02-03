@@ -117,10 +117,10 @@ public class Drive extends TestHardwareMap{
         // Description
         // ------------------ START -----------------------------
         if (gamepad1.right_trigger > 0) {
-            plate.setPosition(Range.clip( 0.3 + ((gamepad1.left_trigger)*(1.0-0.3))  , 0.3, 0.95));
+            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5))  , 0.5, 1.0));
         }
         else {
-            plate.setPosition(Range.clip(0.3 + ((gamepad2.left_trigger) * (1.0 - 0.3)), 0.3, 0.95));
+            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
         }
         // ------------------  END  -----------------------------
 

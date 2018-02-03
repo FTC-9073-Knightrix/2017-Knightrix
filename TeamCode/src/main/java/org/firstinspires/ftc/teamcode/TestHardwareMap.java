@@ -36,6 +36,9 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
+    DcMotor LeftIntakeDrive;
+    DcMotor RightIntakeDrive;
+    DcMotor updownMotor;
     //DcMotor updownMotor;
     //DcMotor armMotor;
     //Servo pickup1;
@@ -50,6 +53,7 @@ public abstract class TestHardwareMap extends OpMode {
     //ModernRoboticsI2cRangeSensor range1;
     //    I2cDevice range1;
     //I2cDevice range2;
+    Servo plate;
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
@@ -71,6 +75,8 @@ public abstract class TestHardwareMap extends OpMode {
     float lastX = 0;
     float lastY = 0;
     double updownPower;
+    double leftIntakePower;
+    double rightIntakePower;
     boolean upclaw = false;
     boolean downclaw = false;
     double gyroResetValue = 0;
@@ -128,14 +134,16 @@ public abstract class TestHardwareMap extends OpMode {
         LeftBackDrive = hardwareMap.dcMotor.get("LB");
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightBackDrive = hardwareMap.dcMotor.get("RB");
-        //updownMotor = hardwareMap.dcMotor.get("UD");
+        updownMotor = hardwareMap.dcMotor.get("UD");
         //armMotor = hardwareMap.dcMotor.get("ARM");
+        LeftIntakeDrive = hardwareMap.dcMotor.get("LIN");
+        RightIntakeDrive = hardwareMap.dcMotor.get("RIN");
 
         // Set motor direction
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         //updownMotor.setDirection(DcMotor.Direction.FORWARD);
         //armMotor.setDirection(DcMotor.Direction.FORWARD);
 
@@ -180,6 +188,9 @@ public abstract class TestHardwareMap extends OpMode {
         //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
         //switchServo = hardwareMap.servo.get("SS");
+        plate = hardwareMap.servo.get("PL");
+        //plate.setPosition(0.3);
+
 
 
         //sensors
@@ -243,10 +254,10 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-            LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip( myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( -myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
