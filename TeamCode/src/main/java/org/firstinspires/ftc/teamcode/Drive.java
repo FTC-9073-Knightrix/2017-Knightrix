@@ -131,14 +131,17 @@ public class Drive extends TestHardwareMap{
         if (gamepad2.a){
             leftIntakePower = -1;
             rightIntakePower = 1;
+            butt.setPosition(90);
         }
         else if(gamepad2.b){
             leftIntakePower = 1;
             rightIntakePower = -1;
+            butt.setPosition(0);
         }
         else {
             leftIntakePower = 0;
             rightIntakePower = 0;
+            butt.setPosition(0);
         }
         LeftIntakeDrive.setPower(leftIntakePower);
         RightIntakeDrive.setPower(rightIntakePower);
