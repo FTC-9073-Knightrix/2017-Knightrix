@@ -99,16 +99,10 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.left_stick_y == 1){
-            updownPower = -.5;
+        if (gamepad2.left_stick_y != 0){
+            updownMotor.setPower(gamepad2.left_stick_y/2);
         }
-        else if(gamepad2.left_stick_y == -1){
-            updownPower = .5;
-        }
-        else {
-            updownPower = 0;
-        }
-        updownMotor.setPower(updownPower);
+
 
         // ------------------  END  -----------------------------
 
@@ -116,19 +110,33 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad1.right_trigger > 0) {
+        if (gamepad2.right_bumper) {
+            plate.setPosition(1);
+        }
+        else {
+            plate.setPosition(0.5);
+        }
+        /*if (gamepad1.right_trigger > 0) {
             plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5))  , 0.5, 1.0));
         }
         else {
             plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
-        }
+        }*/
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // Changes Intake Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.a){
+        if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
+            butt.setPosition(90);
+            RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+            LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
+        }
+        else {
+            butt.setPosition(0);
+        }
+        /*if (gamepad2.a){
             leftIntakePower = -1;
             rightIntakePower = 1;
             butt.setPosition(90);
@@ -144,7 +152,7 @@ public class Drive extends TestHardwareMap{
             butt.setPosition(0);
         }
         LeftIntakeDrive.setPower(leftIntakePower);
-        RightIntakeDrive.setPower(rightIntakePower);
+        RightIntakeDrive.setPower(rightIntakePower);*/
 
         // ------------------  END  -----------------------------
 
@@ -234,7 +242,14 @@ public class Drive extends TestHardwareMap{
             leftstick_x = -gamepad1.left_stick_x;
             leftstick_y = gamepad1.left_stick_y;
         }
-        float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
+        float myrot = 0;
+        if (gamepad2.right_stick_x != 0) {
+            myrot = gamepad2.right_stick_x / 5;
+        }
+        else {
+            myrot = gamepad1.right_stick_x / 2;
+        }
+        //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
 
 

@@ -307,11 +307,11 @@ public abstract class TestHardwareMap extends OpMode {
                 LeftBackDrive.setPower(0);
                 MotorOnTarget[1] = 1;
             }
-            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / (rfEncVar+1)); } else {
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(-MyPower  * MaxValue / (rfEncVar+1)); } else {
                 RightFrontDrive.setPower(0);
                 MotorOnTarget[2] = 1;
             }
-            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(MyPower   * MaxValue / (rbEncVar+1)); } else {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
@@ -369,11 +369,11 @@ public abstract class TestHardwareMap extends OpMode {
                 LeftBackDrive.setPower(0);
                 MotorOnTarget[1] = 1;
             }
-            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(-MyPower  * MaxValue / (rfEncVar+1)); } else {
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / (rfEncVar+1)); } else {
                 RightFrontDrive.setPower(0);
                 MotorOnTarget[2] = 1;
             }
-            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(MyPower   * MaxValue / (rbEncVar+1)); } else {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
@@ -415,14 +415,14 @@ public abstract class TestHardwareMap extends OpMode {
                 if(angle > degree) {
                     LeftFrontDrive.setPower(Range.clip(power, -1, 1));
                     LeftBackDrive.setPower(Range.clip(power, -1, 1));
-                    RightFrontDrive.setPower(Range.clip(power, -1, 1));
-                    RightBackDrive.setPower(Range.clip(power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(-power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(-power, -1, 1));
                 }
                 else if(angle < degree) {
                     LeftFrontDrive.setPower(Range.clip(-power, -1, 1));
                     LeftBackDrive.setPower(Range.clip(-power, -1, 1));
-                    RightFrontDrive.setPower(Range.clip(-power, -1, 1));
-                    RightBackDrive.setPower(Range.clip(-power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(power, -1, 1));
                 }
                 return false;
             }

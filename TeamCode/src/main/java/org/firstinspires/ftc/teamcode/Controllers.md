@@ -5,13 +5,13 @@
 
 |Button|Action|
 |:-------------:|:-------------:|
-|dpad up|up pickup|
-|dpad down|down pickup|
-|dpad left|arm left|
-|dpad right|arm right|
+|dpad up||
+|dpad down||
+|dpad left||
+|dpad right||
 |y||
 |b||
-|a||
+|a|reset gyro|
 |x||
 |select||
 |start||
@@ -21,8 +21,8 @@
 |left stick left|drive left|
 |right stick right|turn right|
 |right stick left|turn left|
-|right trigger|pickup 1|
-|left trigger|pickup 2|
+|right trigger||
+|left trigger||
 |right bumper||
 |left bumper||
 
@@ -35,21 +35,21 @@
 |dpad down|down pickup|
 |dpad left||
 |dpad right||
-|y|arm servo|
-|b|intake out|
-|a|intake in|
-|x|arm servo|
+|y||
+|b||
+|a||
+|x||
 |select||
 |start||
-|left stick up|arm out|
-|left stick down|arm back|
+|left stick up||
+|left stick down||
 |left stick right||
 |left stick left||
 |right stick up||
 |right stick down||
 |right stick left|turn slowly left|
-|right stick right|turn slowly left|
-|right trigger|pickup 1|
-|left trigger|pickup 2|
-|right bumper|hand|
-|left bumper|hand|
+|right stick right|turn slowly right|
+|right trigger|intake in|
+|left trigger|intake out|
+|right bumper|plate up|
+|left bumper||
