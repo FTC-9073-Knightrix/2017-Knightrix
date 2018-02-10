@@ -99,8 +99,41 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.left_stick_y != 0){
-            updownMotor.setPower(gamepad2.left_stick_y/2);
+        if (gamepad2.dpad_up) {
+            updownMotor.setPower(0.5);
+        }
+        else if (gamepad2.dpad_down) {
+            updownMotor.setPower(-0.5);
+        }
+        else {
+            updownMotor.setPower(0);
+        }
+
+        if (gamepad2.dpad_right) {
+            armMotor.setPower(1);
+        }
+        else if (gamepad2.dpad_left) {
+            armMotor.setPower(-1);
+        }
+        else {
+            armMotor.setPower(0);
+        }
+
+        if (gamepad2.y) {
+            arm.setPower(1);
+        }
+        else if (gamepad2.x) {
+            arm.setPower(-1);
+        }
+        else {
+            arm.setPower(0);
+        }
+
+        if (gamepad2.b) {
+            hand.setPosition(0.6);
+        }
+        else if (gamepad2.a) {
+            hand.setPosition(0);
         }
 
 

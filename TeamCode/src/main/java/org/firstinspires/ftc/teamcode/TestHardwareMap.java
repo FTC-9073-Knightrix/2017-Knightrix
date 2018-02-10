@@ -39,13 +39,12 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor LeftIntakeDrive;
     DcMotor RightIntakeDrive;
     DcMotor updownMotor;
-    //DcMotor updownMotor;
-    //DcMotor armMotor;
+    DcMotor armMotor;
     //Servo pickup1;
     //Servo pickup2;
     //Servo side; // Color Sensor
-    //Servo hand; // Relic pickup
-    //Servo arm;  // Relic pickup
+    Servo hand; // Relic pickup
+    CRServo arm;  // Relic pickup
     Servo butt;
     //CRServo LeftIntakeDrive;
     //CRServo RightIntakeDrive;
@@ -90,7 +89,7 @@ public abstract class TestHardwareMap extends OpMode {
     double prevtimer = 0;
     boolean auto = false;
     boolean ran = false;
-    static final double ROT_MM = 3.93897638;
+    static final double ROT_MM = 1; // Encoder distance/MM
     /*int color1red;
     int color1green;
     int color1blue;*/
@@ -289,6 +288,8 @@ public abstract class TestHardwareMap extends OpMode {
             double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
             if (MaxValue == 0) {MaxValue = 1;} // To ensure there is no div/0
 
+            MyDistance = MyDistance * ROT_MM;
+
             // Direction        LF  RF  |   LF  RF
             //                  LB  RB  |   LB  RB
             //
@@ -338,6 +339,8 @@ public abstract class TestHardwareMap extends OpMode {
 
             twoago = oneago;
             oneago = Math.abs(lfEnc)+Math.abs(lbEnc)+Math.abs(rfEnc)+Math.abs(rbEnc);
+
+            MyDistance = MyDistance * ROT_MM;
 
 //            if (twoago == xPos && onesec == -1) {
 //                onesec = getRuntime();

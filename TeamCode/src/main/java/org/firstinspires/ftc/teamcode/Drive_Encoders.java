@@ -36,14 +36,30 @@ public class Drive_Encoders extends TestHardwareMap{
         RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
     public void loop() {
+        if (LeftFrontDrive.getCurrentPosition() < 2000 && LeftBackDrive.getCurrentPosition() < 2000 && RightFrontDrive.getCurrentPosition() < 2000 && RightBackDrive.getCurrentPosition() < 2000) {
+            LeftFrontDrive.setTargetPosition(2000);
+            LeftBackDrive.setTargetPosition(2000);
+            RightFrontDrive.setTargetPosition(2000);
+            RightBackDrive.setTargetPosition(2000);
+        }
+        else {
+            stop();
+        }
+        /// /if (AutoFrontBack(1500, 0.5)) {
+        //    stop();
+        //}
+        /*telemetry.addLine("LF: " + LeftFrontDrive.getCurrentPosition());
+        telemetry.addLine("LB: " + LeftBackDrive.getCurrentPosition());
+        telemetry.addLine("RF: " + RightFrontDrive.getCurrentPosition());
+        telemetry.addLine("RB: " + RightBackDrive.getCurrentPosition());*/
 //
 //        // Update variables
 //        prevtimer = timer;

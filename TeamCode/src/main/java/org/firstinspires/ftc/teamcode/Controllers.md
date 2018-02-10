@@ -33,12 +33,12 @@
 |:-------------:|:-------------:|
 |dpad up|up pickup|
 |dpad down|down pickup|
-|dpad left||
-|dpad right||
-|y||
-|b||
-|a||
-|x||
+|dpad left|extend in|
+|dpad right|extend out|
+|y|arm up|
+|b|open hand|
+|a|close hand|
+|x|arm down|
 |select||
 |start||
 |left stick up||
