@@ -45,7 +45,7 @@ public abstract class TestHardwareMap extends OpMode {
     //Servo side; // Color Sensor
     Servo hand; // Relic pickup
     CRServo arm;  // Relic pickup
-    Servo butt;
+    Servo back;
     //CRServo LeftIntakeDrive;
     //CRServo RightIntakeDrive;
     //Servo switchServo;
@@ -135,7 +135,7 @@ public abstract class TestHardwareMap extends OpMode {
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightBackDrive = hardwareMap.dcMotor.get("RB");
         updownMotor = hardwareMap.dcMotor.get("UD");
-        //armMotor = hardwareMap.dcMotor.get("ARM");
+        armMotor = hardwareMap.dcMotor.get("ARM");
         LeftIntakeDrive = hardwareMap.dcMotor.get("LIN");
         RightIntakeDrive = hardwareMap.dcMotor.get("RIN");
 
@@ -188,7 +188,7 @@ public abstract class TestHardwareMap extends OpMode {
         //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
         //switchServo = hardwareMap.servo.get("SS");
-        butt = hardwareMap.servo.get("butt");
+        //back = hardwareMap.servo.get("BK");
         plate = hardwareMap.servo.get("PL");
         //plate.setPosition(0.3);
 

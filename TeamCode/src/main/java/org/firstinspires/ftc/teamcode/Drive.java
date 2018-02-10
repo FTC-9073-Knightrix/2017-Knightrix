@@ -162,27 +162,27 @@ public class Drive extends TestHardwareMap{
         // Description
         // ------------------ START -----------------------------
         if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
-            butt.setPosition(90);
+            back.setPosition(90);
             RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
             LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
         }
         else {
-            butt.setPosition(0);
+            back.setPosition(0);
         }
         /*if (gamepad2.a){
             leftIntakePower = -1;
             rightIntakePower = 1;
-            butt.setPosition(90);
+            back.setPosition(90);
         }
         else if(gamepad2.b){
             leftIntakePower = 1;
             rightIntakePower = -1;
-            butt.setPosition(0);
+            back.setPosition(0);
         }
         else {
             leftIntakePower = 0;
             rightIntakePower = 0;
-            butt.setPosition(0);
+            back.setPosition(0);
         }
         LeftIntakeDrive.setPower(leftIntakePower);
         RightIntakeDrive.setPower(rightIntakePower);*/
@@ -288,7 +288,7 @@ public class Drive extends TestHardwareMap{
 
         // --------------- DESCRIPTION --------------------------
         // Resets Gyro by demand
-        // Resets Gyro on gamepad button to update Heading
+        // Resets Gyro on gamepad backon to update Heading
         // ------------------ START -----------------------------
         if (gamepad1.a) {
             gyroResetValue = orientation.firstAngle;
