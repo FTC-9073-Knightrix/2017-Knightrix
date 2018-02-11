@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/9/17.
  */
 
-@TeleOp(name = "Drive Test")
+@TeleOp(name = "DRIVE_NEW")
 
 // Main Driver controlled program
 // WITH comments
@@ -71,10 +72,10 @@ public class Drive_Test extends NewHardwareMap{
         // Test Motors
         // Run Motors Forward at 50%
         // ------------------ START -----------------------------
-        LeftFrontDrive.setPower(0.5);
-        LeftBackDrive.setPower(0.5);
-        RightFrontDrive.setPower(0.5);
-        RightBackDrive.setPower(0.5);
+        //LeftFrontDrive.setPower(leftstick_x);
+        //LeftBackDrive.setPower(leftstick_x);
+        //RightFrontDrive.setPower(leftstick_y);
+        //RightBackDrive.setPower(leftstick_y);
         // ------------------  END  -----------------------------
 
         //
@@ -83,9 +84,17 @@ public class Drive_Test extends NewHardwareMap{
         // Update Variables in Loop
         // Description
         // ------------------ START -----------------------------
-        //Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        //double gyroDegrees = orientation.firstAngle - gyroResetValue;
-        //double gyroTilt = orientation.secondAngle;
+        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        double gyroDegrees = orientation.firstAngle - gyroResetValue;
+        double gyroTilt = orientation.secondAngle;
+
+        // Read dimensionalized data from the gyro. This gyro can report angular velocities
+        // about all three axes. Additionally, it internally integrates the Z axis to
+        // be able to report an absolute angular Z orientation.
+        AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
+        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -280,7 +289,10 @@ public class Drive_Test extends NewHardwareMap{
         // Rotates Robot
         // Change rotation heading based on position of the robot
         // ------------------ START -----------------------------
-        /*if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
+        //leftstick_x = gamepad1.left_stick_x;
+        //leftstick_y = -gamepad1.left_stick_y;
+
+        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
             leftstick_x = gamepad1.left_stick_x;
             leftstick_y = -gamepad1.left_stick_y;
         }
@@ -295,7 +307,6 @@ public class Drive_Test extends NewHardwareMap{
         else {
             myrot = gamepad1.right_stick_x / 2;
         }
-        */
         //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
 
@@ -345,7 +356,7 @@ public class Drive_Test extends NewHardwareMap{
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        /*
+
         // 1- Determines angle of the joystick (myangle)
         if (leftstick_x > 0 && leftstick_y < 0) {//quadrant up/right
             myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //90 to 0
@@ -382,7 +393,7 @@ public class Drive_Test extends NewHardwareMap{
 
         // 4- MOVE robot
         mech_move(myangle,mypower,myrot);
-        */
+
         // ------------------  END  -----------------------------
 
 
@@ -453,11 +464,12 @@ public class Drive_Test extends NewHardwareMap{
 
 
 
+        telemetry.addLine("DRIVE_NEW");
         telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());
         //telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
-        //telemetry.addLine("angle = " + myangle);
-        //telemetry.addLine("power = " + mypower);
+        telemetry.addLine("angle = " + myangle);
+        telemetry.addLine("power = " + mypower);
         //telemetry.addLine("Rotation = " + myrot);
         //telemetry.addLine("Rev:" + plate.getPosition());
 //        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
@@ -465,10 +477,10 @@ public class Drive_Test extends NewHardwareMap{
 //        telemetry.addLine("Side: " + side.getPosition());
         //telemetry.addLine("Hand: " + hand.getPosition());
         //telemetry.addLine("Arm: " + arm.getPosition());
-        //telemetry.addLine("gyro z = " + orientation.firstAngle);
-        //telemetry.addLine("new 0: " + gyroResetValue);
-        //telemetry.addLine("gyro x = " + orientation.secondAngle);
-        //telemetry.addLine("gyro y = " + orientation.thirdAngle);
+        telemetry.addLine("gyro z = " + orientation.firstAngle);
+        telemetry.addLine("new 0: " + gyroResetValue);
+        telemetry.addLine("gyro x = " + orientation.secondAngle);
+        telemetry.addLine("gyro y = " + orientation.thirdAngle);
         //Range Sensor
         //telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
 
@@ -479,6 +491,16 @@ public class Drive_Test extends NewHardwareMap{
         //telemetry.addLine("Color: " + color());
         //telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
+        // Gyro Telemetry
+        telemetry.addLine()
+                .addData("dx", formatRate(rates.xRotationRate))
+                .addData("dy", formatRate(rates.yRotationRate))
+                .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
+
+        telemetry.addLine()
+                .addData("heading", formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
 
     }
 

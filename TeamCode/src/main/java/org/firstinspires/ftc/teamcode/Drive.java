@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,7 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/9/17.
  */
 
-@TeleOp(name = "DRIVE")
+@TeleOp(name = "DRIVE_old")
+@Disabled
 
 // Main Driver controlled program
 // WITH comments

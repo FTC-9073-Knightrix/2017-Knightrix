@@ -5,40 +5,72 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Created by ibravo on 2/10/18.
  */
 
 public abstract class NewHardwareMap extends OpMode {
-    // Init variables
 
+    // Init Hardware
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
+    DcMotor updownMotor;
+    DcMotor LeftIntakeDrive;
+    DcMotor RightIntakeDrive;
 
-    //Sensors
+    // Init Sensors
     ColorSensor color1;
+
+    IntegratingGyroscope gyro;
+    NavxMicroNavigationSensor navxGyro;
 
     // Time Variables
     double timer = 0;
+
+    // Variables
+    double gyroResetValue = 0;
+    float myangle = 0;
+    float mypower = 0;
+    double leftstick_x = 0;
+    double leftstick_y = 0;
+
+
 
     @Override
     public void init() {
 
 
-        // AL00VL2F
+        // Name the devices
+        // AL00VL2F - Left Wall
         LeftFrontDrive = hardwareMap.dcMotor.get("LF");
-        LeftBackDrive = hardwareMap.dcMotor.get("LB");
-        // AL00VLYG
-        RightFrontDrive = hardwareMap.dcMotor.get("RF");
-        RightBackDrive = hardwareMap.dcMotor.get("RB");
-
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
+        LeftBackDrive = hardwareMap.dcMotor.get("LB");
         LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
-        RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        // AL00XTF6 - Left Wall
+        updownMotor = hardwareMap.dcMotor.get("UD");
+        LeftIntakeDrive = hardwareMap.dcMotor.get("LIN");
+        // AL00VLVW - Right Wall
+        RightIntakeDrive = hardwareMap.dcMotor.get("RIN");
+        //armMotor = hardwareMap.dcMotor.get("ARM");
+        // AL00VLYG - Right Wall
+        RightFrontDrive = hardwareMap.dcMotor.get("RF");
+        RightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        RightBackDrive = hardwareMap.dcMotor.get("RB");
         RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        // AI02RN0U - Right Wall Servo
+        //Plate; Arm; Hand; Color
+        // AL026BJ2 - Bottom Floor I2C
+        // 0 NavX; 5 Color
+        navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
+        gyro = (IntegratingGyroscope)navxGyro;
+        //
+
 
         /*// Reset encoders
         LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,4 +86,35 @@ public abstract class NewHardwareMap extends OpMode {
         */
 
     }
+
+    public void init_loop() {
+        if (navxGyro.isCalibrating()) {
+            telemetry.addLine("navX Calibration");
+        }
+    }
+
+
+
+    void mech_move (float myangle, float mypower, float myrot){
+        if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
+            LeftFrontDrive.setPower(Range.clip( myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( -myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+        }
+    }
+
+
+    String formatRate(float rate) {
+        return String.format("%.3f", rate);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
 }
