@@ -16,14 +16,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/9/17.
  */
 
-@TeleOp(name = "DRIVE")
+@TeleOp(name = "DRIVE Test")
 
 // Main Driver controlled program
 // WITH comments
 
 //http://pdocs.kauailabs.com/navx-micro/examples/field-oriented-drive/
 
-public class Drive extends TestHardwareMap{
+public class Drive_Test extends NewHardwareMap{
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits INIT
@@ -71,9 +71,9 @@ public class Drive extends TestHardwareMap{
         // Update Variables in Loop
         // Description
         // ------------------ START -----------------------------
-        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        double gyroDegrees = orientation.firstAngle - gyroResetValue;
-        double gyroTilt = orientation.secondAngle;
+        //Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        //double gyroDegrees = orientation.firstAngle - gyroResetValue;
+        //double gyroTilt = orientation.secondAngle;
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -99,7 +99,7 @@ public class Drive extends TestHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.dpad_up) {
+        /*if (gamepad2.dpad_up) {
             updownMotor.setPower(0.5);
         }
         else if (gamepad2.dpad_down) {
@@ -135,7 +135,7 @@ public class Drive extends TestHardwareMap{
         else if (gamepad2.a) {
             hand.setPosition(0);
         }
-
+        */
 
         // ------------------  END  -----------------------------
 
@@ -161,7 +161,7 @@ public class Drive extends TestHardwareMap{
         // Changes Intake Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
+        /*if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
             butt.setPosition(90);
             RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
             LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
@@ -169,6 +169,7 @@ public class Drive extends TestHardwareMap{
         else {
             butt.setPosition(0);
         }
+        */
         /*if (gamepad2.a){
             leftIntakePower = -1;
             rightIntakePower = 1;
@@ -267,7 +268,7 @@ public class Drive extends TestHardwareMap{
         // Rotates Robot
         // Change rotation heading based on position of the robot
         // ------------------ START -----------------------------
-        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
+        /*if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
             leftstick_x = gamepad1.left_stick_x;
             leftstick_y = -gamepad1.left_stick_y;
         }
@@ -282,6 +283,7 @@ public class Drive extends TestHardwareMap{
         else {
             myrot = gamepad1.right_stick_x / 2;
         }
+        */
         //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
 
@@ -290,9 +292,9 @@ public class Drive extends TestHardwareMap{
         // Resets Gyro by demand
         // Resets Gyro on gamepad button to update Heading
         // ------------------ START -----------------------------
-        if (gamepad1.a) {
+        /*if (gamepad1.a) {
             gyroResetValue = orientation.firstAngle;
-        }
+        }*/
         // ------------------  END  -----------------------------
 
 
@@ -331,6 +333,7 @@ public class Drive extends TestHardwareMap{
         //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
+        /*
         // 1- Determines angle of the joystick (myangle)
         if (leftstick_x > 0 && leftstick_y < 0) {//quadrant up/right
             myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //90 to 0
@@ -367,6 +370,7 @@ public class Drive extends TestHardwareMap{
 
         // 4- MOVE robot
         mech_move(myangle,mypower,myrot);
+        */
         // ------------------  END  -----------------------------
 
 
@@ -429,12 +433,19 @@ public class Drive extends TestHardwareMap{
         }*/
         // ------------------  END  -----------------------------
 
+        // --------------- DESCRIPTION --------------------------
+        // Enables Timer
+        // ------------------ START -----------------------------
+        timer = getRuntime();  // Sets timer = accumulated time
+        // ------------------  END  -----------------------------
+
+
 
         //telemetry.addLine("SS: " + switchServo.getPosition());
         //telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
-        telemetry.addLine("angle = " + myangle);
-        telemetry.addLine("power = " + mypower);
-        telemetry.addLine("Rotation = " + myrot);
+        //telemetry.addLine("angle = " + myangle);
+        //telemetry.addLine("power = " + mypower);
+        //telemetry.addLine("Rotation = " + myrot);
         //telemetry.addLine("Rev:" + plate.getPosition());
 //        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
 //        telemetry.addLine("Leftclaw =" + (1 - gamepad1.left_trigger)+"-"+pickup2.getPosition());
@@ -448,10 +459,10 @@ public class Drive extends TestHardwareMap{
         //Range Sensor
         //telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
 
-        telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
-        telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
-        telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
-        telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
+        //telemetry.addLine("LF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
+        //telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
+        //telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
+        //telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         //telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
 

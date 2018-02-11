@@ -53,9 +53,11 @@ public abstract class TestHardwareMap extends OpMode {
     //ModernRoboticsI2cRangeSensor range1;
     //    I2cDevice range1;
     //I2cDevice range2;
-    Servo plate;
-    IntegratingGyroscope gyro;
+    //Servo    IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
+ //plate;
+    IntegratingGyroscope gyro;
+    //NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
     //DigitalChannel limitSwitch;
 
@@ -188,8 +190,8 @@ public abstract class TestHardwareMap extends OpMode {
         //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
         //switchServo = hardwareMap.servo.get("SS");
-        butt = hardwareMap.servo.get("butt");
-        plate = hardwareMap.servo.get("PL");
+        //butt = hardwareMap.servo.get("butt");
+        //plate = hardwareMap.servo.get("PL");
         //plate.setPosition(0.3);
 
 
@@ -230,7 +232,6 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-    @Override
     public void init_loop() {
         if (navxGyro.isCalibrating()) {
             telemetry.addLine("navX Calibration");

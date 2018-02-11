@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name = "Drive Encoders")
 
-public class Drive_Encoders extends TestHardwareMap{
+public class Drive_Encoders extends NewHardwareMap {
     /*
 * Code to run ONCE when the driver hits PLAY
 */
@@ -31,7 +31,7 @@ public class Drive_Encoders extends TestHardwareMap{
     public void init() {
 
         //Reset encoders
-        LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -40,11 +40,14 @@ public class Drive_Encoders extends TestHardwareMap{
         LeftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+*/    }
 
     @Override
     public void loop() {
-        if (LeftFrontDrive.getCurrentPosition() < 2000 && LeftBackDrive.getCurrentPosition() < 2000 && RightFrontDrive.getCurrentPosition() < 2000 && RightBackDrive.getCurrentPosition() < 2000) {
+        //LeftFrontDrive.setPower(0.2);
+
+
+        /*if (LeftFrontDrive.getCurrentPosition() < 2000 && LeftBackDrive.getCurrentPosition() < 2000 && RightFrontDrive.getCurrentPosition() < 2000 && RightBackDrive.getCurrentPosition() < 2000) {
             LeftFrontDrive.setTargetPosition(2000);
             LeftBackDrive.setTargetPosition(2000);
             RightFrontDrive.setTargetPosition(2000);
