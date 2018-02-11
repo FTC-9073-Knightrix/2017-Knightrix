@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/9/17.
  */
 
-@TeleOp(name = "DRIVE Test")
+@TeleOp(name = "Drive Test")
 
 // Main Driver controlled program
 // WITH comments
@@ -66,6 +66,18 @@ public class Drive_Test extends NewHardwareMap{
         // ------------------ START -----------------------------
         // Code
         // ------------------  END  -----------------------------
+
+        // --------------- DESCRIPTION --------------------------
+        // Test Motors
+        // Run Motors Forward at 50%
+        // ------------------ START -----------------------------
+        LeftFrontDrive.setPower(0.5);
+        LeftBackDrive.setPower(0.5);
+        RightFrontDrive.setPower(0.5);
+        RightBackDrive.setPower(0.5);
+        // ------------------  END  -----------------------------
+
+        //
 
         // --------------- DESCRIPTION --------------------------
         // Update Variables in Loop
@@ -441,6 +453,7 @@ public class Drive_Test extends NewHardwareMap{
 
 
 
+        telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());
         //telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
         //telemetry.addLine("angle = " + myangle);
@@ -463,6 +476,7 @@ public class Drive_Test extends NewHardwareMap{
         //telemetry.addLine("LB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
         //telemetry.addLine("RF =" + Math.round(-Math.sin((myangle+45)/180*3.141592)*100));
         //telemetry.addLine("RB =" + Math.round(-Math.sin((myangle+135)/180*3.141592)*100));
+        //telemetry.addLine("Color: " + color());
         //telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
 
