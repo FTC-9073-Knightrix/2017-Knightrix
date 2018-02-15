@@ -114,7 +114,23 @@ public class Drive_Test extends NewHardwareMap{
             downclaw = gamepad2.dpad_down;
         }*/
         // ------------------  END  -----------------------------
+        /*if (gamepad2.b) {
+            hand.setPosition(0);
+        }
+        else if (gamepad2.a) {
+            hand.setPosition(0.5);
+        }*/
 
+        if(gamepad2.x){
+            armpos = 0.45;
+        }
+        else if(gamepad2.y){
+            armpos = 0.60;
+        }
+        else{
+            armpos = 0.5;
+        }
+        //arm.setPosition(armpos);
 
         // --------------- DESCRIPTION --------------------------
         // Changes Up/Down Power based on direction
@@ -165,10 +181,10 @@ public class Drive_Test extends NewHardwareMap{
         // Description
         // ------------------ START -----------------------------
         if (gamepad2.right_bumper) {
-            //plate.setPosition(1);
+            plate.setPosition(1);
         }
         else {
-            //plate.setPosition(0.5);
+            plate.setPosition(0.5);
         }
         /*if (gamepad1.right_trigger > 0) {
             plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5))  , 0.5, 1.0));
@@ -182,32 +198,32 @@ public class Drive_Test extends NewHardwareMap{
         // Changes Intake Power based on direction
         // Description
         // ------------------ START -----------------------------
-        /*if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
-            butt.setPosition(90);
-            RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-            LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
-        }
-        else {
-            butt.setPosition(0);
-        }
-        */
-        /*if (gamepad2.a){
+//        if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
+//            //butt.setPosition(90);
+//            RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+//            LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
+//        }
+//        else {
+//            //butt.setPosition(0);
+//        }
+
+        if (gamepad2.a){
             leftIntakePower = -1;
             rightIntakePower = 1;
-            butt.setPosition(90);
+            //butt.setPosition(90);
         }
         else if(gamepad2.b){
             leftIntakePower = 1;
             rightIntakePower = -1;
-            butt.setPosition(0);
+            //butt.setPosition(0);
         }
         else {
             leftIntakePower = 0;
             rightIntakePower = 0;
-            butt.setPosition(0);
+            //butt.setPosition(0);
         }
         LeftIntakeDrive.setPower(leftIntakePower);
-        RightIntakeDrive.setPower(rightIntakePower);*/
+        RightIntakeDrive.setPower(rightIntakePower);
 
         // ------------------  END  -----------------------------
 
@@ -216,19 +232,26 @@ public class Drive_Test extends NewHardwareMap{
         // Left/Right relic recovery
         // Use GamePad1 as master, GamePad2 as slave
         // ------------------ START -----------------------------
+        side.setPosition(0.6);
+        if (gamepad2.dpad_right) {
+            armMotor.setPower(-1);
+        }
+        else if (gamepad2.dpad_left) {
+            armMotor.setPower(1);
+        }
+        else {
+            armMotor.setPower(0);
+        }
 
-        /*if (gamepad1.dpad_left) {
-            left = gamepad1.dpad_left;
+        if (gamepad2.left_stick_y == 1) {
+            updownMotor.setPower(-0.7);
+        }
+        else if (gamepad2.left_stick_y == -1) {
+            updownMotor.setPower(0.7);
         }
         else {
-            left = gamepad2.dpad_left;
+            updownMotor.setPower(0);
         }
-        if (gamepad1.dpad_right) {
-            right = gamepad1.dpad_right;
-        }
-        else {
-            right = gamepad2.dpad_right;
-        }*/
         // -----------------------------------------------------
 
         // --------------- DESCRIPTION --------------------------

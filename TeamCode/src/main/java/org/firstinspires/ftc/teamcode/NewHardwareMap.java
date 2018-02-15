@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -23,6 +24,11 @@ public abstract class NewHardwareMap extends OpMode {
     DcMotor updownMotor;
     DcMotor LeftIntakeDrive;
     DcMotor RightIntakeDrive;
+    DcMotor armMotor;
+    Servo plate;
+    Servo arm;
+    Servo hand;
+    Servo side;
 
     // Init Sensors
     ColorSensor color1;
@@ -39,6 +45,9 @@ public abstract class NewHardwareMap extends OpMode {
     float mypower = 0;
     double leftstick_x = 0;
     double leftstick_y = 0;
+    double armpos = 0;
+    double leftIntakePower = 0;
+    double rightIntakePower = 0;
 
 
 
@@ -57,7 +66,7 @@ public abstract class NewHardwareMap extends OpMode {
         LeftIntakeDrive = hardwareMap.dcMotor.get("LIN");
         // AL00VLVW - Right Wall
         RightIntakeDrive = hardwareMap.dcMotor.get("RIN");
-        //armMotor = hardwareMap.dcMotor.get("ARM");
+        armMotor = hardwareMap.dcMotor.get("ARM");
         // AL00VLYG - Right Wall
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -65,6 +74,10 @@ public abstract class NewHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         // AI02RN0U - Right Wall Servo
         //Plate; Arm; Hand; Color
+        //arm = hardwareMap.servo.get("AS");
+        //hand = hardwareMap.servo.get("HS");
+        plate = hardwareMap.servo.get("PL");
+        side = hardwareMap.servo.get("SS");
         // AL026BJ2 - Bottom Floor I2C
         // 0 NavX; 5 Color
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
@@ -97,10 +110,14 @@ public abstract class NewHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-            LeftFrontDrive.setPower(Range.clip( myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            LeftBackDrive.setPower(Range.clip(  myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
             RightFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightBackDrive.setPower(Range.clip( -myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            /*LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( myrot + (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));*/
         }
     }
 
