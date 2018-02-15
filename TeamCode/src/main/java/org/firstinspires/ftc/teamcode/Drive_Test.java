@@ -464,12 +464,12 @@ public class Drive_Test extends NewHardwareMap{
 
 
 
-        telemetry.addLine("DRIVE_NEW");
-        telemetry.addLine("Timer: " + timer);
+       // telemetry.addLine("DRIVE_NEW");
+        //telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());
         //telemetry.addLine("LS boolean 2: " + !limitSwitch.getState());
-        telemetry.addLine("angle = " + myangle);
-        telemetry.addLine("power = " + mypower);
+        //telemetry.addLine("angle = " + myangle);
+        //telemetry.addLine("power = " + mypower);
         //telemetry.addLine("Rotation = " + myrot);
         //telemetry.addLine("Rev:" + plate.getPosition());
 //        telemetry.addLine("Rightclaw =" + (1 - gamepad1.right_trigger)+"-"+pickup1.getPosition());
@@ -477,10 +477,10 @@ public class Drive_Test extends NewHardwareMap{
 //        telemetry.addLine("Side: " + side.getPosition());
         //telemetry.addLine("Hand: " + hand.getPosition());
         //telemetry.addLine("Arm: " + arm.getPosition());
-        telemetry.addLine("gyro z = " + orientation.firstAngle);
-        telemetry.addLine("new 0: " + gyroResetValue);
-        telemetry.addLine("gyro x = " + orientation.secondAngle);
-        telemetry.addLine("gyro y = " + orientation.thirdAngle);
+        //telemetry.addLine("gyro z = " + orientation.firstAngle);
+        //telemetry.addLine("new 0: " + gyroResetValue);
+        //telemetry.addLine("gyro x = " + orientation.secondAngle);
+        //telemetry.addLine("gyro y = " + orientation.thirdAngle);
         //Range Sensor
         //telemetry.addLine("Range ="+ range1.getDistance(DistanceUnit.CM));
 
