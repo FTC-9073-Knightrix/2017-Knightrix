@@ -86,13 +86,13 @@ public class Drive_Test extends NewHardwareMap{
         // ------------------ START -----------------------------
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         double gyroDegrees = orientation.firstAngle - gyroResetValue;
-        double gyroTilt = orientation.secondAngle;
+        //double gyroTilt = orientation.secondAngle;
 
         // Read dimensionalized data from the gyro. This gyro can report angular velocities
         // about all three axes. Additionally, it internally integrates the Z axis to
         // be able to report an absolute angular Z orientation.
-        AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
-        Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+       // AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
+        //Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
 
         // ------------------  END  -----------------------------
@@ -180,18 +180,23 @@ public class Drive_Test extends NewHardwareMap{
         // Changes Up/Down Power based on direction
         // Description
         // ------------------ START -----------------------------
-        if (gamepad2.right_bumper) {
-            plate.setPosition(1);
+//        if (gamepad2.right_bumper) {
+//            plate.setPosition(1);
+//        }
+//        else {
+//            plate.setPosition(0.5);
+//        }
+        if (gamepad1.right_trigger > 0) {
+            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
         }
-        else {
-            plate.setPosition(0.5);
-        }
-        /*if (gamepad1.right_trigger > 0) {
-            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5))  , 0.5, 1.0));
+        else if (gamepad2.left_bumper) {
+            plate.setPosition(0.6);
         }
         else {
             plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
-        }*/
+        }
+
+
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -232,7 +237,7 @@ public class Drive_Test extends NewHardwareMap{
         // Left/Right relic recovery
         // Use GamePad1 as master, GamePad2 as slave
         // ------------------ START -----------------------------
-        side.setPosition(0.6);
+        side.setPosition(1);
         if (gamepad2.dpad_right) {
             armMotor.setPower(-1);
         }
@@ -244,10 +249,10 @@ public class Drive_Test extends NewHardwareMap{
         }
 
         if (gamepad2.left_stick_y == 1) {
-            updownMotor.setPower(-0.7);
+            updownMotor.setPower(0.7);
         }
         else if (gamepad2.left_stick_y == -1) {
-            updownMotor.setPower(0.7);
+            updownMotor.setPower(-0.7);
         }
         else {
             updownMotor.setPower(0);
@@ -482,7 +487,7 @@ public class Drive_Test extends NewHardwareMap{
         // --------------- DESCRIPTION --------------------------
         // Enables Timer
         // ------------------ START -----------------------------
-        timer = getRuntime();  // Sets timer = accumulated time
+        //timer = getRuntime();  // Sets timer = accumulated time
         // ------------------  END  -----------------------------
 
 
@@ -515,15 +520,7 @@ public class Drive_Test extends NewHardwareMap{
         //telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
 
         // Gyro Telemetry
-        telemetry.addLine()
-                .addData("dx", formatRate(rates.xRotationRate))
-                .addData("dy", formatRate(rates.yRotationRate))
-                .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
-
-        telemetry.addLine()
-                .addData("heading", formatAngle(angles.angleUnit, angles.firstAngle))
-                .addData("roll", formatAngle(angles.angleUnit, angles.secondAngle))
-                .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
+//     \
 
     }
 
