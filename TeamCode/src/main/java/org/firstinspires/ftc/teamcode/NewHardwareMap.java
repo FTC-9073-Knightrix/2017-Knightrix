@@ -75,7 +75,7 @@ public abstract class NewHardwareMap extends OpMode {
         // AI02RN0U - Right Wall Servo
         //Plate; Arm; Hand; Color
         //arm = hardwareMap.servo.get("AS");
-        //hand = hardwareMap.servo.get("HS");
+        hand = hardwareMap.servo.get("HS");
         plate = hardwareMap.servo.get("PL");
         side = hardwareMap.servo.get("SS");
         // AL026BJ2 - Bottom Floor I2C

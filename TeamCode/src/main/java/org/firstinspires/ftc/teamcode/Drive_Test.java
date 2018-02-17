@@ -114,18 +114,21 @@ public class Drive_Test extends NewHardwareMap{
             downclaw = gamepad2.dpad_down;
         }*/
         // ------------------  END  -----------------------------
-        /*if (gamepad2.b) {
+        if (gamepad1.left_bumper) {
+            hand.setPosition(0.5);
+        }
+        else if (gamepad2.right_bumper) {
             hand.setPosition(0);
         }
-        else if (gamepad2.a) {
-            hand.setPosition(0.5);
-        }*/
+        else{
+            hand.setPosition(0);
+        }
 
         if(gamepad2.x){
-            armpos = 0.45;
+            armpos = 0.35;
         }
         else if(gamepad2.y){
-            armpos = 0.60;
+            armpos = 0.75;
         }
         else{
             armpos = 0.5;
