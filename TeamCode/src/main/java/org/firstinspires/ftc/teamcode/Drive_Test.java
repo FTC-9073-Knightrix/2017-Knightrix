@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -68,14 +71,21 @@ public class Drive_Test extends NewHardwareMap{
         // Code
         // ------------------  END  -----------------------------
 
+
         // --------------- DESCRIPTION --------------------------
-        // Test Motors
-        // Run Motors Forward at 50%
+        // Enable/Disable I2C devices
+        // Avoid I2C sensor lag by only enabling the sensors when
+        // required to be used and disabling them the rest of the time
         // ------------------ START -----------------------------
-        //LeftFrontDrive.setPower(leftstick_x);
-        //LeftBackDrive.setPower(leftstick_x);
-        //RightFrontDrive.setPower(leftstick_y);
-        //RightBackDrive.setPower(leftstick_y);
+        // Somewhere in your code when you need the color sensor.
+        // beaconColorSensorState.setEnabled(true);
+        // When you are done with the color sensor.
+        // beaconColorSensorState.setEnabled(false);
+
+        // Somewhere in your code when you need the range sensor.
+        //        rangeSensorState.setEnabled(true);
+        // When you are done with the range sensor.
+        //        rangeSensorState.setEnabled(false);
         // ------------------  END  -----------------------------
 
         //
@@ -84,8 +94,18 @@ public class Drive_Test extends NewHardwareMap{
         // Update Variables in Loop
         // Description
         // ------------------ START -----------------------------
-        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        double gyroDegrees = orientation.firstAngle - gyroResetValue;
+
+        // Nick: Set this code to run every other loop run
+        if (navxCounter == 3) {
+            orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+            gyroDegrees = (int) (orientation.firstAngle - gyroResetValue);
+            navxCounter = 1;
+        }
+        else {
+            navxCounter++;
+        }
+
+
         //double gyroTilt = orientation.secondAngle;
 
         // Read dimensionalized data from the gyro. This gyro can report angular velocities
@@ -122,13 +142,13 @@ public class Drive_Test extends NewHardwareMap{
         }*/
 
         if(gamepad2.x){
-            armpos = 0.45;
+            armpos = (float) 0.45;
         }
         else if(gamepad2.y){
-            armpos = 0.60;
+            armpos = (float) 0.60;
         }
         else{
-            armpos = 0.5;
+            armpos = (float) 0.5;
         }
         //arm.setPosition(armpos);
 
@@ -330,10 +350,10 @@ public class Drive_Test extends NewHardwareMap{
         }
         float myrot = 0;
         if (gamepad2.right_stick_x != 0) {
-            myrot = gamepad2.right_stick_x / 5;
+            myrot = Math.round((gamepad2.right_stick_x / 5) * 100) / 100;
         }
         else {
-            myrot = gamepad1.right_stick_x / 2;
+            myrot = Math.round((gamepad1.right_stick_x / 2) * 100) / 100;
         }
         //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
@@ -386,31 +406,24 @@ public class Drive_Test extends NewHardwareMap{
 
 
         // 1- Determines angle of the joystick (myangle)
-        if (leftstick_x > 0 && leftstick_y < 0) {//quadrant up/right
-            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //90 to 0
+        if ((leftstick_x > 0 && leftstick_y > 0) || (leftstick_x > 0 && leftstick_y < 0)) {//quadrant down/right
+            myangle = (int) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //180 to 90}
         }
-        else if (leftstick_x > 0 && leftstick_y > 0) {//quadrant down/right
-            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //180 to 90}
+        else if((leftstick_x < 0 && leftstick_y < 0) || (leftstick_x < 0 && leftstick_y > 0)) { //quadrant up/left
+            myangle = (int) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //270-180
         }
-        else if(leftstick_x < 0 && leftstick_y > 0) {//quadrant down/left
-            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //360-270
-        }
-        else if(leftstick_x < 0 && leftstick_y < 0) { //quadrant up/left
-            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //270-180
-        }
-        else if(leftstick_x == 0 && leftstick_y == 0) //(0,0)
-            myangle = (float) 0;
-        else if(leftstick_x == 0 && leftstick_y < 0) //(0,-1)
-            myangle = (float) 0;
+        else if((leftstick_x == 0 && leftstick_y == 0) || (leftstick_x == 0 && leftstick_y < 0)) //(0,0)
+            myangle = 0;
         else if(leftstick_x > 0  && leftstick_y == 0) //(1,0)
-            myangle = (float) 90;
+            myangle = 90;
         else if(leftstick_x == 0 && leftstick_y > 0) //(0,1)
-            myangle = (float) 180;
+            myangle = 180;
         else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
-            myangle = (float) 270;
+            myangle = 270;
+
 
         // 2- Determines power based on Pythagorean Theorem (mypower)
-        mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
+        mypower = (float) Range.clip(Math.round(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y) * 100) / 100,0,1);
 
         // 3- Limits angle value to be in 360 degrees range
         //myangle = myangle - angle that the gyro is at
@@ -486,12 +499,21 @@ public class Drive_Test extends NewHardwareMap{
 
         // --------------- DESCRIPTION --------------------------
         // Enables Timer
+        // Counts the number of loops per second of the program.
+        // More loops is better.
+        // Used to evaluate what is taking more loop cycles
         // ------------------ START -----------------------------
-        //timer = getRuntime();  // Sets timer = accumulated time
+        loopcounter++;
+        if ((int)(getRuntime()) > timer) {
+            timer = getRuntime();  // Sets timer = accumulated time
+            loopshower = loopcounter;
+            loopcounter = 0;
+        }
+
         // ------------------  END  -----------------------------
 
 
-
+        telemetry.addLine("Loops/sec: "+ loopshower);
        // telemetry.addLine("DRIVE_NEW");
         //telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());

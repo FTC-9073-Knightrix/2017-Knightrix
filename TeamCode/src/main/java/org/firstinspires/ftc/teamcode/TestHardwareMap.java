@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -31,6 +32,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 public abstract class TestHardwareMap extends OpMode {
+
+
+    // To enable I2C enable/disable function
+    public ModernRoboticsI2cColorSensor beaconColorSensor;
+    public FtcI2cDeviceState beaconColorSensorState;
+    public ModernRoboticsI2cRangeSensor rangeSensor;
+    public FtcI2cDeviceState rangeSensorState;
+
     // Remove Hardware Section
     DcMotor LeftFrontDrive;
     DcMotor LeftBackDrive;

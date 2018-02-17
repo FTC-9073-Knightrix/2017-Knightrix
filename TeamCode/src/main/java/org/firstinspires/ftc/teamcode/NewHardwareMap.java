@@ -1,20 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by ibravo on 2/10/18.
  */
 
 public abstract class NewHardwareMap extends OpMode {
+
+    // To enable I2C enable/disable function
+    ModernRoboticsI2cColorSensor beaconColorSensor;
+    FtcI2cDeviceState beaconColorSensorState;
+    //public ModernRoboticsI2cRangeSensor rangeSensor;
+    //public FtcI2cDeviceState rangeSensorState;
 
     // Init Hardware
     DcMotor LeftFrontDrive;
@@ -40,14 +52,19 @@ public abstract class NewHardwareMap extends OpMode {
     double timer = 0;
 
     // Variables
-    double gyroResetValue = 0;
-    float myangle = 0;
+    int gyroResetValue = 0;
+    int myangle = 0;
     float mypower = 0;
-    double leftstick_x = 0;
-    double leftstick_y = 0;
-    double armpos = 0;
-    double leftIntakePower = 0;
-    double rightIntakePower = 0;
+    float leftstick_x = 0;
+    float leftstick_y = 0;
+    float armpos = 0;
+    float leftIntakePower = 0;
+    float rightIntakePower = 0;
+    int loopcounter =0;
+    int loopshower = 0;
+    int navxCounter = 1;
+    int gyroDegrees = 0;
+    Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
 
 
@@ -98,6 +115,15 @@ public abstract class NewHardwareMap extends OpMode {
         RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         */
 
+        // I2C devices
+        // In your init method.
+        //beaconColorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "C1");
+        //beaconColorSensorState = new FtcI2cDeviceState((I2cDevice)beaconColorSensor);
+        //beaconColorSensorState.setEnabled(false);
+        //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        //rangeSensorState = new FtcI2cDeviceState((I2cDevice)rangeSensor);
+        //rangeSensorState.setEnabled(false);
+
     }
 
     public void init_loop() {
@@ -108,7 +134,7 @@ public abstract class NewHardwareMap extends OpMode {
 
 
 
-    void mech_move (float myangle, float mypower, float myrot){
+    void mech_move (int myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
             LeftFrontDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
             LeftBackDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
