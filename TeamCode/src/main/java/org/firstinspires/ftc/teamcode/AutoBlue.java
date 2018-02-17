@@ -28,6 +28,7 @@ public class AutoBlue extends TestHardwareMap {
 
     @Override
     public void loop() {
+        /*
         Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         // Get position of the 4 encoders
@@ -176,19 +177,19 @@ public class AutoBlue extends TestHardwareMap {
                 rbEncStart =  rbEnc;
             }
         }
-        /*else if (state == 10) {//left
-            if ((int)range1Value != 86) {
-                if (range1Value < 86) {
-                    mech_move(-90, (float) -0.5, 0);
-                } else {
-                    mech_move(-90,(float)0.5,0);
-                }
-            }
-            else {
-                state = 12.5;
-                angle = orientation.firstAngle;
-            }
-        }*/
+//        else if (state == 10) {//left
+//            if ((int)range1Value != 86) {
+//                if (range1Value < 86) {
+//                    mech_move(-90, (float) -0.5, 0);
+//                } else {
+//                    mech_move(-90,(float)0.5,0);
+//                }
+//            }
+//            else {
+//                state = 12.5;
+//                angle = orientation.firstAngle;
+//            }
+//        }
         else if (state == 10) { //left
             if (fourthEdge) {
                 state = 13;
@@ -236,17 +237,17 @@ public class AutoBlue extends TestHardwareMap {
                 }
             }
         }
-        /*else if (state == 11) {//center
-            if ((int)range1Value != 69) {
-                if (range1Value < 69) {
-                    mech_move(-90, (float) -0.5, 0);
-                } else {
-                    mech_move(-90,(float)0.5,0);
-                }
-            }
-            state = 12.5;
-            angle = orientation.firstAngle;
-        }*/
+//        else if (state == 11) {//center
+//            if ((int)range1Value != 69) {
+//                if (range1Value < 69) {
+//                    mech_move(-90, (float) -0.5, 0);
+//                } else {
+//                    mech_move(-90,(float)0.5,0);
+//                }
+//            }
+//            state = 12.5;
+//            angle = orientation.firstAngle;
+//        }
         else if (state == 11) { //center
             if (thirdEdge) {
                 state = 13;
@@ -284,19 +285,19 @@ public class AutoBlue extends TestHardwareMap {
                 }
             }
         }
-        /*else if (state == 12) {//right
-            if ((int)range1Value != 51) {
-                if (range1Value < 51) {
-                    mech_move(-90, (float) -0.5, 0);
-                } else {
-                    mech_move(-90,(float)0.5,0);
-                }
-            }
-            else {
-                state = 12.5;
-                angle = orientation.firstAngle;
-            }
-        }*///right
+//        else if (state == 12) {//right
+//            if ((int)range1Value != 51) {
+//                if (range1Value < 51) {
+//                    mech_move(-90, (float) -0.5, 0);
+//                } else {
+//                    mech_move(-90,(float)0.5,0);
+//                }
+//            }
+//            else {
+//                state = 12.5;
+//                angle = orientation.firstAngle;
+//            }
+//        ///right
         else if (state == 12) { //right
             if (secondEdge) {
                 state = 13;
@@ -392,5 +393,7 @@ public class AutoBlue extends TestHardwareMap {
         telemetry.addLine("Color RGB = (" + color1.red() + ", " + color1.green() + ", " + color1.blue() + ")");
         telemetry.addLine("Range = " + range1Value);
         telemetry.addLine("Vuforia = " + pictograph);
+
+      */
     }
 }

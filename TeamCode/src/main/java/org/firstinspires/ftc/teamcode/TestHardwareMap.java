@@ -36,24 +36,30 @@ public abstract class TestHardwareMap extends OpMode {
     DcMotor LeftBackDrive;
     DcMotor RightFrontDrive;
     DcMotor RightBackDrive;
+    DcMotor LeftIntakeDrive;
+    DcMotor RightIntakeDrive;
     DcMotor updownMotor;
     DcMotor armMotor;
-    Servo pickup1;
-    Servo pickup2;
-    Servo side; // Color Sensor
+    //Servo pickup1;
+    //Servo pickup2;
+    //Servo side; // Color Sensor
     Servo hand; // Relic pickup
-    Servo arm;  // Relic pickup
+    CRServo arm;  // Relic pickup
+    Servo butt;
     //CRServo LeftIntakeDrive;
     //CRServo RightIntakeDrive;
-    Servo switchServo;
-    ColorSensor color1;
-    ModernRoboticsI2cRangeSensor range1;
+    //Servo switchServo;
+    //ColorSensor color1;
+    //ModernRoboticsI2cRangeSensor range1;
     //    I2cDevice range1;
     //I2cDevice range2;
-    IntegratingGyroscope gyro;
+    //Servo    IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
+ //plate;
+    IntegratingGyroscope gyro;
+    //NavxMicroNavigationSensor navxGyro;
     VuforiaLocalizer vuforia;
-    DigitalChannel limitSwitch;
+    //DigitalChannel limitSwitch;
 
     //Variables
     float myangle = 0;
@@ -71,6 +77,8 @@ public abstract class TestHardwareMap extends OpMode {
     float lastX = 0;
     float lastY = 0;
     double updownPower;
+    double leftIntakePower;
+    double rightIntakePower;
     boolean upclaw = false;
     boolean downclaw = false;
     double gyroResetValue = 0;
@@ -83,7 +91,7 @@ public abstract class TestHardwareMap extends OpMode {
     double prevtimer = 0;
     boolean auto = false;
     boolean ran = false;
-    static final double ROT_MM = 3.93897638;
+    static final double ROT_MM = 1; // Encoder distance/MM
     /*int color1red;
     int color1green;
     int color1blue;*/
@@ -129,15 +137,17 @@ public abstract class TestHardwareMap extends OpMode {
         RightFrontDrive = hardwareMap.dcMotor.get("RF");
         RightBackDrive = hardwareMap.dcMotor.get("RB");
         updownMotor = hardwareMap.dcMotor.get("UD");
-        armMotor = hardwareMap.dcMotor.get("ARM");
+        //armMotor = hardwareMap.dcMotor.get("ARM");
+        LeftIntakeDrive = hardwareMap.dcMotor.get("LIN");
+        RightIntakeDrive = hardwareMap.dcMotor.get("RIN");
 
         // Set motor direction
         LeftFrontDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
         LeftBackDrive.setDirection(DcMotor.Direction.FORWARD); //was reverse
-        RightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        updownMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        //updownMotor.setDirection(DcMotor.Direction.FORWARD);
+        //armMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set driving mode
         if (auto) {
@@ -169,27 +179,31 @@ public abstract class TestHardwareMap extends OpMode {
 
 
         // servos
-        pickup1 = hardwareMap.servo.get("pickup1"); //Right
-        pickup2 = hardwareMap.servo.get("pickup2"); //Left
-        side = hardwareMap.servo.get("side");
+        //pickup1 = hardwareMap.servo.get("pickup1"); //Right
+        //pickup2 = hardwareMap.servo.get("pickup2"); //Left
+        //side = hardwareMap.servo.get("side");
         //side.setPosition(1); // Set ARM up
-        hand = hardwareMap.servo.get("hand");
+        //hand = hardwareMap.servo.get("hand");
         //LeftIntakeDrive = hardwareMap.crservo.get("LI");
         //hand.setPosition(0.5);
-        arm = hardwareMap.servo.get("arm");
+        //arm = hardwareMap.servo.get("arm");
         //RightIntakeDrive = hardwareMap.crservo.get("RI");
         //arm.setPosition(0);
-        switchServo = hardwareMap.servo.get("SS");
+        //switchServo = hardwareMap.servo.get("SS");
+        //butt = hardwareMap.servo.get("butt");
+        //plate = hardwareMap.servo.get("PL");
+        //plate.setPosition(0.3);
+
 
 
         //sensors
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope) navxGyro;
-        color1 = hardwareMap.colorSensor.get("C1");
-        color1.enableLed(true);
+        //color1 = hardwareMap.colorSensor.get("C1");
+        //color1.enableLed(true);
 
         // Range Sensor
-        range1 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "R1");
+        //range1 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "R1");
         // Old Range Sensor Code
         //    range1 = hardwareMap.i2cDevice.get("R1");
         //    range2 = hardwareMap.i2cDevice.get("R2");
@@ -198,8 +212,8 @@ public abstract class TestHardwareMap extends OpMode {
         //    range1Reader.engage();
         //    range2Reader.engage();
 
-        limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        //limitSwitch = hardwareMap.get(DigitalChannel.class, "LS");
+        //limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
 
         if (auto) {
@@ -218,7 +232,6 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-    @Override
     public void init_loop() {
         if (navxGyro.isCalibrating()) {
             telemetry.addLine("navX Calibration");
@@ -243,10 +256,10 @@ public abstract class TestHardwareMap extends OpMode {
 
     void mech_move (float myangle, float mypower, float myrot){
         if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-            LeftFrontDrive.setPower(Range.clip( myrot +  (-mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-            LeftBackDrive.setPower(Range.clip(  myrot +  (-mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightFrontDrive.setPower(Range.clip(myrot +  (mypower * ((-Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightBackDrive.setPower(Range.clip( myrot +  (mypower * ((-Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            LeftFrontDrive.setPower(Range.clip( myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            LeftBackDrive.setPower(Range.clip(  myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+            RightFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
+            RightBackDrive.setPower(Range.clip( -myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
         }
     }
 
@@ -276,6 +289,8 @@ public abstract class TestHardwareMap extends OpMode {
             double MaxValue = Math.max(Math.max(lfEncVar,lbEncVar),Math.max(rfEncVar,rbEncVar));
             if (MaxValue == 0) {MaxValue = 1;} // To ensure there is no div/0
 
+            MyDistance = MyDistance * ROT_MM;
+
             // Direction        LF  RF  |   LF  RF
             //                  LB  RB  |   LB  RB
             //
@@ -294,11 +309,11 @@ public abstract class TestHardwareMap extends OpMode {
                 LeftBackDrive.setPower(0);
                 MotorOnTarget[1] = 1;
             }
-            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / (rfEncVar+1)); } else {
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(-MyPower  * MaxValue / (rfEncVar+1)); } else {
                 RightFrontDrive.setPower(0);
                 MotorOnTarget[2] = 1;
             }
-            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(MyPower   * MaxValue / (rbEncVar+1)); } else {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
@@ -325,6 +340,8 @@ public abstract class TestHardwareMap extends OpMode {
 
             twoago = oneago;
             oneago = Math.abs(lfEnc)+Math.abs(lbEnc)+Math.abs(rfEnc)+Math.abs(rbEnc);
+
+            MyDistance = MyDistance * ROT_MM;
 
 //            if (twoago == xPos && onesec == -1) {
 //                onesec = getRuntime();
@@ -356,11 +373,11 @@ public abstract class TestHardwareMap extends OpMode {
                 LeftBackDrive.setPower(0);
                 MotorOnTarget[1] = 1;
             }
-            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(-MyPower  * MaxValue / (rfEncVar+1)); } else {
+            if (rfEncVar < MyDistance) {RightFrontDrive.setPower(MyPower  * MaxValue / (rfEncVar+1)); } else {
                 RightFrontDrive.setPower(0);
                 MotorOnTarget[2] = 1;
             }
-            if (rbEncVar < MyDistance) {RightBackDrive.setPower(-MyPower   * MaxValue / (rbEncVar+1)); } else {
+            if (rbEncVar < MyDistance) {RightBackDrive.setPower(MyPower   * MaxValue / (rbEncVar+1)); } else {
                 RightBackDrive.setPower(0);
                 MotorOnTarget[3] = 1;
             }
@@ -402,14 +419,14 @@ public abstract class TestHardwareMap extends OpMode {
                 if(angle > degree) {
                     LeftFrontDrive.setPower(Range.clip(power, -1, 1));
                     LeftBackDrive.setPower(Range.clip(power, -1, 1));
-                    RightFrontDrive.setPower(Range.clip(power, -1, 1));
-                    RightBackDrive.setPower(Range.clip(power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(-power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(-power, -1, 1));
                 }
                 else if(angle < degree) {
                     LeftFrontDrive.setPower(Range.clip(-power, -1, 1));
                     LeftBackDrive.setPower(Range.clip(-power, -1, 1));
-                    RightFrontDrive.setPower(Range.clip(-power, -1, 1));
-                    RightBackDrive.setPower(Range.clip(-power, -1, 1));
+                    RightFrontDrive.setPower(Range.clip(power, -1, 1));
+                    RightBackDrive.setPower(Range.clip(power, -1, 1));
                 }
                 return false;
             }
@@ -434,7 +451,7 @@ public abstract class TestHardwareMap extends OpMode {
         }
     }
 
-    String color() {
+    /*String color() {
         String returnvalue = null;
         if (color1 != null) {
             if (color1.blue() > color1.red()) {
@@ -451,5 +468,5 @@ public abstract class TestHardwareMap extends OpMode {
             }
         }
         return returnvalue;
-    }
+    }*/
 }
