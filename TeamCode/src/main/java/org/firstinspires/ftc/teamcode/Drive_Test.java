@@ -134,23 +134,25 @@ public class Drive_Test extends NewHardwareMap{
             downclaw = gamepad2.dpad_down;
         }*/
         // ------------------  END  -----------------------------
-        /*if (gamepad2.b) {
-            hand.setPosition(0);
+        if (gamepad1.right_bumper) {
+            hand.setPosition(1);
         }
-        else if (gamepad2.a) {
-            hand.setPosition(0.5);
-        }*/
+        else if (gamepad1.left_bumper) {
+            hand.setPosition(0.3);
+        }
+
 
         if(gamepad2.x){
             armpos = (float) 0.45;
         }
         else if(gamepad2.y){
-            armpos = (float) 0.60;
+            armpos = (float) 0.6;
+
         }
         else{
             armpos = (float) 0.5;
         }
-        //arm.setPosition(armpos);
+        arm.setPosition(armpos);
 
         // --------------- DESCRIPTION --------------------------
         // Changes Up/Down Power based on direction
@@ -434,6 +436,9 @@ public class Drive_Test extends NewHardwareMap{
 
         // 4- MOVE robot
         mech_move(myangle,mypower,myrot);
+        telemetry.addLine("myangle: " + myangle);
+        telemetry.addLine("mypower: " + mypower);
+        telemetry.addLine("myrot: " + myrot);
 
         // ------------------  END  -----------------------------
 
@@ -505,7 +510,7 @@ public class Drive_Test extends NewHardwareMap{
         // ------------------ START -----------------------------
         loopcounter++;
         if ((int)(getRuntime()) > timer) {
-            timer = getRuntime();  // Sets timer = accumulated time
+            timer = (float) getRuntime();  // Sets timer = accumulated time
             loopshower = loopcounter;
             loopcounter = 0;
         }
