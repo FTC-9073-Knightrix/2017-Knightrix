@@ -4,6 +4,7 @@ import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -11,10 +12,14 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by ibravo on 2/10/18.
@@ -39,18 +44,26 @@ public abstract class NewHardwareMap extends OpMode {
     DcMotor RightIntakeDrive;
     DcMotor armMotor;
     Servo plate;
-    Servo arm;
+    CRServo arm;
     Servo hand;
     Servo side;
 
     // Init Sensors
     ColorSensor color1;
-
     IntegratingGyroscope gyro;
     NavxMicroNavigationSensor navxGyro;
 
     // Time Variables
     float timer = 0;
+
+    // Vuforia
+    VuforiaLocalizer vuforia;
+    // Init variables
+    boolean Vuforia_Init = false;
+    VuforiaTrackable relicTemplate = null;
+    String pictograph = null;
+    float ColorRun = 0;
+
 
     // Variables
     int gyroResetValue = 0;
@@ -70,12 +83,25 @@ public abstract class NewHardwareMap extends OpMode {
     float angle = 0;
     float start_angle = 0;
     float timer2 = 0;
+    boolean auto = false;
+    // Variables for the encoders
+    float lfEnc = 0;
+    float lbEnc = 0;
+    float rfEnc = 0;
+    float rbEnc = 0;
+    float lfEncStart =  lfEnc;
+    float lbEncStart =  lbEnc;
+    float rfEncStart =  rfEnc;
+    float rbEncStart =  rbEnc;
+    // Variables for the position of the robot
+    double xPos = 0;
+    double yPos = 0;
+    double rotPos = 0;
 
 
 
     @Override
     public void init() {
-
 
         // Name the devices
         // AL00VL2F - Left Wall
@@ -96,7 +122,7 @@ public abstract class NewHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         // AI02RN0U - Right Wall Servo
         //Plate; Arm; Hand; Color
-        arm = hardwareMap.servo.get("AS");
+        arm = hardwareMap.crservo.get("AS");
         hand = hardwareMap.servo.get("HS");
         plate = hardwareMap.servo.get("PL");
         side = hardwareMap.servo.get("SS");
@@ -104,21 +130,9 @@ public abstract class NewHardwareMap extends OpMode {
         // 0 NavX; 5 Color
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope)navxGyro;
+        color1 = hardwareMap.colorSensor.get("C1");
         //
 
-
-        /*// Reset encoders
-        LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Run without encoders
-        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        */
 
         // I2C devices
         // In your init method.
@@ -129,7 +143,43 @@ public abstract class NewHardwareMap extends OpMode {
         //rangeSensorState = new FtcI2cDeviceState((I2cDevice)rangeSensor);
         //rangeSensorState.setEnabled(false);
 
+
+        // Vuforia
+        // Only enable in Autonomous
+        // with camera enabled
+        //int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        // with camera disabled
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = "Af2vuDn/////AAAAGXe946hBZkSxhA2XTKJ9Hp8yBAj3UI6Kjy/SeKPMhY8gynJA1+/uvoTP9vJzgR1qyu7JvC1YieE5WDEMAo/v0OD4NOKVXVmxDphz024lZpnf+vKZ03nz30t1wEk50Jv+hy9drTZBr5WSScrf9okUG3IMZ4h5EGyg8X7b0TYS6oN5HxM5XX6+AfnKMimI4olRAsKJN0xF2HhIHchHa3TKWoEhPLwA3Pr3YYtbjjSh6TucVd6SyM6X4yXmnAONYikfV2k2AII8IIGTpzUsFu6xbID4q22rU0CleajBa1GyDO35haGER/93+AStVd1XHKVileLTDgvhvNNfajoJPpA7ef2TVXUvQVbe3duqlqhfhfza";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
+        Vuforia_Init = true;
+
+
+
+        if (auto) {
+            // Reset encoders
+            //LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //RightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //RightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // Run without encoders
+            LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
     }
+
 
     public void init_loop() {
         if (navxGyro.isCalibrating()) {
@@ -139,12 +189,12 @@ public abstract class NewHardwareMap extends OpMode {
 
 
 
-    void mech_move (double myangle, float mypower, float myrot){
-        if (LeftFrontDrive !=null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null ) {
-            LeftFrontDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
-            LeftBackDrive.setPower(Range.clip(myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightFrontDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))),-1,1));
-            RightBackDrive.setPower(Range.clip(-myrot +  (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))),-1,1));
+    void mech_move (double myangle, float mypower, float myrot) {
+        if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+            LeftFrontDrive.setPower(Range.clip(myrot + (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))), -1, 1));
+            LeftBackDrive.setPower(Range.clip(myrot + (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))), -1, 1));
+            RightFrontDrive.setPower(Range.clip(-myrot + (mypower * ((Math.sin((myangle + 45) / 180 * 3.141592)))), -1, 1));
+            RightBackDrive.setPower(Range.clip(-myrot + (mypower * ((Math.sin((myangle + 135) / 180 * 3.141592)))), -1, 1));
         }
     }
 
@@ -182,8 +232,8 @@ public abstract class NewHardwareMap extends OpMode {
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             LeftFrontDrive.setPower(power);
             LeftBackDrive.setPower(power);
-            RightFrontDrive.setPower(-power);
-            RightBackDrive.setPower(-power);
+            RightFrontDrive.setPower(power);
+            RightBackDrive.setPower(power);
         }
     }
     boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=

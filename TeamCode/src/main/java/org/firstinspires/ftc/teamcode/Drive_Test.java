@@ -271,14 +271,14 @@ public class Drive_Test extends NewHardwareMap{
         // Y = 0.60 Moves arm up (with Relic)
         // !X & !Y = 0.5 no power to the servo (free movement)
         // ------------------ START -----------------------------
-        armpos = (float) 0.5; // Default state
+        armpos = (float) 0; // Default state
         if(gamepad2.x){
-            armpos = (float) 0.45;
+            armpos = (float) 0.5;
         }
         else if(gamepad2.y){
-            armpos = (float) 0.6;
+            armpos = (float) -0.5;
         }
-        arm.setPosition(armpos);
+        arm.setPower(armpos);
         // ------------------  END  -----------------------------
 
 
