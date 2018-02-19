@@ -247,7 +247,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 8) {
             // Turns 90 degrees
-            if (turn(0.2,-90)) {
+            if (turn(0.2,90)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
