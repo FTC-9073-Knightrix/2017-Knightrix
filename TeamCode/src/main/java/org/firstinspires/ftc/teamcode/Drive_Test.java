@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -60,7 +63,6 @@ public class Drive_Test extends NewHardwareMap{
     */
     @Override
     public void loop() {
-
         // --------------- DESCRIPTION --------------------------
         // Title
         // Description
@@ -68,34 +70,252 @@ public class Drive_Test extends NewHardwareMap{
         // Code
         // ------------------  END  -----------------------------
 
+
+        // ######################################################
+        // ##              VARIABLES                           ##
+        // ######################################################
+        //
         // --------------- DESCRIPTION --------------------------
-        // Test Motors
-        // Run Motors Forward at 50%
+        // Update Variables
+        // Update all variables for every loop
         // ------------------ START -----------------------------
-        //LeftFrontDrive.setPower(leftstick_x);
-        //LeftBackDrive.setPower(leftstick_x);
-        //RightFrontDrive.setPower(leftstick_y);
-        //RightBackDrive.setPower(leftstick_y);
+        side.setPosition(1);    // side up for color sensor
         // ------------------  END  -----------------------------
 
-        //
 
         // --------------- DESCRIPTION --------------------------
-        // Update Variables in Loop
-        // Description
+        // Enables Timer
+        // Counts the number of loops per second of the program.
+        // More loops is better.
+        // Used to evaluate what is taking more loop cycles
         // ------------------ START -----------------------------
-        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
-        double gyroDegrees = orientation.firstAngle - gyroResetValue;
-        //double gyroTilt = orientation.secondAngle;
+        loopcounter++;
+        if ((int)(getRuntime()) > timer) {
+            timer = (float) getRuntime();  // Sets timer = accumulated time
+            loopshower = loopcounter;
+            loopcounter = 0;
+        }
+        // ------------------  END  -----------------------------
 
+
+        // --------------- DESCRIPTION --------------------------
+        // Update Gyro
+        // Update the Gyro 1 every 3 loop counts to reduce lag
+        // ------------------ START -----------------------------
+        if (navxCounter == 3) {
+            orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+            gyroDegrees = (int) (orientation.firstAngle - gyroResetValue);
+            navxCounter = 1;
+        }
+        else {
+            navxCounter++;
+        }
+        //double gyroTilt = orientation.secondAngle;
         // Read dimensionalized data from the gyro. This gyro can report angular velocities
         // about all three axes. Additionally, it internally integrates the Z axis to
         // be able to report an absolute angular Z orientation.
-       // AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
-        //Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
+        // Orientation angles = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // ------------------  END  -----------------------------
 
+
+        // ######################################################
+        // ##              DRIVE TRAIN                         ##
+        // ######################################################
+        //
+        // --------------- DESCRIPTION --------------------------
+        // Rotates Robot
+        // Change rotation heading based on position of the robot
+        // ------------------ START -----------------------------
+        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
+            leftstick_x = gamepad1.left_stick_x;
+            leftstick_y = -gamepad1.left_stick_y;
+        }
+        else {
+            leftstick_x = -gamepad1.left_stick_x;
+            leftstick_y = gamepad1.left_stick_y;
+        }
+        float myrot = 0;
+        if (gamepad2.right_stick_x != 0) {
+            myrot = Math.round((gamepad2.right_stick_x / (float) 5) * (float) 100) / (float) 100;
+        }
+        else {
+            myrot = Math.round((gamepad1.right_stick_x / (float) 2) * (float) 100) / (float) 100;
+        }
+        //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
+        // ------------------  END  -----------------------------
+
+
+        // --------------- DESCRIPTION --------------------------
+        // Mechanum Move
+        // 1- Determines angle of the joystick (myangle)
+        // 2- Determines power based on Pythagorean Theorem (mypower)
+        // 3- Limits angle value to be in 360 degrees range
+        // 4- MOVE robot
+        // ------------------ START -----------------------------
+        //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        // 1- Determines angle of the joystick (myangle)
+        if ((leftstick_x > 0 && leftstick_y > 0) || (leftstick_x > 0 && leftstick_y < 0)) {//quadrant down/right
+            myangle = (int) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //180 to 90}
+        }
+        else if((leftstick_x < 0 && leftstick_y < 0) || (leftstick_x < 0 && leftstick_y > 0)) { //quadrant up/left
+            myangle = (int) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //270-180
+        }
+        else if((leftstick_x == 0 && leftstick_y == 0) || (leftstick_x == 0 && leftstick_y < 0)) //(0,0)
+            myangle = 0;
+        else if(leftstick_x > 0  && leftstick_y == 0) //(1,0)
+            myangle = 90;
+        else if(leftstick_x == 0 && leftstick_y > 0) //(0,1)
+            myangle = 180;
+        else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
+            myangle = 270;
+        // 2- Determines power based on Pythagorean Theorem (mypower)
+        mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0.0,1.0);
+        // 3- Limits angle value to be in 360 degrees range
+        //myangle = myangle - angle that the gyro is at (gyroDegrees)
+        myangle -= gyroDegrees;
+        if (myangle < -359) {
+            myangle += 360;
+        }
+
+        // 4- MOVE robot
+        mech_move(myangle,mypower,myrot);
+        telemetry.addLine("myangle: " + myangle);
+        telemetry.addLine("mypower: " + mypower);
+        telemetry.addLine("mypower*100: " + (mypower*100));
+        telemetry.addLine("myrot: " + myrot);
 
         // ------------------  END  -----------------------------
+
+
+        // ######################################################
+        // ##              GLYPH CAPTURE                       ##
+        // ######################################################
+        //
+        // --------------- DESCRIPTION --------------------------
+        // Intake wheels
+        // Change direction of intake based on gamepad A/B buttons
+        // ------------------ START -----------------------------
+        // Define default state:
+        leftIntakePower = 0;
+        rightIntakePower = 0;
+        // Change status based on buttons pressed
+        if (gamepad2.a){
+            leftIntakePower = -1;
+            rightIntakePower = 1;
+            //butt.setPosition(90);
+        }
+        if(gamepad2.b){
+            leftIntakePower = 1;
+            rightIntakePower = -1;
+            //butt.setPosition(0);
+        }
+        // Send state to the motors
+        LeftIntakeDrive.setPower(leftIntakePower);
+        RightIntakeDrive.setPower(rightIntakePower);
+        // ------------------  END  -----------------------------
+
+
+        // --------------- DESCRIPTION --------------------------
+        // Plate Swing In / Swing Out
+        // Moves the plate to deploy glyphs
+        // Update: 1. Get trigger position or left bumper
+        //         2. Update plate position based on #1
+        // ------------------ START -----------------------------
+        //
+        if (gamepad1.right_trigger > 0) {
+            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
+        }
+        else if (gamepad2.left_bumper) {
+            plate.setPosition(0.6);
+        }
+        else {
+            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
+        }
+        // ------------------  END  -----------------------------
+
+
+        // --------------- DESCRIPTION --------------------------
+        // Plate UP/DOWN
+        // Moves the plate using the updown motor
+        // Update: 1. Get updown power based on left stick
+        //         2. Set power to 70% of left stick
+        // ------------------ START -----------------------------
+        //
+        double updownPower = gamepad2.left_stick_y;
+        updownMotor.setPower(updownPower * 0.7);
+        // ------------------  END  -----------------------------
+
+
+        // ######################################################
+        // ##              RELIC                               ##
+        // ######################################################
+        //
+        // --------------- DESCRIPTION --------------------------
+        // IN / OUT Relic
+        // Use GamePad2 dpad
+        //  Right => OUT
+        //  Left  => IN
+        // ------------------ START -----------------------------
+        double armMotorPower = 0;
+        if (gamepad2.dpad_right) {armMotorPower = -1;}
+        else if (gamepad2.dpad_left) {armMotorPower = 1;}
+        armMotor.setPower(armMotorPower);
+        // ------------------  END  -----------------------------
+
+        // --------------- DESCRIPTION --------------------------
+        // Relic Arm
+        // Uses Continuous rotation servo from gamepad 2
+        // X = 0.45 Moves arm down (required in autonomous)
+        // Y = 0.60 Moves arm up (with Relic)
+        // !X & !Y = 0.5 no power to the servo (free movement)
+        // ------------------ START -----------------------------
+        armpos = (float) 0.5; // Default state
+        if(gamepad2.x){
+            armpos = (float) 0.45;
+        }
+        else if(gamepad2.y){
+            armpos = (float) 0.6;
+        }
+        arm.setPosition(armpos);
+        // ------------------  END  -----------------------------
+
+
+        // --------------- DESCRIPTION --------------------------
+        // Relic Hand
+        // Open and close hand based on bumpers of gamepad 1
+        // ------------------ START -----------------------------
+        if (gamepad1.right_bumper) {
+            hand.setPosition(1);
+        }
+        else if (gamepad1.left_bumper) {
+            hand.setPosition(0.3);
+        }
+        // ------------------  END  -----------------------------
+
+
+
+
+        // ######################################################
+        // ##              UNUSED CODE                         ##
+        // ######################################################
+        //
+        // --------------- DESCRIPTION --------------------------
+        // Enable/Disable I2C devices
+        // Avoid I2C sensor lag by only enabling the sensors when
+        // required to be used and disabling them the rest of the time
+        // ------------------ START -----------------------------
+        // Somewhere in your code when you need the color sensor.
+        // beaconColorSensorState.setEnabled(true);
+        // When you are done with the color sensor.
+        // beaconColorSensorState.setEnabled(false);
+        // Somewhere in your code when you need the range sensor.
+        //        rangeSensorState.setEnabled(true);
+        // When you are done with the range sensor.
+        //        rangeSensorState.setEnabled(false);
+        // ------------------  END  -----------------------------
+
 
         // --------------- DESCRIPTION --------------------------
         // Up/Down grabber
@@ -114,23 +334,6 @@ public class Drive_Test extends NewHardwareMap{
             downclaw = gamepad2.dpad_down;
         }*/
         // ------------------  END  -----------------------------
-        /*if (gamepad2.b) {
-            hand.setPosition(0);
-        }
-        else if (gamepad2.a) {
-            hand.setPosition(0.5);
-        }*/
-
-        if(gamepad2.x){
-            armpos = 0.45;
-        }
-        else if(gamepad2.y){
-            armpos = 0.60;
-        }
-        else{
-            armpos = 0.5;
-        }
-        //arm.setPosition(armpos);
 
         // --------------- DESCRIPTION --------------------------
         // Changes Up/Down Power based on direction
@@ -176,87 +379,10 @@ public class Drive_Test extends NewHardwareMap{
 
         // ------------------  END  -----------------------------
 
-        // --------------- DESCRIPTION --------------------------
-        // Changes Up/Down Power based on direction
-        // Description
-        // ------------------ START -----------------------------
-//        if (gamepad2.right_bumper) {
-//            plate.setPosition(1);
-//        }
-//        else {
-//            plate.setPosition(0.5);
-//        }
-        if (gamepad1.right_trigger > 0) {
-            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
-        }
-        else if (gamepad2.left_bumper) {
-            plate.setPosition(0.6);
-        }
-        else {
-            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
-        }
 
 
-        // ------------------  END  -----------------------------
-
-        // --------------- DESCRIPTION --------------------------
-        // Changes Intake Power based on direction
-        // Description
-        // ------------------ START -----------------------------
-//        if (gamepad2.right_trigger != 0 || gamepad2.left_trigger != 0) {
-//            //butt.setPosition(90);
-//            RightIntakeDrive.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-//            LeftIntakeDrive.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
-//        }
-//        else {
-//            //butt.setPosition(0);
-//        }
-
-        if (gamepad2.a){
-            leftIntakePower = -1;
-            rightIntakePower = 1;
-            //butt.setPosition(90);
-        }
-        else if(gamepad2.b){
-            leftIntakePower = 1;
-            rightIntakePower = -1;
-            //butt.setPosition(0);
-        }
-        else {
-            leftIntakePower = 0;
-            rightIntakePower = 0;
-            //butt.setPosition(0);
-        }
-        LeftIntakeDrive.setPower(leftIntakePower);
-        RightIntakeDrive.setPower(rightIntakePower);
-
-        // ------------------  END  -----------------------------
 
 
-        // --------------- DESCRIPTION --------------------------
-        // Left/Right relic recovery
-        // Use GamePad1 as master, GamePad2 as slave
-        // ------------------ START -----------------------------
-        side.setPosition(1);
-        if (gamepad2.dpad_right) {
-            armMotor.setPower(-1);
-        }
-        else if (gamepad2.dpad_left) {
-            armMotor.setPower(1);
-        }
-        else {
-            armMotor.setPower(0);
-        }
-
-        if (gamepad2.left_stick_y == 1) {
-            updownMotor.setPower(0.7);
-        }
-        else if (gamepad2.left_stick_y == -1) {
-            updownMotor.setPower(-0.7);
-        }
-        else {
-            updownMotor.setPower(0);
-        }
         // -----------------------------------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -313,30 +439,6 @@ public class Drive_Test extends NewHardwareMap{
         // ------------------  END  -----------------------------
 
 
-        // --------------- DESCRIPTION --------------------------
-        // Rotates Robot
-        // Change rotation heading based on position of the robot
-        // ------------------ START -----------------------------
-        //leftstick_x = gamepad1.left_stick_x;
-        //leftstick_y = -gamepad1.left_stick_y;
-
-        if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
-            leftstick_x = gamepad1.left_stick_x;
-            leftstick_y = -gamepad1.left_stick_y;
-        }
-        else {
-            leftstick_x = -gamepad1.left_stick_x;
-            leftstick_y = gamepad1.left_stick_y;
-        }
-        float myrot = 0;
-        if (gamepad2.right_stick_x != 0) {
-            myrot = gamepad2.right_stick_x / 5;
-        }
-        else {
-            myrot = gamepad1.right_stick_x / 2;
-        }
-        //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
-        // ------------------  END  -----------------------------
 
 
         // --------------- DESCRIPTION --------------------------
@@ -374,55 +476,6 @@ public class Drive_Test extends NewHardwareMap{
         // ------------------  END  -----------------------------
 
 
-        // --------------- DESCRIPTION --------------------------
-        // Mechanum Move
-        // 1- Determines angle of the joystick (myangle)
-        // 2- Determines power based on Pythagorean Theorem (mypower)
-        // 3- Limits angle value to be in 360 degrees range
-        // 4- MOVE robot
-        // ------------------ START -----------------------------
-        //MoveRobot(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-        //move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-
-        // 1- Determines angle of the joystick (myangle)
-        if (leftstick_x > 0 && leftstick_y < 0) {//quadrant up/right
-            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //90 to 0
-        }
-        else if (leftstick_x > 0 && leftstick_y > 0) {//quadrant down/right
-            myangle = (float) (90 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //180 to 90}
-        }
-        else if(leftstick_x < 0 && leftstick_y > 0) {//quadrant down/left
-            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //360-270
-        }
-        else if(leftstick_x < 0 && leftstick_y < 0) { //quadrant up/left
-            myangle = (float) (270 + Math.toDegrees(Math.atan(leftstick_y / leftstick_x))); //270-180
-        }
-        else if(leftstick_x == 0 && leftstick_y == 0) //(0,0)
-            myangle = (float) 0;
-        else if(leftstick_x == 0 && leftstick_y < 0) //(0,-1)
-            myangle = (float) 0;
-        else if(leftstick_x > 0  && leftstick_y == 0) //(1,0)
-            myangle = (float) 90;
-        else if(leftstick_x == 0 && leftstick_y > 0) //(0,1)
-            myangle = (float) 180;
-        else if(leftstick_x < 0 && leftstick_y == 0) //(-1,0)
-            myangle = (float) 270;
-
-        // 2- Determines power based on Pythagorean Theorem (mypower)
-        mypower = (float) Range.clip(Math.sqrt(leftstick_x*leftstick_x+leftstick_y*leftstick_y),0,1);
-
-        // 3- Limits angle value to be in 360 degrees range
-        //myangle = myangle - angle that the gyro is at
-        myangle -= gyroDegrees;
-        if (myangle < -359) {
-            myangle += 360;
-        }
-
-        // 4- MOVE robot
-        mech_move(myangle,mypower,myrot);
-
-        // ------------------  END  -----------------------------
 
 
 
@@ -484,14 +537,8 @@ public class Drive_Test extends NewHardwareMap{
         }*/
         // ------------------  END  -----------------------------
 
-        // --------------- DESCRIPTION --------------------------
-        // Enables Timer
-        // ------------------ START -----------------------------
-        //timer = getRuntime();  // Sets timer = accumulated time
-        // ------------------  END  -----------------------------
 
-
-
+        telemetry.addLine("Loops/sec: "+ loopshower);
        // telemetry.addLine("DRIVE_NEW");
         //telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());
