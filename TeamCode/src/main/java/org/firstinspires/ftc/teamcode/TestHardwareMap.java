@@ -67,7 +67,14 @@ public abstract class TestHardwareMap extends OpMode {
  //plate;
     IntegratingGyroscope gyro;
     //NavxMicroNavigationSensor navxGyro;
+
+    // Init Vuforia
+    boolean Vuforia_Init = false;
     VuforiaLocalizer vuforia;
+    VuforiaTrackable relicTemplate = null;
+    String pictograph = null;
+
+
     //DigitalChannel limitSwitch;
 
     //Variables
@@ -111,14 +118,12 @@ public abstract class TestHardwareMap extends OpMode {
     boolean turn1 = false;
     boolean turn2 = false;
     double degreeTurn = 0;
-    String pictograph = null;
     public I2cDeviceSynch range1Reader;
     public I2cDeviceSynch range2Reader;
     public byte[] range1Cache;
     //public byte[] range2Cache;
     public double range1Value;
     //public double range2Value;
-    VuforiaTrackable relicTemplate = null;
     double lfEnc = 0.0, lbEnc = 0.0, rfEnc = 0.0, rbEnc = 0.0;
     double lfEncStart = 0;
     double lbEncStart = 0;
@@ -238,6 +243,8 @@ public abstract class TestHardwareMap extends OpMode {
             relicTemplate = relicTrackables.get(0);
             relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
             relicTrackables.activate();
+            Vuforia_Init = true;
+
         }
     }
 
