@@ -445,9 +445,9 @@ public class Drive_Test extends NewHardwareMap{
         // Resets Gyro by demand
         // Resets Gyro on gamepad button to update Heading
         // ------------------ START -----------------------------
-        /*if (gamepad1.a) {
-            gyroResetValue = orientation.firstAngle;
-        }*/
+        if (gamepad1.a) {
+            gyroResetValue = (int) orientation.firstAngle;
+        }
         // ------------------  END  -----------------------------
 
 

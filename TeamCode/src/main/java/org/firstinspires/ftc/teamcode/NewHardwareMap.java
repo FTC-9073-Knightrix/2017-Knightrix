@@ -57,9 +57,9 @@ public abstract class NewHardwareMap extends OpMode {
     float timer = 0;
 
     // Vuforia
-    VuforiaLocalizer vuforia;
     // Init variables
     boolean Vuforia_Init = false;
+    VuforiaLocalizer vuforia;
     VuforiaTrackable relicTemplate = null;
     String pictograph = null;
     float ColorRun = 0;
@@ -143,7 +143,6 @@ public abstract class NewHardwareMap extends OpMode {
         //rangeSensorState = new FtcI2cDeviceState((I2cDevice)rangeSensor);
         //rangeSensorState.setEnabled(false);
 
-
         // Vuforia
         // Only enable in Autonomous
         // with camera enabled
@@ -176,6 +175,9 @@ public abstract class NewHardwareMap extends OpMode {
             LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
         }
 
     }

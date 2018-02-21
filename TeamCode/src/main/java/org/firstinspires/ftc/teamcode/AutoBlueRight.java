@@ -38,11 +38,12 @@ public class AutoBlueRight extends NewHardwareMap {
         // Autonomous for Right side (Blue), middle position
         // ------------------ START -----------------------------
         // Code:
-        // 1. Start moving arm to the side
-        // 2. Init Variables:
+        // 0. Start moving arm to the side
+        // 1. Init Variables:
         //      a.Calculate starting angle
         //      b.Read Vuforia
         //      c.Encoders position
+        // 2. Left blank
         // 3. Lower the color sensor
         // 4. Read the color & Stop the arm movement (from #1)
         // 5. tilt robot if wrong color in front
@@ -130,26 +131,32 @@ public class AutoBlueRight extends NewHardwareMap {
 
                 if (vuMark == RelicRecoveryVuMark.LEFT) {
                     pictograph = "left";
-                    ColorRun = -2000;
-                    state++;
+                    ColorRun = -1000;
                     state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     pictograph = "center";
                     ColorRun = -1500;
                     state++;
-                    state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     pictograph = "right";
-                    ColorRun = -1000;
-                    state++;
+                    ColorRun = -2100;
                     state++;
                 }
             }
         }
         // ------------------  END  -----------------------------*/
 
+
+        // --------------- DESCRIPTION --------------------------
+        // 02.Empty
+        // Empty
+        // ------------------ START -----------------------------
+        if (state == 2) {
+            state++;
+        }
+        // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
         // 03.Lower the color sensor
@@ -199,9 +206,15 @@ public class AutoBlueRight extends NewHardwareMap {
             }
         }
         if (state == 6){
+            side.setPosition(1); // Side UP = 1
             if (turn(0.2, 0)) {   // Returned to start position
-                side.setPosition(1); // Side UP = 1
-                state++;
+                state+=0.5;
+                timer = (float) getRuntime();
+            }
+        }
+        if (state == 6.5) {
+            if (getRuntime() > timer + 0.5) {
+                state += 0.5;
             }
         }
         // ------------------  END  -----------------------------*/
@@ -279,10 +292,17 @@ public class AutoBlueRight extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             // Check if we have reached the first position
-            if (xPos < -500) {
+            if (xPos < -700) {
                 plate.setPosition(0.5); // Plate DOWN
-                move(0);
+                move(0.2);
                 // Check if we reached the Pictograph color position
+                state++;
+                timer = (float) getRuntime();
+            }
+        }
+        if (state == 10) {
+            if (getRuntime() > timer + 1) {
+                move(0);
                 state++;
             }
         }
