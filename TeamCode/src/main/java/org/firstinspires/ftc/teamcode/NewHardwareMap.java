@@ -97,6 +97,7 @@ public abstract class NewHardwareMap extends OpMode {
     double xPos = 0;
     double yPos = 0;
     double rotPos = 0;
+    double glyphPos = 0;
 
 
 

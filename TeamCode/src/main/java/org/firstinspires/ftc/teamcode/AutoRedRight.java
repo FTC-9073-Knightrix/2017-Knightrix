@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
-@Autonomous(name = "NEWBLUE_RIGHT")
-public class AutoBlueRight extends NewHardwareMap {
+@Autonomous(name = "NEWRED_LEFT")
+public class AutoRedRight extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits PLAY
@@ -412,13 +412,13 @@ public class AutoBlueRight extends NewHardwareMap {
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
-            if (getRuntime() > timer + 3) {//if robot reached glyphs
+            if (getRuntime() > timer + 5) {//if robot reached glyphs
                 move(0);
                 //Turn off intake
                 LeftIntakeDrive.setPower(0);
                 RightIntakeDrive.setPower(0);
                 timer = (float) getRuntime();
-                glyphPos = xPos;
+
                 state++;
             }
         }
@@ -451,9 +451,9 @@ public class AutoBlueRight extends NewHardwareMap {
             }
 
             float motorVar = (float) -0.3;
-            if (xPos < (-1* (glyphPos - 202))) {
+            if (xPos < (-1* (37/0.01489))) {
                 motorVar = 0;
-                state++;
+                state = (float) 11.5;
                 timer = (float) getRuntime();
             }
             // Complete actions
@@ -463,11 +463,22 @@ public class AutoBlueRight extends NewHardwareMap {
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
+        // 11.5. Reset to -90 degrees
+        // Turn to be perpendicular to the crypto box
+        // ------------------ START -----------------------------
+        if (state == (float) 11.5) {
+            if (turn(0.2, -90)) { // if it got back to where it was
+                state = 12;
+            }
+        }
+        // ------------------  END  -----------------------------*/
+
+        // --------------- DESCRIPTION --------------------------
         // 12. Score glyph
         // Flip the plate, push the block in, and back up from the crypto box
         // ------------------ START -----------------------------
         if (state == 12) {
-            plate.setPosition(1);
+            plate.setPosition(1); // Plate UP
             if (getRuntime() < timer + 2) {
                 move(-0.3);
             }
