@@ -44,7 +44,7 @@ public abstract class NewHardwareMap extends OpMode {
     DcMotor RightIntakeDrive;
     DcMotor armMotor;
     Servo plate;
-    CRServo arm;
+    Servo arm;
     Servo hand;
     Servo side;
 
@@ -122,7 +122,7 @@ public abstract class NewHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         // AI02RN0U - Right Wall Servo
         //Plate; Arm; Hand; Color
-        arm = hardwareMap.crservo.get("AS");
+        arm = hardwareMap.servo.get("AS");
         hand = hardwareMap.servo.get("HS");
         plate = hardwareMap.servo.get("PL");
         side = hardwareMap.servo.get("SS");
