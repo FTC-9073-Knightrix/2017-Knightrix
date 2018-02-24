@@ -257,7 +257,7 @@ public class AutoRedLeft extends NewHardwareMap {
             if (xPos < 400) {
                 side.setPosition(1); // Side UP
                 // Get off the platform
-                if(xPos < 2000) {
+                if(xPos < 2200) {
                     move(0);
                     //timer = (float) getRuntime();
                     state = (float) 7.001;
@@ -265,7 +265,7 @@ public class AutoRedLeft extends NewHardwareMap {
             }
         }
         if(state == (float) 7.001){
-            if (turn(0.2,185)) {
+            if (turn(0.2,0)) {
                 // Set starting position based on current encoder position
                 state = (float) 7.01;
                 timer = (float) getRuntime();
@@ -507,7 +507,7 @@ public class AutoRedLeft extends NewHardwareMap {
             if(turn(.3,90)){
                 float updownVar = (float) 0.5;
                 // after 1.5 of lifting the plate, stop lift
-                if (getRuntime() > timer + 1.5) {
+                if (getRuntime() > timer + 3) {
                     updownVar = 0;
                     state = (float) 11.4;
                 }
@@ -536,7 +536,42 @@ public class AutoRedLeft extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             float motorVar = (float) -0.3;
-            if (xPos < 202) {
+            move(motorVar);
+            if (getRuntime() > timer + 4) {
+                move(0);
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = (float) 11.45;
+//            if (xPos < 202) {
+//                motorVar = 0;
+//                state = (float) 11.5;
+//                timer = (float) getRuntime();
+}
+        }
+        // ------------------  END  -----------------------------*/
+// --------------- DESCRIPTION --------------------------
+        // 11.4. Moves away from cryotbox a little to place glyph
+        // ------------------ START -----------------------------
+        if (state == (float) 11.45) {
+            // Get position of the 4 encoders
+            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+//
+//            // Determines the X-Y-Rotation position of the robot
+//            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+//            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+//            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+//            // Simpler version using the average of the front two wheels
+            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+
+            float motorVar = (float) 0.3;
+
+
+            if (xPos < -202) {
                 motorVar = 0;
                 state = (float) 11.5;
                 timer = (float) getRuntime();
@@ -544,8 +579,8 @@ public class AutoRedLeft extends NewHardwareMap {
             // Complete actions
             move(motorVar);
         }
-        // ------------------  END  -----------------------------*/
 
+        // ------------------  END  -----------------------------*/
         // --------------- DESCRIPTION --------------------------
         // 11.5. UP the plate slowly
         // Raises the plate slowly until it gets to 1

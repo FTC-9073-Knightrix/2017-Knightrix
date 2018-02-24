@@ -500,8 +500,9 @@ public class AutoBlueRight extends NewHardwareMap {
             if(turn(.3,90)){
                 float updownVar = (float) 0.5;
                 // after 1.5 of lifting the plate, stop lift
-                if (getRuntime() > timer + 1.5) {
-                    updownVar = 0;
+                if (getRuntime() > timer + 3) {
+                    updownVar = (float) 0.5;
+                    timer = (float) getRuntime();
                     state = (float) 11.4;
                 }
                 // Complete actions
@@ -513,32 +514,71 @@ public class AutoBlueRight extends NewHardwareMap {
         // --------------- DESCRIPTION --------------------------
         // 11.4. Goes back to Crypto box
         // Moves back to starting position
+        //rams into the box
         // ------------------ START -----------------------------
         if (state == (float) 11.4) {
+            // Get position of the 4 encoders
+//            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+//            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+//            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+//            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+//
+//            // Determines the X-Y-Rotation position of the robot
+//            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+//            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+//            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+//            // Simpler version using the average of the front two wheels
+//            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+
+            float motorVar = (float) -0.3;
+            move(motorVar);
+            if (getRuntime() > timer + 4) {
+                move(0);
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                state = (float) 11.45;
+//            if (xPos < 202) {
+//                motorVar = 0;
+//                state = (float) 11.5;
+//                timer = (float) getRuntime();
+            }
+                // Complete actions
+
+
+        }
+        // ------------------  END  -----------------------------*/
+        // --------------- DESCRIPTION --------------------------
+        // 11.4. Moves away from cryotbox a little to place glyph
+        // ------------------ START -----------------------------
+        if (state == (float) 11.45) {
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
             lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
             rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
             rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-
-            // Determines the X-Y-Rotation position of the robot
-            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-            // Simpler version using the average of the front two wheels
+//
+//            // Determines the X-Y-Rotation position of the robot
+//            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+//            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+//            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+//            // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
-            float motorVar = (float) -0.3;
-            if (xPos < 202) {
+            float motorVar = (float) 0.3;
+
+
+            if (xPos < -202) {
                 motorVar = 0;
                 state = (float) 11.5;
                 timer = (float) getRuntime();
             }
-            // Complete actions
+                // Complete actions
             move(motorVar);
-        }
-        // ------------------  END  -----------------------------*/
+            }
 
+        // ------------------  END  -----------------------------*/
         // --------------- DESCRIPTION --------------------------
         // 11.5. UP the plate slowly
         // Raises the plate slowly until it gets to 1
