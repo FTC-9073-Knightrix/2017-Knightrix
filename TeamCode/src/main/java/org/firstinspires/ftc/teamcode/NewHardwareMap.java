@@ -44,7 +44,7 @@ public abstract class NewHardwareMap extends OpMode {
     DcMotor RightIntakeDrive;
     DcMotor armMotor;
     Servo plate;
-    CRServo arm;
+    Servo arm;
     Servo hand;
     Servo side;
 
@@ -57,9 +57,9 @@ public abstract class NewHardwareMap extends OpMode {
     float timer = 0;
 
     // Vuforia
-    VuforiaLocalizer vuforia;
     // Init variables
     boolean Vuforia_Init = false;
+    VuforiaLocalizer vuforia;
     VuforiaTrackable relicTemplate = null;
     String pictograph = null;
     float ColorRun = 0;
@@ -122,7 +122,7 @@ public abstract class NewHardwareMap extends OpMode {
         RightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         // AI02RN0U - Right Wall Servo
         //Plate; Arm; Hand; Color
-        arm = hardwareMap.crservo.get("AS");
+        arm = hardwareMap.servo.get("AS");
         hand = hardwareMap.servo.get("HS");
         plate = hardwareMap.servo.get("PL");
         side = hardwareMap.servo.get("SS");
@@ -142,7 +142,6 @@ public abstract class NewHardwareMap extends OpMode {
         //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         //rangeSensorState = new FtcI2cDeviceState((I2cDevice)rangeSensor);
         //rangeSensorState.setEnabled(false);
-
 
         // Vuforia
         // Only enable in Autonomous
@@ -176,6 +175,9 @@ public abstract class NewHardwareMap extends OpMode {
             LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
         }
 
     }
