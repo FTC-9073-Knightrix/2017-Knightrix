@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  * Created by nicolas on 2/10/18.
  */
 @Autonomous(name = "NEWRED_LEFT")
-public class AutoRedRight extends NewHardwareMap {
+public class AutoRedLeft extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits PLAY
@@ -34,8 +34,8 @@ public class AutoRedRight extends NewHardwareMap {
 
 
         // --------------- DESCRIPTION --------------------------
-        // Blue Middle
-        // Autonomous for Right side (Blue), middle position
+        // Red Middle
+        // Autonomous for Left side (Red), middle position
         // ------------------ START -----------------------------
         // Code:
         // 0. Start moving arm to the side
@@ -95,7 +95,9 @@ public class AutoRedRight extends NewHardwareMap {
         // Moves the arm from the top of the robot to the side
         // ------------------ START -----------------------------
         if (state == 0) {
-            //arm.setPower(-0.3); //Move arm down
+            // No need to move the arm as this is the default position
+            // arm.setPosition(0); //Move arm down.
+            plate.setPosition(0.5); //plate down
             state++;
         }
         // ------------------  END  -----------------------------*/
@@ -122,29 +124,26 @@ public class AutoRedRight extends NewHardwareMap {
             angle = orientation.firstAngle;
             start_angle = angle;
 
-
             // Checks Vuforia
-
-
             // Look for pictograph value until finds a match
             if (pictograph == null) {
 
-                float colorInch = 21;
+                float colorInch = 22;
 
-                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     pictograph = "left";
-                    ColorRun = (float) (-1 * (int)((colorInch-(2*7.63))/0.01489));
+                    ColorRun = (float) (1 * (int)((colorInch-(2*7.63))/0.01489));
                     state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     pictograph = "center";
-                    ColorRun = (float) (-1 * (int)((colorInch-7.63)/0.01489));
+                    ColorRun = (float) (1 * (int)((colorInch-7.63)/0.01489));
                     state++;
                 }
-                else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                else if (vuMark == RelicRecoveryVuMark.LEFT) {
                     pictograph = "right";
                     //noinspection NumericOverflow
-                    ColorRun = (float) (-1 * (int)(colorInch/0.01489));
+                    ColorRun = (float) (1 * (int)(colorInch/0.01489));
                     state++;
                 }
             }
@@ -169,10 +168,7 @@ public class AutoRedRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 3) {
             side.setPosition(.4); //Move color sensor down
-            timer = (float) getRuntime();
-            //            timer = (float) getRuntime();  // Sets timer = accumulated time
-            //            angle = orientation.firstAngle;
-            //            start_angle = angle;
+            timer = (float) getRuntime();  // Sets timer = accumulated time
             state++;
         }
         // ------------------  END  -----------------------------*/
@@ -184,25 +180,27 @@ public class AutoRedRight extends NewHardwareMap {
         // assume something is wrong, and continue forward
         // ------------------ START -----------------------------
         if (state == 4) {
-            if (getRuntime() > timer + 2) {
-                side.setPosition(1); // Side UP
-                state = (float)6.5;
-            }
-            else {
-                move(0.15);
-            }
-            if (color().equals("red")) {
+            // Checks the color of the ball and exits the loop
+            if (color().equals("blue")) {
+                move(0);
                 // Go to Tilt 1 then Tilt back
                 state = 5;
             }
-            else if (color().equals("blue")) {
+            else if (color().equals("red")) {
+                move(0);
                 // Move forwards
                 state = 7;
             }
 
-            //            timer = (float) getRuntime();  // Sets timer = accumulated time
-            //            angle = orientation.firstAngle;
-            //            start_angle = angle;
+            // If two seconds have passed, move robot towards a ball for 1 more second
+            if (getRuntime() > timer + 2) {
+                move(0.10);
+                if (getRuntime() > timer + 3.5) {
+                    move(0);
+                    side.setPosition(1); // Side UP
+                    state = (float)6.5;
+                }
+            }
         }
         // ------------------  END  -----------------------------*/
 
@@ -213,20 +211,20 @@ public class AutoRedRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 5) {
             // Turns left to kick the ball
-            if (turn(0.15,10)) {
+            if (turn(0.2,10)) {
                 state ++;
             }
         }
         if (state == 6){
             side.setPosition(1); // Side UP = 1
-            if (turn(0.15, 0)) {   // Returned to start position
-                state+=0.5;
+            if (turn(0.2, 0)) {   // Returned to start position
+                state=(float) 6.5;
                 timer = (float) getRuntime();
             }
         }
         if (state == (float) 6.5) {
             if (getRuntime() > timer + 2) {
-                state += 0.5;
+                state = 7;
             }
         }
         // ------------------  END  -----------------------------*/
@@ -240,7 +238,7 @@ public class AutoRedRight extends NewHardwareMap {
         if (state == 7) {
             // Give power to the motors
             ///move(-0.3);
-            mech_move(0,(float)-0.2,0);
+            mech_move(0,(float)0.2,0);
             // Check encoders are higher than xxxxx
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
@@ -256,18 +254,32 @@ public class AutoRedRight extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             // Check if we have reached the first position
-            if (xPos < -500) {
+            if (xPos < 400) {
                 side.setPosition(1); // Side UP
-                // Check if we reached the Pictograph color position
-                if(xPos < -1500) {
+                // Get off the platform
+                if(xPos < 2000) {
                     move(0);
-                    timer = (float) getRuntime();
-                    state = (float) 7.01;
+                    //timer = (float) getRuntime();
+                    state = (float) 7.001;
                 }
             }
         }
+        if(state == (float) 7.001){
+            if (turn(0.2,185)) {
+                // Set starting position based on current encoder position
+                state = (float) 7.01;
+                timer = (float) getRuntime();
+            }
+        }
+
+        // ------------------  END  -----------------------------*/
+
+        // --------------- DESCRIPTION --------------------------
+        // 07.01. Wait
+        // waits for 1 second before going backwards to align
+        // ------------------ START -----------------------------
         if (state == (float) 7.01) {
-            if (getRuntime() > timer + 1) {
+            if (getRuntime() > timer + 0.5) {
                 timer = (float) getRuntime();
                 state = (float) 7.1;
             }
@@ -276,11 +288,11 @@ public class AutoRedRight extends NewHardwareMap {
 
         // --------------- DESCRIPTION --------------------------
         // 7.1. Position with platform
-        // Go backwards to position with platform for 2 seconds
+        // Go backwards to position with platform for 1 second
         // ------------------ START -----------------------------
         if (state == (float) 7.1) {
             move(0.2);
-            if (getRuntime() > timer + 2) {
+            if (getRuntime() > timer + 1) {
                 move(0);
                 // Get position of the 4 encoders
                 lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
@@ -298,11 +310,11 @@ public class AutoRedRight extends NewHardwareMap {
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
-        // 7.2. Align with Crypto Box
-        // Go backwards to position with platform
+        // 7.2. Reach crypto box
+        // Go backwards based on pictogram distance
         // ------------------ START -----------------------------
         if (state == (float) 7.2) {
-            mech_move(0,(float)-0.3,0);
+            mech_move(0,(float)-0.2,0);
             // Check encoders are higher than xxxxx
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
@@ -326,33 +338,34 @@ public class AutoRedRight extends NewHardwareMap {
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
-        // 08. Rotate 90 degrees to position plate
-        // Rotate 90 degrees
+        // 08. Rotate 100 degrees to position plate
+        // Rotate 100 degrees
         // ------------------ START -----------------------------
         if (state == 8) {
-            // Turns 90 degrees
-            if (turn(0.2,90)) {
+            // Turns 100 degrees
+            if (turn(0.2,100)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
                 rfEncStart =  rfEnc;
                 rbEncStart =  rbEnc;
-//                state++;
-                state = (float)8.1;
+                state = (float) 8.1;
+
                 timer = (float) getRuntime();
             }
         }
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
-        // 08.1. Get closer to crypto box
-        // Move back for time
+        // 08.1. UP the plate slowly
+        // Raises the plate slowly until it gets to 1
         // ------------------ START -----------------------------
         if (state == (float) 8.1) {
-            move(-0.2);
-            if (getRuntime() > timer + 0.5) {
-                move(0);
-                state=9;
+            plate.setPosition(platepos);
+            platepos=(float) (platepos + .03);
+            if (platepos > 0.95 ) {
+                platepos=(float) 0.5;
+                state = 9;
             }
         }
         // ------------------  END  -----------------------------*/
@@ -370,7 +383,7 @@ public class AutoRedRight extends NewHardwareMap {
             // after 2 seconds of pushing, go get a new block
             if (getRuntime() > timer + 2) {
                 move(0);
-                plate.setPosition(0.5); // Plate DOWN
+                //plate.setPosition(0.5); // Plate DOWN
                 // Get position of the 4 encoders
                 lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
                 lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -381,8 +394,68 @@ public class AutoRedRight extends NewHardwareMap {
                 lbEncStart =  lbEnc;
                 rfEncStart =  rfEnc;
                 rbEncStart =  rbEnc;
-                state++;
+                // Determines the X-Y-Rotation position of the robot
+                //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+                //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+                //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+                // Simpler version using the average of the front two wheels
+                xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+
                 timer = (float) getRuntime();
+                state = (float) 9.5;
+            }
+        }
+        // ------------------  END  -----------------------------*/
+
+        // --------------- DESCRIPTION --------------------------
+        // 09.5. Get further away from crypto box
+        // Move forward for encoder value, put plate down, and turn
+        // ------------------ START -----------------------------
+        if (state == (float) 9.5) {
+            move(0.2);
+            // Get position of the 4 encoders
+            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+            // Determines the X-Y-Rotation position of the robot
+            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+            // Simpler version using the average of the front two wheels
+            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+            if (xPos > 400) {
+                plate.setPosition(0.5); //plate down
+                move(0);
+                state = (float) 9.6;
+            }
+        }
+        // ------------------  END  -----------------------------*/
+
+        // --------------- DESCRIPTION --------------------------
+        // 09.6. Turn
+        // Turns to align perpendicular to the blocks
+        // ------------------ START -----------------------------
+        if (state == (float)9.6) {
+            if (turn(0.2, 90)) {
+                // Get position of the 4 encoders
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                // Set starting position based on current encoder positions
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+                // Determines the X-Y-Rotation position of the robot
+                //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+                //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+                //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+                // Simpler version using the average of the front two wheels
+                xPos = ((lfEnc - lfEncStart) + (rfEnc - rfEncStart)) / 2;
+                timer = (float) getRuntime();
+                state = 10;
             }
         }
         // ------------------  END  -----------------------------*/
@@ -412,13 +485,13 @@ public class AutoRedRight extends NewHardwareMap {
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
-            if (getRuntime() > timer + 5) {//if robot reached glyphs
+            if (getRuntime() > timer + 2) {//if robot reached glyphs
                 move(0);
                 //Turn off intake
                 LeftIntakeDrive.setPower(0);
                 RightIntakeDrive.setPower(0);
                 timer = (float) getRuntime();
-
+                glyphPos = xPos;
                 state++;
             }
         }
@@ -429,8 +502,26 @@ public class AutoRedRight extends NewHardwareMap {
         // Go backwards into the crypto box, lift & raise the platform
         // ------------------ START -----------------------------
         if (state == 11) {
-            plate.setPosition(0.6);
+            plate.setPosition(0.6); //lifts plate a little
+            // Rotates to alight back with crypto box
+            if(turn(.3,90)){
+                float updownVar = (float) 0.5;
+                // after 1.5 of lifting the plate, stop lift
+                if (getRuntime() > timer + 1.5) {
+                    updownVar = 0;
+                    state = (float) 11.4;
+                }
+                // Complete actions
+                updownMotor.setPower(updownVar);
+            }
+        }
+        // ------------------  END  -----------------------------*/
 
+        // --------------- DESCRIPTION --------------------------
+        // 11.4. Goes back to Crypto box
+        // Moves back to starting position
+        // ------------------ START -----------------------------
+        if (state == (float) 11.4) {
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
             lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -444,46 +535,42 @@ public class AutoRedRight extends NewHardwareMap {
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
-            float updownVar = 0;
-            // after 2 seconds of pushing, go get a new block
-            if (getRuntime() < timer + 1.5) {
-                updownVar = (float) 0.5;
-            }
-
             float motorVar = (float) -0.3;
-            if (xPos < (-1* (37/0.01489))) {
+            if (xPos < 202) {
                 motorVar = 0;
                 state = (float) 11.5;
                 timer = (float) getRuntime();
             }
             // Complete actions
             move(motorVar);
-            updownMotor.setPower(updownVar);
         }
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
-        // 11.5. Reset to -90 degrees
-        // Turn to be perpendicular to the crypto box
+        // 11.5. UP the plate slowly
+        // Raises the plate slowly until it gets to 1
         // ------------------ START -----------------------------
         if (state == (float) 11.5) {
-            if (turn(0.2, -90)) { // if it got back to where it was
-                state = 12;
+            platepos=(float) (platepos + .05);
+            if (platepos > 0.95 ) {
+                platepos=(float) 0.5;
+                state=12;
             }
+            plate.setPosition(platepos);
         }
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------
-        // 12. Score glyph
+        // 12. Score 2nd glyph
         // Flip the plate, push the block in, and back up from the crypto box
         // ------------------ START -----------------------------
         if (state == 12) {
-            plate.setPosition(1); // Plate UP
+            plate.setPosition(1); //UP
             if (getRuntime() < timer + 2) {
-                move(-0.3);
+                move(-0.2);
             }
-            else if (getRuntime() < timer + 4) {
-                move(0.3);
+            else if (getRuntime() < timer + 2.5) {
+                move(0.25);
             }
             else {
                 state++;
@@ -497,7 +584,7 @@ public class AutoRedRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 13) {
             move(0);
-            if(turn(0.2,-90)) {
+            if(turn(0.2,90)) {
                 stop();
             }
         }

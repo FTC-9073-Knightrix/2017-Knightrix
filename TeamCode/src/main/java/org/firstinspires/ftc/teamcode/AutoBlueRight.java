@@ -355,7 +355,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == (float) 8.1) {
             plate.setPosition(platepos);
-            platepos=(float) (platepos + .05);
+            platepos=(float) (platepos + .03);
             if (platepos > 0.95 ) {
                 platepos=(float) 0.5;
                 state = 9;
@@ -544,7 +544,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // Raises the plate slowly until it gets to 1
         // ------------------ START -----------------------------
         if (state == (float) 11.5) {
-            platepos=(float) (platepos + .05);
+            platepos=(float) (platepos + .03);
             if (platepos > 0.95 ) {
                 platepos=(float) 0.5;
                 state=12;
