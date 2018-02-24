@@ -271,14 +271,14 @@ public class Drive_Test extends NewHardwareMap{
         // Y = 0.60 Moves arm up (with Relic)
         // !X & !Y = 0.5 no power to the servo (free movement)
         // ------------------ START -----------------------------
-        armpos = (float) 0; // Default state
+         // Default state
         if(gamepad2.x){
-          armpos = (float) 0.1;
+            arm.setPosition(0);
         }
         else if(gamepad2.y){
-            armpos = (float) 1;
+            arm.setPosition(0.7);
         }
-        arm.setPosition(armpos);
+        ;
 
         //arm.setPosition(gamepad1.right_stick_x);
         //telemetry.addLine("Servo:"+ gamepad1.right_stick_x);

@@ -478,7 +478,7 @@ public class AutoBlueRight extends NewHardwareMap {
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
-            if (getRuntime() > timer + 3) {//if robot reached glyphs
+            if (getRuntime() > timer + 2) {//if robot reached glyphs
                 move(0);
                 //Turn off intake
                 LeftIntakeDrive.setPower(0);
