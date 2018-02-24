@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
-@Autonomous(name = "NEWBLUE_RIGHT")
-public class AutoBlueRight extends NewHardwareMap {
+@Autonomous(name = "NEWRED_LEFT")
+public class AutoRedLeft extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits PLAY
@@ -34,8 +34,8 @@ public class AutoBlueRight extends NewHardwareMap {
 
 
         // --------------- DESCRIPTION --------------------------
-        // Blue Middle
-        // Autonomous for Right side (Blue), middle position
+        // Red Middle
+        // Autonomous for Left side (Red), middle position
         // ------------------ START -----------------------------
         // Code:
         // 0. Start moving arm to the side
@@ -130,20 +130,20 @@ public class AutoBlueRight extends NewHardwareMap {
 
                 float colorInch = 22;
 
-                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     pictograph = "left";
-                    ColorRun = (float) (-1 * (int)((colorInch-(2*7.63))/0.01489));
+                    ColorRun = (float) (1 * (int)((colorInch-(2*7.63))/0.01489));
                     state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     pictograph = "center";
-                    ColorRun = (float) (-1 * (int)((colorInch-7.63)/0.01489));
+                    ColorRun = (float) (1 * (int)((colorInch-7.63)/0.01489));
                     state++;
                 }
-                else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                else if (vuMark == RelicRecoveryVuMark.LEFT) {
                     pictograph = "right";
                     //noinspection NumericOverflow
-                    ColorRun = (float) (-1 * (int)(colorInch/0.01489));
+                    ColorRun = (float) (1 * (int)(colorInch/0.01489));
                     state++;
                 }
             }
@@ -181,12 +181,12 @@ public class AutoBlueRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 4) {
             // Checks the color of the ball and exits the loop
-            if (color().equals("red")) {
+            if (color().equals("blue")) {
                 move(0);
                 // Go to Tilt 1 then Tilt back
                 state = 5;
             }
-            else if (color().equals("blue")) {
+            else if (color().equals("red")) {
                 move(0);
                 // Move forwards
                 state = 7;
@@ -238,7 +238,7 @@ public class AutoBlueRight extends NewHardwareMap {
         if (state == 7) {
             // Give power to the motors
             ///move(-0.3);
-            mech_move(0,(float)-0.2,0);
+            mech_move(0,(float)0.2,0);
             // Check encoders are higher than xxxxx
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
@@ -254,14 +254,21 @@ public class AutoBlueRight extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             // Check if we have reached the first position
-            if (xPos < -400) {
+            if (xPos < 400) {
                 side.setPosition(1); // Side UP
                 // Get off the platform
-                if(xPos < -1500) {
+                if(xPos < 2200) {
                     move(0);
-                    timer = (float) getRuntime();
-                    state = (float) 7.01;
+                    //timer = (float) getRuntime();
+                    state = (float) 7.001;
                 }
+            }
+        }
+        if(state == (float) 7.001){
+            if (turn(0.2,0)) {
+                // Set starting position based on current encoder position
+                state = (float) 7.01;
+                timer = (float) getRuntime();
             }
         }
 
@@ -501,8 +508,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 float updownVar = (float) 0.5;
                 // after 1.5 of lifting the plate, stop lift
                 if (getRuntime() > timer + 3) {
-                    updownVar = (float) 0.5;
-                    timer = (float) getRuntime();
+                    updownVar = 0;
                     state = (float) 11.4;
                 }
                 // Complete actions
@@ -514,21 +520,20 @@ public class AutoBlueRight extends NewHardwareMap {
         // --------------- DESCRIPTION --------------------------
         // 11.4. Goes back to Crypto box
         // Moves back to starting position
-        //rams into the box
         // ------------------ START -----------------------------
         if (state == (float) 11.4) {
             // Get position of the 4 encoders
-//            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
-//            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
-//            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
-//            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-//
-//            // Determines the X-Y-Rotation position of the robot
-//            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-//            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-//            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-//            // Simpler version using the average of the front two wheels
-//            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+
+            // Determines the X-Y-Rotation position of the robot
+            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
+            // Simpler version using the average of the front two wheels
+            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             float motorVar = (float) -0.3;
             move(motorVar);
@@ -543,13 +548,10 @@ public class AutoBlueRight extends NewHardwareMap {
 //                motorVar = 0;
 //                state = (float) 11.5;
 //                timer = (float) getRuntime();
-            }
-                // Complete actions
-
-
+}
         }
         // ------------------  END  -----------------------------*/
-        // --------------- DESCRIPTION --------------------------
+// --------------- DESCRIPTION --------------------------
         // 11.4. Moves away from cryotbox a little to place glyph
         // ------------------ START -----------------------------
         if (state == (float) 11.45) {
@@ -574,9 +576,9 @@ public class AutoBlueRight extends NewHardwareMap {
                 state = (float) 11.5;
                 timer = (float) getRuntime();
             }
-                // Complete actions
+            // Complete actions
             move(motorVar);
-            }
+        }
 
         // ------------------  END  -----------------------------*/
         // --------------- DESCRIPTION --------------------------
@@ -584,7 +586,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // Raises the plate slowly until it gets to 1
         // ------------------ START -----------------------------
         if (state == (float) 11.5) {
-            platepos=(float) (platepos + .03);
+            platepos=(float) (platepos + .05);
             if (platepos > 0.95 ) {
                 platepos=(float) 0.5;
                 state=12;

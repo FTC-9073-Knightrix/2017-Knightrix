@@ -72,6 +72,7 @@ public abstract class NewHardwareMap extends OpMode {
     float leftstick_x = 0;
     float leftstick_y = 0;
     float armpos = 0;
+    float platepos = (float) 0.5;
     float leftIntakePower = 0;
     float rightIntakePower = 0;
     int loopcounter =0;
@@ -97,6 +98,7 @@ public abstract class NewHardwareMap extends OpMode {
     double xPos = 0;
     double yPos = 0;
     double rotPos = 0;
+    double glyphPos = 0;
 
 
 
