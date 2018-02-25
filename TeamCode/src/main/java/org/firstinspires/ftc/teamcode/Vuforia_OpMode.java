@@ -65,7 +65,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Vuforia_OpMode")
+//@Autonomous(name="Vuforia_OpMode")
 //@Disabled
 public class Vuforia_OpMode extends OpMode {
 

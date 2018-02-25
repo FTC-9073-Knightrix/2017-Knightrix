@@ -22,7 +22,7 @@ import java.text.DecimalFormat;
  * as telemetry data.
  */
 
-@TeleOp(name = "NavX Test")
+//@TeleOp(name = "NavX Test")
 
 public class NavXtest extends OpMode {
 

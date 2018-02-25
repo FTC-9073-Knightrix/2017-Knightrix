@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by ibravo on 10/3/17.
  */
 
-@TeleOp(name = "Driver Controlled")
+//@TeleOp(name = "Driver Controlled")
 
 //http://pdocs.kauailabs.com/navx-micro/examples/field-oriented-drive/
 

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
-@Autonomous(name = "NEWBLUE_RIGHT")
+@Autonomous(name = "Blue")
 public class AutoBlueRight extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
@@ -498,10 +498,10 @@ public class AutoBlueRight extends NewHardwareMap {
             plate.setPosition(0.6); //lifts plate a little
             // Rotates to alight back with crypto box
             if(turn(.3,90)){
-                float updownVar = (float) 0.5;
+                float updownVar = (float) -0.5;
                 // after 1.5 of lifting the plate, stop lift
-                if (getRuntime() > timer + 3) {
-                    updownVar = (float) 0.5;
+                if (getRuntime() > timer + 2) {
+                    updownVar = (float) 0;
                     timer = (float) getRuntime();
                     state = (float) 11.4;
                 }
@@ -601,14 +601,27 @@ public class AutoBlueRight extends NewHardwareMap {
             plate.setPosition(1); //UP
             if (getRuntime() < timer + 2) {
                 move(-0.2);
-            }
-            else if (getRuntime() < timer + 2.5) {
+            } else if (getRuntime() < timer + 2.5) {
                 move(0.25);
-            }
-            else {
+            } else {
                 state++;
+                /*
+                timer = getRuntime();
+                state = (float) 12.5;
+                */
             }
         }
+        // 12.5. Strafe
+        // Strafes onto the safe zone
+        // ------------------ START -----------------------------
+        /*
+        if (state == (float) 12.5) {
+            if (getRuntime() < timer + 1) {
+                mech_move(90,(float)0.2,0);
+            }
+        }
+        */
+
         // ------------------  END  -----------------------------*/
 
         // --------------- DESCRIPTION --------------------------

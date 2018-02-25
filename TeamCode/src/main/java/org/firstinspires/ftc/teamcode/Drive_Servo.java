@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/9/17.
  */
 
-@TeleOp(name = "DRIVE_SERVO")
+//@TeleOp(name = "DRIVE_SERVO")
 
 // Main Driver controlled program
 // WITH comments

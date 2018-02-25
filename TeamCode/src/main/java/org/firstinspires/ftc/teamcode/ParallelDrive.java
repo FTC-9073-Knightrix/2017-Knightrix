@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  * Created by ibravo on 12/11/17.
  */
-@Autonomous(name = "Parallel Drive")
+//@Autonomous(name = "Parallel Drive")
 public class ParallelDrive extends TestHardwareMap {
     @Override
     public void start() {

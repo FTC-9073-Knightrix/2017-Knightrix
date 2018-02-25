@@ -65,7 +65,7 @@
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Knight VuMark Id", group ="Concept")
+//@Autonomous(name="Knight VuMark Id", group ="Concept")
 //@Disabled
 public class Knight_Vuforia_Test extends LinearOpMode {
 

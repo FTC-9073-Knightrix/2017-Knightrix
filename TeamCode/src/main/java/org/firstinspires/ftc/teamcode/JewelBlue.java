@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 12/2/17.
  */
 
-@Autonomous(name = "Blue Jewel")
+//@Autonomous(name = "Blue Jewel")
 
 public class JewelBlue extends TestHardwareMap {
     @Override public void start() {

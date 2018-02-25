@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by nicolas on 1/29/18.
  */
 
-@TeleOp(name = "Wheel Drive")
+//@TeleOp(name = "Wheel Drive")
 
 public class WheelDrive extends TestHardwareMap {
     @Override

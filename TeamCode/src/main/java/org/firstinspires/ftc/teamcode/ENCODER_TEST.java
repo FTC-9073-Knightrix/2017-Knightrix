@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Vijay on 12/9/2017.
  */
-@TeleOp(name="Encoder", group="Linear Opmode") // @Autonomous(...) is the other common choice
+//@TeleOp(name="Encoder", group="Linear Opmode") // @Autonomous(...) is the other common choice
 // @Disabled
 public class ENCODER_TEST extends LinearOpMode{
     /* Declare OpMode members. */

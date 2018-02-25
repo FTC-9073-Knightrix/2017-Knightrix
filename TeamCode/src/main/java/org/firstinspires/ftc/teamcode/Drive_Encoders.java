@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by ibravo on 11/14/17.
  */
 
-@TeleOp(name = "Drive Encoders")
+//@TeleOp(name = "Drive Encoders")
 
 public class Drive_Encoders extends NewHardwareMap {
     /*

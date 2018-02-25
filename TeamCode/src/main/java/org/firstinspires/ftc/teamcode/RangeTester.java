@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by ibravo on 11/11/17.
  */
 
-@TeleOp(name = "Range")
+//@TeleOp(name = "Range")
 
 public class RangeTester extends TestHardwareMap {
     @Override

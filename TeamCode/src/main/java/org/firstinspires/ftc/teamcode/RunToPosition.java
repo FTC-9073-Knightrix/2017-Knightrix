@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created by nicolas on 1/6/18.
  */
 
-@Autonomous(name = "Run To Position")
+//@Autonomous(name = "Run To Position")
 
 public class RunToPosition extends TestHardwareMap {
     @Override

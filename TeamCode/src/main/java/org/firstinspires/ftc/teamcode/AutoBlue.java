@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by nicolas on 11/4/17.
  */
 
-@Autonomous(name = "Blue_Left")
+//@Autonomous(name = "Blue_Left")
 
 public class AutoBlue extends TestHardwareMap {
     @Override

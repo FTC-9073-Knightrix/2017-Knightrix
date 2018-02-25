@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by nicolas on 11/4/17.
  */
 
-@Autonomous(name = "Auto Encoders")
+//@Autonomous(name = "Auto Encoders")
 
 public class AutoMoveEncoders extends TestHardwareMap {
     @Override
