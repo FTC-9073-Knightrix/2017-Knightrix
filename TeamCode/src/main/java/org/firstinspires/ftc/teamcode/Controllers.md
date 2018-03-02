@@ -21,35 +21,35 @@
 |left stick left|drive left|
 |right stick right|turn right|
 |right stick left|turn left|
-|right trigger||
+|right trigger|plate up|
 |left trigger||
-|right bumper||
-|left bumper||
+|right bumper|slow speed|
+|left bumper|normal speed|
 
 
 ### Gamepad 2
 
 |Button|Action|
 |:-------------:|:-------------:|
-|dpad up|up pickup|
-|dpad down|down pickup|
+|dpad up||
+|dpad down||
 |dpad left|extend in|
 |dpad right|extend out|
 |y|arm up|
-|b|open hand|
-|a|close hand|
+|b|intake in|
+|a|intake out|
 |x|arm down|
 |select||
 |start||
-|left stick up||
-|left stick down||
+|left stick up|lift up|
+|left stick down|lift down|
 |left stick right||
 |left stick left||
 |right stick up||
 |right stick down||
 |right stick left|turn slowly left|
 |right stick right|turn slowly right|
-|right trigger|intake in|
-|left trigger|intake out|
-|right bumper|plate up|
-|left bumper||
+|right trigger|plate up|
+|left trigger|plate balanced|
+|right bumper|hand closed|
+|left bumper|hand open|

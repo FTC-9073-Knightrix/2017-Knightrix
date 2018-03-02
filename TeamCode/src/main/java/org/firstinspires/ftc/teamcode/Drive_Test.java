@@ -135,12 +135,27 @@ public class Drive_Test extends NewHardwareMap{
             leftstick_x = -gamepad1.left_stick_x;
             leftstick_y = gamepad1.left_stick_y;
         }
+
+        if (gamepad1.right_bumper) {
+            slow = true;
+        }
+        else if (gamepad1.left_bumper) {
+            slow = false;
+        }
+        if (slow) {
+            leftstick_x /= 2;
+            leftstick_y /= 2;
+        }
+
         float myrot = 0;
         if (gamepad2.right_stick_x != 0) {
             myrot = Math.round((gamepad2.right_stick_x / (float) 5) * (float) 100) / (float) 100;
         }
-        else {
+        else if (gamepad1.right_stick_x != 0 && slow){
             myrot = Math.round((gamepad1.right_stick_x / (float) 2) * (float) 100) / (float) 100;
+        }
+        else {
+            myrot = Math.round((gamepad1.right_stick_x / (float) 1) * (float) 100) / (float) 100;
         }
         //float myrot = gamepad1.right_stick_x/2; // left=-1 ; right=1
         // ------------------  END  -----------------------------
@@ -227,7 +242,7 @@ public class Drive_Test extends NewHardwareMap{
         if (gamepad1.right_trigger > 0) {
             plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
         }
-        else if (gamepad2.left_bumper) {
+        else if (gamepad2.left_trigger != 0) {
             plate.setPosition(0.6);
         }
         else {
@@ -290,10 +305,10 @@ public class Drive_Test extends NewHardwareMap{
         // Relic Hand
         // Open and close hand based on bumpers of gamepad 1
         // ------------------ START -----------------------------
-        if (gamepad1.right_bumper) {
+        if (gamepad2.right_bumper) {
             hand.setPosition(1);
         }
-        else if (gamepad1.left_bumper) {
+        else if (gamepad2.left_bumper) {
             hand.setPosition(0.3);
         }
         // ------------------  END  -----------------------------

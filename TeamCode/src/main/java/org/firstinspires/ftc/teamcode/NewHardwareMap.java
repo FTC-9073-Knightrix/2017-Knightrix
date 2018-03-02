@@ -99,7 +99,7 @@ public abstract class NewHardwareMap extends OpMode {
     double yPos = 0;
     double rotPos = 0;
     double glyphPos = 0;
-
+    boolean slow = false;
 
 
     @Override
