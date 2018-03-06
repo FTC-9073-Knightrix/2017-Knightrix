@@ -213,7 +213,7 @@ public class AutoRedLeft extends NewHardwareMap {
         // Tilt the robot backwards/forwards;
         // raise the side after completion
         // ------------------ START -----------------------------
-        if (state == 5) {
+        /*if (state == 5) {
             // Go backwards
             ///move(-0.3);
             mech_move(0,(float)-0.3,0);
@@ -279,6 +279,19 @@ public class AutoRedLeft extends NewHardwareMap {
         // to get down from the balancing stone
         // and put the side color sensor UP
         // ------------------ START -----------------------------
+
+
+        /*
+        * NEW SIDE SERVO
+        *
+        * Using the side servo, we can...
+        * 1) Put side servo down
+        * 2) Move side 2 to the right, knocking the blue off
+        * 3) Put the side 2 back to the center
+        * 4) Lift side back up
+        * */
+
+
         if (state == 7) {
             // Give power to the motors
             ///move(-0.3);

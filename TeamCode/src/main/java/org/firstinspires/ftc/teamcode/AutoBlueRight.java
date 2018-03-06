@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
-@Autonomous(name = "Blue")
+@Autonomous(name = "Blue Right")
 public class AutoBlueRight extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------

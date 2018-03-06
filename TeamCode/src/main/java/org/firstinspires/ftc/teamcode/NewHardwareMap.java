@@ -47,6 +47,7 @@ public abstract class NewHardwareMap extends OpMode {
     Servo arm;
     Servo hand;
     Servo side;
+    Servo side2;
 
     // Init Sensors
     ColorSensor color1;
@@ -128,6 +129,7 @@ public abstract class NewHardwareMap extends OpMode {
         hand = hardwareMap.servo.get("HS");
         plate = hardwareMap.servo.get("PL");
         side = hardwareMap.servo.get("SS");
+        side2 = hardwareMap.servo.get("S2");
         // AL026BJ2 - Bottom Floor I2C
         // 0 NavX; 5 Color
         navxGyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
