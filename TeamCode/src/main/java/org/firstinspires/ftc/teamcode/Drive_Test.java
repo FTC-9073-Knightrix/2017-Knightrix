@@ -128,18 +128,38 @@ public class Drive_Test extends NewHardwareMap{
         // Change rotation heading based on position of the robot
         // ------------------ START -----------------------------
         if ((gyroResetValue > 45 && gyroResetValue < 135) || (gyroResetValue > 225 && gyroResetValue < 315)) {
-            leftstick_x = gamepad1.left_stick_x;
-            leftstick_y = -gamepad1.left_stick_y;
+            if (gamepad1.left_stick_x != 0) {
+                leftstick_x = gamepad1.left_stick_x;
+            }
+            else {
+                leftstick_x = gamepad2.left_stick_x/5;
+            }
+            if (gamepad1.left_stick_y != 0) {
+                leftstick_y = -gamepad1.left_stick_y;
+            }
+            else {
+                leftstick_y = -gamepad2.left_stick_y/5;
+            }
         }
         else {
-            leftstick_x = -gamepad1.left_stick_x;
-            leftstick_y = gamepad1.left_stick_y;
+            if (gamepad1.left_stick_x != 0) {
+                leftstick_x = -gamepad1.left_stick_x;
+            }
+            else {
+                leftstick_x = -gamepad2.left_stick_x/5;
+            }
+            if (gamepad1.left_stick_y != 0) {
+                leftstick_y = gamepad1.left_stick_y;
+            }
+            else {
+                leftstick_y = gamepad2.left_stick_y/5;
+            }
         }
 
-        if (gamepad1.right_bumper) {
+        if (gamepad1.x) {
             slow = true;
         }
-        else if (gamepad1.left_bumper) {
+        else if (gamepad1.y) {
             slow = false;
         }
         if (slow) {
@@ -238,12 +258,14 @@ public class Drive_Test extends NewHardwareMap{
         // Update: 1. Get trigger position or left bumper
         //         2. Update plate position based on #1
         // ------------------ START -----------------------------
-        //
+
         if (gamepad1.right_trigger > 0) {
             plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
         }
-        else if (gamepad2.left_trigger != 0) {
-            plate.setPosition(0.6);
+        else if (gamepad2.left_bumper) {
+            if (plate.getPosition() < 0.75) {
+                plate.setPosition(plate.getPosition() + 0.01);
+            }
         }
         else {
             plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
@@ -305,10 +327,10 @@ public class Drive_Test extends NewHardwareMap{
         // Relic Hand
         // Open and close hand based on bumpers of gamepad 1
         // ------------------ START -----------------------------
-        if (gamepad2.right_bumper) {
+        if (gamepad1.right_bumper) {
             hand.setPosition(1);
         }
-        else if (gamepad2.left_bumper) {
+        else if (gamepad1.left_bumper) {
             hand.setPosition(0.3);
         }
         // ------------------  END  -----------------------------

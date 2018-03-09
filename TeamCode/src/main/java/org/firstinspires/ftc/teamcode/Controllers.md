@@ -9,10 +9,10 @@
 |dpad down||
 |dpad left||
 |dpad right||
-|y||
+|y|go fast|
 |b||
 |a|reset gyro|
-|x||
+|x|go slow|
 |select||
 |start||
 |left stick up|drive forwards|
@@ -23,8 +23,8 @@
 |right stick left|turn left|
 |right trigger|plate up|
 |left trigger||
-|right bumper|slow speed|
-|left bumper|normal speed|
+|right bumper|hand closed|
+|left bumper|hand open|
 
 
 ### Gamepad 2
@@ -43,13 +43,13 @@
 |start||
 |left stick up|lift up|
 |left stick down|lift down|
-|left stick right||
-|left stick left||
-|right stick up||
-|right stick down||
+|left stick right|right slow|
+|left stick left|left slow|
+|right stick up|up slow|
+|right stick down|down slow|
 |right stick left|turn slowly left|
 |right stick right|turn slowly right|
 |right trigger|plate up|
-|left trigger|plate balanced|
-|right bumper|hand closed|
-|left bumper|hand open|
+|left trigger||
+|right bumper||
+|left bumper|plate balanced|
