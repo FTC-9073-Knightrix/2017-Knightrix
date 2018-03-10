@@ -258,21 +258,26 @@ public class Drive_Test extends NewHardwareMap{
         // Update: 1. Get trigger position or left bumper
         //         2. Update plate position based on #1
         // ------------------ START -----------------------------
-
-        if (gamepad1.right_trigger > 0) {
-            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
-        }
-        else if (gamepad2.left_bumper) {
-            if (plate.getPosition() < 0.75) {
-                plate.setPosition(plate.getPosition() + 0.01);
-            }
-        }
-        else {
-            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
-        }
+// REAL CODE HERE
+//        if (gamepad1.right_trigger > 0) {
+//            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
+//        }
+//        else if (gamepad2.left_bumper) {
+//            if (plate.getPosition() < 0.75) {
+//                plate.setPosition(plate.getPosition() + 0.01);
+//            }
+//        }
+//        else {
+//            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
+//        }
         // ------------------  END  -----------------------------
+        if (gamepad1.left_trigger > 0) {
+            side.setPosition(Range.clip ((double) (gamepad1.left_trigger), 0, 1.0));
+        }
+        else if(gamepad1.right_trigger > 0){
+            side2.setPosition(Range.clip(((double) gamepad1.right_trigger), 0, 1.0));
 
-
+        }
         // --------------- DESCRIPTION --------------------------
         // Plate UP/DOWN
         // Moves the plate using the updown motor
