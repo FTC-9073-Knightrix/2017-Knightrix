@@ -79,7 +79,7 @@ public class Drive_Test extends NewHardwareMap{
         // Update Variables
         // Update all variables for every loop
         // ------------------ START -----------------------------
-        side.setPosition(1);    // side up for color sensor
+        //side.setPosition(1);    // side up for color sensor
         // ------------------  END  -----------------------------
 
 
@@ -259,25 +259,25 @@ public class Drive_Test extends NewHardwareMap{
         //         2. Update plate position based on #1
         // ------------------ START -----------------------------
 // REAL CODE HERE
-//        if (gamepad1.right_trigger > 0) {
-//            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
-//        }
-//        else if (gamepad2.left_bumper) {
-//            if (plate.getPosition() < 0.75) {
-//                plate.setPosition(plate.getPosition() + 0.01);
-//            }
-//        }
-//        else {
-//            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
-//        }
+        if (gamepad1.right_trigger > 0) {
+            plate.setPosition(Range.clip( 0.5 + ((gamepad1.right_trigger)*(1.0 - 0.5)), 0.5, 1.0));
+        }
+        else if (gamepad2.left_bumper) {
+            if (plate.getPosition() < 0.75) {
+                plate.setPosition(plate.getPosition() + 0.01);
+            }
+        }
+        else {
+            plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
+        }
         // ------------------  END  -----------------------------
-        if (gamepad1.left_trigger > 0) {
-            side.setPosition(Range.clip ((double) (gamepad1.left_trigger), 0, 1.0));
-        }
-        else if(gamepad1.right_trigger > 0){
-            side2.setPosition(Range.clip(((double) gamepad1.right_trigger), 0, 1.0));
-
-        }
+//        if (gamepad1.left_trigger > 0) {
+//            side.setPosition(Range.clip ((double) (gamepad1.left_trigger), 0, 1.0));
+//        }
+//        else if(gamepad1.right_trigger > 0){
+//            side2.setPosition(Range.clip(((double) gamepad1.right_trigger), 0, 1.0));
+//
+//        }
         // --------------- DESCRIPTION --------------------------
         // Plate UP/DOWN
         // Moves the plate using the updown motor
@@ -585,6 +585,8 @@ public class Drive_Test extends NewHardwareMap{
 
 
         telemetry.addLine("Loops/sec: "+ loopshower);
+        telemetry.addLine("Side Servo" + side.getPosition());
+        telemetry.addLine("Side Servo 2 " + side2.getPosition());
        // telemetry.addLine("DRIVE_NEW");
         //telemetry.addLine("Timer: " + timer);
         //telemetry.addLine("SS: " + switchServo.getPosition());
