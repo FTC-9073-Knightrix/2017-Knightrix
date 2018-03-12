@@ -148,6 +148,16 @@ public abstract class NewHardwareMap extends OpMode {
         //rangeSensorState.setEnabled(false);
 
 
+        // Get position of the 4 encoders
+        lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 - lfEncStart;
+        lbEnc =  LeftBackDrive.getCurrentPosition()   +1 - lbEncStart;
+        rfEnc =  RightFrontDrive.getCurrentPosition() +1 - rfEncStart;
+        rbEnc =  RightBackDrive.getCurrentPosition()  +1 - rbEncStart;
+        // Reset encoder values
+        lfEncStart =  lfEnc;
+        lbEncStart =  lbEnc;
+        rfEncStart =  rfEnc;
+        rbEncStart =  rbEnc;
 
 
 
@@ -244,9 +254,37 @@ public abstract class NewHardwareMap extends OpMode {
     }
     boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
+            // Calculate Position
             Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
             angle = orientation.firstAngle;
-            if(Math.abs(degree-angle) > 5) {
+
+            // Determine if the turn is on the
+            // The Gyro goes from +179 to -179
+            // A 180 turn will have the robot follow 178, 179, 180, -179, -178
+            // If the robot crosses the threshold POS to NEG, it will continue
+            // to spin around. The Objective is to have it return when it goes too far
+            // by going from 179 to 180, 181, 182 and
+            // from -179 to -180, -181, -182
+            // by adding 360 to its value
+
+            // 1. Check if we are in the DANGER zone (back quadrants)
+            if(Math.abs(degree) > 135){
+                // We are in the danger zone; adjust the values
+                if (degree > 0) {
+                    // Use all POSITIVE values by adding 360 to negative gyro values (179,180,181)
+                    if (angle < 0) {angle = angle + 360;}
+                }
+                if (degree < 0) {
+                    // Use all NEGATIVE values by substracting 360 to positive gyro values (-179,-180,-181)
+                    if (angle > 0) {angle = angle - 360;}
+                }
+            }
+
+            telemetry.addLine("Target Angle: " + degree);
+            telemetry.addLine("Curr. Angle: " + angle);
+            telemetry.addLine("ABS angle: " + Math.abs(degree-angle));
+
+            if((Math.abs(degree) - Math.abs(angle)) > 5) {
                 //if((double)((int)(start_angle)) - (double)((int)(angle)) < degree) {
                 if(angle > degree) {
                     LeftFrontDrive.setPower(Range.clip(power, -1, 1));
