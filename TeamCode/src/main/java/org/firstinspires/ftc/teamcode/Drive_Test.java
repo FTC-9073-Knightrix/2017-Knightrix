@@ -63,6 +63,9 @@ public class Drive_Test extends NewHardwareMap{
     */
     @Override
     public void loop() {
+
+        telemetry.addLine("Side1: " + side.getPosition());
+        telemetry.addLine("Side2: " + side2.getPosition());
         // --------------- DESCRIPTION --------------------------
         // Title
         // Description
@@ -79,7 +82,7 @@ public class Drive_Test extends NewHardwareMap{
         // Update Variables
         // Update all variables for every loop
         // ------------------ START -----------------------------
-        //side.setPosition(1);    // side up for color sensor
+        side.setPosition(1);    // side up for color sensor
         // ------------------  END  -----------------------------
 
 

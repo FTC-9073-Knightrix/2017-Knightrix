@@ -11,24 +11,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
-@Autonomous(name = "Red")
+
+@Autonomous(name = "Red Left")
+
 public class AutoRedLeft extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits PLAY
-       --------------------------------------------------------------------------
-    */
+       --------------------------------------------------------------------------*/
     @Override
     public void start() {
         auto = true;
         super.start();
     }
 
-
     /* --------------------------------------------------------------------------
     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-       --------------------------------------------------------------------------
-    */
+       --------------------------------------------------------------------------*/
+
     @Override
     public void loop() {
 
@@ -184,7 +184,8 @@ public class AutoRedLeft extends NewHardwareMap {
             if (color().equals("red")) {
                 move(0);
                 // Go to Tilt 1 then Tilt back
-                state = 5;
+                //state = 5;
+                state = 7;
             }
             else if (color().equals("blue")) {
                 move(0);
@@ -202,7 +203,8 @@ public class AutoRedLeft extends NewHardwareMap {
                     lbEncStart =  lbEnc;
                     rfEncStart =  rfEnc;
                     rbEncStart =  rbEnc;
-                    state = (float)6.5;
+                    //state = (float)6.5;
+                    state = 7;
                 }
             }
         }
@@ -317,11 +319,21 @@ public class AutoRedLeft extends NewHardwareMap {
                 if(xPos > 1500) {
                     move(0);
                     //timer = (float) getRuntime();
-                    state = (float)7.001;
+                    state = (float)7.2;
+                    // Get position of the 4 encoders
+                    lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                    lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+                    rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+                    rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+                    // Set starting position based on current encoder positions
+                    lfEncStart =  lfEnc;
+                    lbEncStart =  lbEnc;
+                    rfEncStart =  rfEnc;
+                    rbEncStart =  rbEnc;
                 }
             }
         }
-        if(state == (float) 7.001){
+        /*if(state == (float) 7.001){
             if (turn(0.2,180)) {
                 // Set starting position based on current encoder position
                 state = (float) 7.01;
@@ -329,7 +341,7 @@ public class AutoRedLeft extends NewHardwareMap {
             }
         }
 
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 07.01. Wait
@@ -341,7 +353,7 @@ public class AutoRedLeft extends NewHardwareMap {
                 state = (float) 7.1;
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 7.1. Position with platform
@@ -400,7 +412,7 @@ public class AutoRedLeft extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 8) {
             // Turns 100 degrees
-            if (turn(0.2,100)) {
+            if (turn(0.2,80)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
@@ -423,6 +435,7 @@ public class AutoRedLeft extends NewHardwareMap {
             if (platepos > 0.95 ) {
                 platepos=(float) 0.5;
                 state = 9;
+                timer = (float) getRuntime();
             }
         }
         // ------------------  END  -----------------------------*/
@@ -435,10 +448,10 @@ public class AutoRedLeft extends NewHardwareMap {
             // Move plate UP
             plate.setPosition(1);
             // Move back and push into crypto box
-            move(-0.2);
+            move(-0.3);
 
             // after 2 seconds of pushing, go get a new block
-            if (getRuntime() > timer + 2) {
+            if (getRuntime() > timer + 1) {
                 move(0);
                 //plate.setPosition(0.5); // Plate DOWN
                 // Get position of the 4 encoders
@@ -481,12 +494,18 @@ public class AutoRedLeft extends NewHardwareMap {
             //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
-            if (xPos > 400) {
+            if (xPos > 300) {
                 plate.setPosition(0.5); //plate down
                 move(0);
-                state = 13;
+                state = 10;
             }
-        }/*
+        }
+        if (state == 10) {
+            if (turn(0.2,90)) {
+                stop();
+            }
+        }
+        /*
         // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -668,7 +687,7 @@ public class AutoRedLeft extends NewHardwareMap {
                 state++;
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 13. STOP

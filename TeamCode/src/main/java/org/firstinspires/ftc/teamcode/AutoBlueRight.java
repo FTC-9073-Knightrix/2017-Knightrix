@@ -11,13 +11,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by nicolas on 2/10/18.
  */
+
 @Autonomous(name = "Blue Right")
+
 public class AutoBlueRight extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run ONCE when the driver hits PLAY
-       --------------------------------------------------------------------------
-    */
+       --------------------------------------------------------------------------*/
+
     @Override
     public void start() {
         auto = true;
@@ -27,8 +29,8 @@ public class AutoBlueRight extends NewHardwareMap {
 
     /* --------------------------------------------------------------------------
     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-       --------------------------------------------------------------------------
-    */
+       --------------------------------------------------------------------------*/
+
     @Override
     public void loop() {
 
@@ -184,7 +186,8 @@ public class AutoBlueRight extends NewHardwareMap {
             if (color().equals("red")) {
                 move(0);
                 // Go to Tilt 1 then Tilt back
-                state = 5;
+                //state = 5;
+                state = 7;
             }
             else if (color().equals("blue")) {
                 move(0);
@@ -198,11 +201,12 @@ public class AutoBlueRight extends NewHardwareMap {
                 if (getRuntime() > timer + 3.5) {
                     move(0);
                     side.setPosition(1); // Side UP
-                    state = (float)6.5;
+                    //state = (float)6.5;
+                    state = 7;
                 }
             }
         }
-        // ------------------  END  -----------------------------*/
+        /*// ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 05-06. tilt robot if wrong color in front
@@ -261,11 +265,21 @@ public class AutoBlueRight extends NewHardwareMap {
                     move(0);
                     timer = (float) getRuntime();
                     state = (float) 7.01;
+                    // Get position of the 4 encoders
+                    lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                    lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+                    rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+                    rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+                    // Set starting position based on current encoder positions
+                    lfEncStart =  lfEnc;
+                    lbEncStart =  lbEnc;
+                    rfEncStart =  rfEnc;
+                    rbEncStart =  rbEnc;
                 }
             }
         }
 
-        // ------------------  END  -----------------------------*/
+        /*// ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 07.01. Wait
@@ -277,7 +291,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 state = (float) 7.1;
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 7.1. Position with platform
@@ -336,7 +350,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // ------------------ START -----------------------------
         if (state == 8) {
             // Turns 100 degrees
-            if (turn(0.2,100)) {
+            if (turn(0.2,80)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
@@ -371,10 +385,10 @@ public class AutoBlueRight extends NewHardwareMap {
             // Move plate UP
             plate.setPosition(1);
             // Move back and push into crypto box
-            move(-0.2);
+            move(-0.3);
 
             // after 2 seconds of pushing, go get a new block
-            if (getRuntime() > timer + 2) {
+            if (getRuntime() > timer + 1) {
                 move(0);
                 //plate.setPosition(0.5); // Plate DOWN
                 // Get position of the 4 encoders
@@ -417,13 +431,19 @@ public class AutoBlueRight extends NewHardwareMap {
             //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
             // Simpler version using the average of the front two wheels
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
-            if (xPos > 400) {
+            if (xPos > 300) {
                 plate.setPosition(0.5); //plate down
                 move(0);
-                state = (float) 9.6;
+                //state = (float) 9.6;
+                state = 10;
             }
         }
-        // ------------------  END  -----------------------------*/
+        if (state == 10) {
+            if (turn(0.2,90)) {
+                stop();
+            }
+        }
+        /*// ------------------  END  -----------------------------*
 
         // --------------- DESCRIPTION --------------------------
         // 09.6. Turn
@@ -451,7 +471,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 state = 10;
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 10. Get a new block
@@ -488,7 +508,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 state++;
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 11. Secure glyph
@@ -509,7 +529,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 updownMotor.setPower(updownVar);
             }
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 11.4. Goes back to Crypto box
@@ -548,7 +568,7 @@ public class AutoBlueRight extends NewHardwareMap {
 
 
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
         // --------------- DESCRIPTION --------------------------
         // 11.4. Moves away from cryotbox a little to place glyph
         // ------------------ START -----------------------------
@@ -578,7 +598,7 @@ public class AutoBlueRight extends NewHardwareMap {
             move(motorVar);
             }
 
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
         // --------------- DESCRIPTION --------------------------
         // 11.5. UP the plate slowly
         // Raises the plate slowly until it gets to 1
@@ -591,7 +611,7 @@ public class AutoBlueRight extends NewHardwareMap {
             }
             plate.setPosition(platepos);
         }
-        // ------------------  END  -----------------------------*/
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 12. Score 2nd glyph
@@ -608,7 +628,7 @@ public class AutoBlueRight extends NewHardwareMap {
                 /*
                 timer = getRuntime();
                 state = (float) 12.5;
-                */
+
             }
         }
         // 12.5. Strafe
@@ -620,9 +640,9 @@ public class AutoBlueRight extends NewHardwareMap {
                 mech_move(90,(float)0.2,0);
             }
         }
-        */
 
-        // ------------------  END  -----------------------------*/
+
+        // ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
         // 13. STOP
