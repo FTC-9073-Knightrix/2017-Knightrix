@@ -19,7 +19,7 @@ public class AutoTester extends NewHardwareMap {
     float time = 0;
     String function = null;
     int capture = 0;
-    int newangle = 0;
+    float newangle = 0;
 
     @Override
     public void start() {
@@ -55,14 +55,30 @@ public class AutoTester extends NewHardwareMap {
             }
 
             if (function.equals("mech_move")) {
+                // Get position of the 4 encoders
                 lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
                 rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+                rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
+
+                // Determines the X-Y-Rotation position of the robot
+                //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
+                //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
+                //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
                 xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
+
                 //while rotations < rotation tracker
-                if (xPos < rotations) {
-                    mech_move(angle, power, 0);
+                if (Math.abs(xPos) < Math.abs(rotations)) {
+                    mech_move(newangle, power, 0);
                 }
-                telemetry.addLine("Mech Move");
+                else { mech_move(0,0,0);}
+
+                telemetry.addLine("Mech Move" + newangle + " Degrees");
+                telemetry.addLine("Desired Pos: " + rotations);
+                telemetry.addLine("Curr Pos: "+ xPos);
+                telemetry.addLine("Left : " + (lfEnc-lfEncStart));
+                telemetry.addLine("Right: " + (rfEnc-rfEncStart));
+
             }
 
             if (function.equals("move")) {
@@ -70,10 +86,16 @@ public class AutoTester extends NewHardwareMap {
                 rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
                 xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
                 //while rotations < rotation tracker
-                if (xPos < rotations) {
+                if (Math.abs(xPos) < Math.abs(rotations)) {
                     move(power);
                 }
+                else { move(0);}
+
                 telemetry.addLine("Move");
+                telemetry.addLine("Desired Pos: " + rotations);
+                telemetry.addLine("Curr Pos: "+ xPos);
+                telemetry.addLine("Left : " + (lfEnc-lfEncStart));
+                telemetry.addLine("Right: " + (rfEnc-rfEncStart));
             }
             if (function.equals("mech_move_time")) {
                 //while time < time tracker
@@ -148,7 +170,7 @@ public class AutoTester extends NewHardwareMap {
             if (capture == 1) { //angle
                 telemetry.addLine("Press X to continue");
 
-                newangle -= (int) gamepad1.left_stick_y * 5;
+                newangle -= gamepad1.left_stick_y * 1;
 
                 // Display angle
                 telemetry.addLine("Capture angle: " + newangle);
@@ -167,6 +189,8 @@ public class AutoTester extends NewHardwareMap {
 
                 if (gamepad1.a) {
                     capture++;
+                    lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                    rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
                     lfEncStart =  lfEnc;
                     rfEncStart =  rfEnc;
                 }
@@ -175,6 +199,7 @@ public class AutoTester extends NewHardwareMap {
             if (capture == 3) { //power
                 telemetry.addLine("Press X to continue");
                 power = -gamepad1.left_stick_y;
+
                 telemetry.addLine("Capture power: " + power);
                 if (gamepad1.x) {
                     capture++;
@@ -186,6 +211,7 @@ public class AutoTester extends NewHardwareMap {
                 time -= gamepad1.left_stick_y / 100;
                 telemetry.addLine("Capture time: " + time);
                 if (gamepad1.a) {
+                    newangle = (int) newangle;
                     run = true;
                 }
             }
