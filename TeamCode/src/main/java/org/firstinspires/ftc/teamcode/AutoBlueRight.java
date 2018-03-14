@@ -169,7 +169,7 @@ public class AutoBlueRight extends NewHardwareMap {
         // Move the servo position down to be closer to the balls
         // ------------------ START -----------------------------
         if (state == 3) {
-            side.setPosition(.4); //Move color sensor down
+            sideDown(); //Move color sensor down
             timer = (float) getRuntime();  // Sets timer = accumulated time
             state++;
         }
@@ -187,12 +187,14 @@ public class AutoBlueRight extends NewHardwareMap {
                 move(0);
                 // Go to Tilt 1 then Tilt back
                 //state = 5;
-                state = 7;
+                state = 6;
+                timer = (float) getRuntime();
             }
             else if (color().equals("blue")) {
                 move(0);
                 // Move forwards
-                state = 7;
+                state = 5;
+                timer = (float) getRuntime();
             }
 
             // If two seconds have passed, move robot towards a ball for 1 more second
@@ -200,12 +202,61 @@ public class AutoBlueRight extends NewHardwareMap {
                 move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
-                    side.setPosition(1); // Side UP
+                    sideUp(); // Side UP
                     //state = (float)6.5;
                     state = 7;
+                    lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                    lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                    rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                    rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                    lfEncStart = lfEnc;
+                    lbEncStart = lbEnc;
+                    rfEncStart = rfEnc;
+                    rbEncStart = rbEnc;
                 }
             }
         }
+
+        if (state == 5) {
+            if (getRuntime() < timer + 0.5) {
+                sideRight();
+            }
+            else if (getRuntime() > timer + 1) {
+                sideUp();
+            }
+            else if (getRuntime() >= timer + 0.5) {
+                state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+            }
+        }
+
+        if (state == 6) {
+            if (getRuntime() < timer + 0.5) {
+                sideLeft();
+            }
+            else if (getRuntime() > timer + 1) {
+                sideUp();
+            }
+            else if (getRuntime() >= timer + 0.5) {
+                state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+            }
+        }
+
         /*// ------------------  END  -----------------------------
 
         // --------------- DESCRIPTION --------------------------
@@ -259,7 +310,7 @@ public class AutoBlueRight extends NewHardwareMap {
 
             // Check if we have reached the first position
             if (xPos < -400) {
-                side.setPosition(1); // Side UP
+                sideUp(); // Side UP
                 // Get off the platform
                 if(xPos < -1500) {
                     move(0);

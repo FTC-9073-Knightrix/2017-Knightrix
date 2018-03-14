@@ -98,6 +98,7 @@ public class AutoRedLeft extends NewHardwareMap {
             // No need to move the arm as this is the default position
             // arm.setPosition(0); //Move arm down.
             plate.setPosition(0.5); //plate down
+            sideUp();
             state++;
         }
         // ------------------  END  -----------------------------*/
@@ -167,7 +168,7 @@ public class AutoRedLeft extends NewHardwareMap {
         // Move the servo position down to be closer to the balls
         // ------------------ START -----------------------------
         if (state == 3) {
-            side.setPosition(.4); //Move color sensor down
+            sideDown();
             timer = (float) getRuntime();  // Sets timer = accumulated time
             state++;
         }
@@ -185,12 +186,14 @@ public class AutoRedLeft extends NewHardwareMap {
                 move(0);
                 // Go to Tilt 1 then Tilt back
                 //state = 5;
-                state = 7;
+                state = 5;
+                timer = (float) getRuntime();
             }
             else if (color().equals("blue")) {
                 move(0);
                 // Move forwards
-                state = 7;
+                state = 6;
+                timer = (float) getRuntime();
             }
 
             // If two seconds have passed, move robot towards a ball for 1 more second
@@ -198,100 +201,60 @@ public class AutoRedLeft extends NewHardwareMap {
                 move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
-                    side.setPosition(1); // Side UP
-                    lfEncStart =  lfEnc;
-                    lbEncStart =  lbEnc;
-                    rfEncStart =  rfEnc;
-                    rbEncStart =  rbEnc;
+                    sideUp();
+                    lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                    lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                    rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                    rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                    lfEncStart = lfEnc;
+                    lbEncStart = lbEnc;
+                    rfEncStart = rfEnc;
+                    rbEncStart = rbEnc;
                     //state = (float)6.5;
                     state = 7;
                 }
             }
         }
-        // ------------------  END  -----------------------------*/
 
-        // --------------- DESCRIPTION --------------------------
-        // 05-06. tilt robot if wrong color in front
-        // Tilt the robot backwards/forwards;
-        // raise the side after completion
-        // ------------------ START -----------------------------
-        /*if (state == 5) {
-            // Go backwards
-            ///move(-0.3);
-            mech_move(0,(float)-0.3,0);
-            // Check encoders are higher than xxxxx
-            // Get position of the 4 encoders
-            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
-            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
-            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
-            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-
-            // Determines the X-Y-Rotation position of the robot
-            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-            // Simpler version using the average of the front two wheels
-            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
-
-            // Check if we have reached the first position
-            if (xPos < -250) {
-                side.setPosition(1); // Side UP
-                // Get off the platform
-                    state = (float) 6;
+        if (state == 5) {
+            if (getRuntime() < timer + 0.5) {
+                sideRight();
             }
-        }
-        if (state == 6){
-            side.setPosition(1); // Side UP = 1
-            // Give power to the motors
-            ///move(-0.3);
-            mech_move(0,(float)0.5,0);
-            // Check encoders are higher than xxxxx
-            // Get position of the 4 encoders
-            lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
-            lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
-            rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
-            rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
-
-            // Determines the X-Y-Rotation position of the robot
-            //    xPos = ((lfEnc + rbEnc) - (rfEnc + lbEnc))*1/4.0;
-            //    yPos = (lfEnc + lbEnc + rfEnc + rbEnc)*1/4.0;
-            //    rotPos = ((lfEnc + lbEnc) - (rfEnc + rbEnc))*1/4.0;
-            // Simpler version using the average of the front two wheels
-            xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
-
-            // Check if we have reached the first position
-            if (xPos > 200) {
-                side.setPosition(1); // Side UP
-                    //timer = (float) getRuntime();
-                    state = (float) 6.5;
+            else if (getRuntime() > timer + 1) {
+                sideUp();
             }
-
-
-        }
-        if (state == (float) 6.5) {
-            if (getRuntime() > timer + 2) {
+            else if (getRuntime() >= timer + 0.5) {
                 state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
             }
         }
-        // ------------------  END  -----------------------------*/
 
-        // --------------- DESCRIPTION --------------------------
-        // 07. Move forwards and lift the side
-        // Move forwards based on encoder postions and slow speed
-        // to get down from the balancing stone
-        // and put the side color sensor UP
-        // ------------------ START -----------------------------
-
-
-        /*
-        * NEW SIDE SERVO
-        *
-        * Using the side servo, we can...
-        * 1) Put side servo down
-        * 2) Move side 2 to the right, knocking the blue off
-        * 3) Put the side 2 back to the center
-        * 4) Lift side back up
-        * */
+        if (state == 6) {
+            if (getRuntime() < timer + 0.5) {
+                sideLeft();
+            }
+            else if (getRuntime() > timer + 1) {
+                sideUp();
+            }
+            else if (getRuntime() >= timer + 0.5) {
+                state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+            }
+        }
 
 
         if (state == 7) {
@@ -314,7 +277,7 @@ public class AutoRedLeft extends NewHardwareMap {
 
             // Check if we have reached the first position
             if (xPos > 400) {
-                side.setPosition(1); // Side UP
+                sideUp();
                 // Get off the platform
                 if(xPos > 1500) {
                     move(0);

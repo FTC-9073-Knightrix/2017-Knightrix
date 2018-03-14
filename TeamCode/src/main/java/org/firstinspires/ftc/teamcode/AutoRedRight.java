@@ -33,7 +33,7 @@ public class AutoRedRight extends NewHardwareMap {
     @Override
     public void loop() {
         // Updates Gyro values
-        Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+        orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
         if (state == 0) {
@@ -66,7 +66,7 @@ public class AutoRedRight extends NewHardwareMap {
                 float colorInch = 22;
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    pictograph = "left";
+                    pictograph = "right"; //values were switched
                     ColorRun = (float) (1 * (int)((colorInch-(2*7.63))/0.01489));
                     state++;
                 }
@@ -76,7 +76,7 @@ public class AutoRedRight extends NewHardwareMap {
                     state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                    pictograph = "right";
+                    pictograph = "left";
                     //noinspection NumericOverflow
                     ColorRun = (float) (1 * (int)(colorInch/0.01489));
                     state++;
@@ -91,7 +91,7 @@ public class AutoRedRight extends NewHardwareMap {
         }
 
         if (state == 3) {
-            side.setPosition(1); //Move color sensor down
+            sideDown();
             timer = (float) getRuntime();  // Sets timer = accumulated time
             state++;
         }
@@ -102,12 +102,14 @@ public class AutoRedRight extends NewHardwareMap {
                 move(0);
                 // Go to Tilt 1 then Tilt back
                 //state = 5;
-                state = 7;
+                state = 5;
+                timer = (float) getRuntime();
             }
             else if (color().equals("blue")) {
                 move(0);
                 // Move forwards
-                state = 7;
+                state = 6;
+                timer = (float) getRuntime();
             }
 
             // If two seconds have passed, move robot towards a ball for 1 more second
@@ -115,14 +117,58 @@ public class AutoRedRight extends NewHardwareMap {
                 move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
-                    side.setPosition(1); // Side UP
-                    lfEncStart =  lfEnc;
-                    lbEncStart =  lbEnc;
-                    rfEncStart =  rfEnc;
-                    rbEncStart =  rbEnc;
+                    sideUp();
+                    lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                    lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                    rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                    rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                    lfEncStart = lfEnc;
+                    lbEncStart = lbEnc;
+                    rfEncStart = rfEnc;
+                    rbEncStart = rbEnc;
                     //state = (float)6.5;
                     state = 7;
                 }
+            }
+        }
+
+        if (state == 5) {
+            if (getRuntime() < timer + 0.5) {
+                sideRight();
+            }
+            else if (getRuntime() > timer + 1) {
+                sideUp();
+            }
+            else if (getRuntime() >= timer + 0.5) {
+                state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
+            }
+        }
+
+        if (state == 6) {
+            if (getRuntime() < timer + 0.5) {
+                sideLeft();
+            }
+            else if (getRuntime() > timer + 1) {
+                sideUp();
+            }
+            else if (getRuntime() >= timer + 0.5) {
+                state = 7;
+                lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
+                lbEnc = LeftBackDrive.getCurrentPosition() + 1;
+                rfEnc = RightFrontDrive.getCurrentPosition() + 1;
+                rbEnc = RightBackDrive.getCurrentPosition() + 1;
+                lfEncStart = lfEnc;
+                lbEncStart = lbEnc;
+                rfEncStart = rfEnc;
+                rbEncStart = rbEnc;
             }
         }
 
@@ -146,12 +192,12 @@ public class AutoRedRight extends NewHardwareMap {
 
             // Check if we have reached the first position
             if (xPos > 400) {
-                side.setPosition(1); // Side UP
+                sideUp();
                 // Get off the platform
                 if(xPos > 1500) {
                     move(0);
                     //timer = (float) getRuntime();
-                    state = (float)7.1;
+                    state = (float) 7.1;
                     // Get position of the 4 encoders
                     lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
                     lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -166,15 +212,19 @@ public class AutoRedRight extends NewHardwareMap {
             }
         }
 
-        if (state == 7.1) {
+        if (state ==  (float) 7.1) {
             // Turns 100 degrees
-            if (turn(0.2, 90)) {
+            if (turn(0.4, 90)) {
                 // Set starting position based on current encoder positions
+                lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+                rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+                rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
                 lfEncStart = lfEnc;
                 lbEncStart = lbEnc;
                 rfEncStart = rfEnc;
                 rbEncStart = rbEnc;
-                state = (float) 8.1;
+                state = (float) 7.2;
 
                 timer = (float) getRuntime();
             }
@@ -282,5 +332,17 @@ public class AutoRedRight extends NewHardwareMap {
         if (state == 10) {
             stop();
         }
+
+        telemetry.addLine("State: " + state);
+        telemetry.addLine("Side 1: " + side.getPosition());
+        telemetry.addLine("Side 2: " + side2.getPosition());
+        telemetry.addLine("Color: " + color());
+        telemetry.addLine("Pictograph: " + pictograph);
+        telemetry.addLine("xPos" + xPos);
+        telemetry.addLine("lfEnc" + lfEnc);
+        telemetry.addLine("lbEnc" + lbEnc);
+        telemetry.addLine("rfEnc" + rfEnc);
+        telemetry.addLine("rbEnc" + rbEnc);
+        telemetry.addLine("Gyro: " + angle);
     }
 }

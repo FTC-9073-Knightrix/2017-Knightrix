@@ -64,6 +64,8 @@ public class Drive_Test extends NewHardwareMap{
     @Override
     public void loop() {
 
+        sideUp();
+
         telemetry.addLine("Side1: " + side.getPosition());
         telemetry.addLine("Side2: " + side2.getPosition());
         // --------------- DESCRIPTION --------------------------
@@ -82,7 +84,7 @@ public class Drive_Test extends NewHardwareMap{
         // Update Variables
         // Update all variables for every loop
         // ------------------ START -----------------------------
-        side.setPosition(1);    // side up for color sensor
+        //side.setPosition(1);    // side up for color sensor
         // ------------------  END  -----------------------------
 
 
@@ -274,13 +276,11 @@ public class Drive_Test extends NewHardwareMap{
             plate.setPosition(Range.clip(0.5 + ((gamepad2.right_trigger) * (1.0 - 0.5)), 0.5, 1.0));
         }
         // ------------------  END  -----------------------------
-//        if (gamepad1.left_trigger > 0) {
-//            side.setPosition(Range.clip ((double) (gamepad1.left_trigger), 0, 1.0));
-//        }
-//        else if(gamepad1.right_trigger > 0){
-//            side2.setPosition(Range.clip(((double) gamepad1.right_trigger), 0, 1.0));
-//
-//        }
+
+        /*side.setPosition(Range.clip ((double) (gamepad2.left_trigger), 0, 1.0));
+
+        side2.setPosition(Range.clip(((double) gamepad2.right_trigger), 0, 1.0));
+*/
         // --------------- DESCRIPTION --------------------------
         // Plate UP/DOWN
         // Moves the plate using the updown motor

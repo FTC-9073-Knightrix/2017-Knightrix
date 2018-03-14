@@ -161,7 +161,7 @@ public abstract class NewHardwareMap extends OpMode {
 
 
 
-        if (auto) {
+       // if (auto) {
             // Reset encoders
             //LeftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //LeftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -192,7 +192,7 @@ public abstract class NewHardwareMap extends OpMode {
             relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
             relicTrackables.activate();
             Vuforia_Init = true;
-        }
+      //  }
 
     }
 
@@ -255,7 +255,7 @@ public abstract class NewHardwareMap extends OpMode {
     boolean turn (double power, double degree) {//power=-0.2; degree=10  0-12=
         if (LeftFrontDrive != null && LeftBackDrive != null && RightFrontDrive != null && RightBackDrive != null) {
             // Calculate Position
-            Orientation orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+            orientation = navxGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
             angle = orientation.firstAngle;
 
             // Determine if the turn is on the
@@ -309,6 +309,23 @@ public abstract class NewHardwareMap extends OpMode {
             }
         }
         else {return false;}
+    }
+
+    void sideUp() {
+        side.setPosition(0.19);
+        side2.setPosition(0.81);
+    }
+    void sideDown() {
+        side.setPosition(0.19);
+        side2.setPosition(0.17);
+    }
+    void sideLeft() {
+        side.setPosition(0);
+        side2.setPosition(0.29);
+    }
+    void sideRight() {
+        side.setPosition(0.55);
+        side2.setPosition(0.29);
     }
 
 }
