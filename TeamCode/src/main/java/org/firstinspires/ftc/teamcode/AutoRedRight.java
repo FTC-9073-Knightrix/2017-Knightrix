@@ -214,8 +214,9 @@ public class AutoRedRight extends NewHardwareMap {
 
         if (state ==  (float) 7.1) {
             // Turns 100 degrees
-            if (turn(0.4, 90)) {
+            if (turn(0.2, 90)) {
                 // Set starting position based on current encoder positions
+                state = (float) 7.2;
                 lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
                 lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
                 rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
@@ -224,7 +225,6 @@ public class AutoRedRight extends NewHardwareMap {
                 lbEncStart = lbEnc;
                 rfEncStart = rfEnc;
                 rbEncStart = rbEnc;
-                state = (float) 7.2;
 
                 timer = (float) getRuntime();
             }
@@ -247,7 +247,7 @@ public class AutoRedRight extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             // Check if we have reached the first position
-            if(xPos < ColorRun) {
+            if(xPos > ColorRun) {
                 move(0);
                 state = 8;
             }
@@ -255,7 +255,7 @@ public class AutoRedRight extends NewHardwareMap {
 
         if (state == 8) {
             // Turns 100 degrees
-            if (turn(0.2,170)) {
+            if (turn(0.2,165)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
