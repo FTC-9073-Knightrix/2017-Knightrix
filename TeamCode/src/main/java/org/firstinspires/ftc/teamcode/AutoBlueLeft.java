@@ -66,16 +66,16 @@ public class AutoBlueLeft extends NewHardwareMap {
 
                 float colorInch = 19;
 
-                if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    pictograph = "right";
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                    pictograph = "left";
                     ColorRun = (float) (-1 * (int) ((colorInch - (2 * 7.63)) / 0.01489));
                     state++;
                 } else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     pictograph = "center";
                     ColorRun = (float) (-1 * (int) ((colorInch - 7.63) / 0.01489));
                     state++;
-                } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                    pictograph = "left";
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                    pictograph = "right";
                     //noinspection NumericOverflow
                     ColorRun = (float) (-1 * (int) (colorInch / 0.01489));
                     state++;
