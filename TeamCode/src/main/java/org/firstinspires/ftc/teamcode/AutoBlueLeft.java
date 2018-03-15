@@ -44,6 +44,7 @@ public class AutoBlueLeft extends NewHardwareMap {
         }
 
         if (state == 1) {
+            sideUp();
             // Get position of the 4 encoders
             lfEnc = LeftFrontDrive.getCurrentPosition() + 1;
             lbEnc = LeftBackDrive.getCurrentPosition() + 1;
@@ -63,20 +64,20 @@ public class AutoBlueLeft extends NewHardwareMap {
             // Look for pictograph value until finds a match
             if (pictograph == null) {
 
-                float colorInch = 22;
+                float colorInch = 19;
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    pictograph = "left";
-                    ColorRun = (float) (1 * (int) ((colorInch - (2 * 7.63)) / 0.01489));
+                    pictograph = "right";
+                    ColorRun = (float) (-1 * (int) ((colorInch - (2 * 7.63)) / 0.01489));
                     state++;
                 } else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     pictograph = "center";
-                    ColorRun = (float) (1 * (int) ((colorInch - 7.63) / 0.01489));
+                    ColorRun = (float) (-1 * (int) ((colorInch - 7.63) / 0.01489));
                     state++;
                 } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                    pictograph = "right";
+                    pictograph = "left";
                     //noinspection NumericOverflow
-                    ColorRun = (float) (1 * (int) (colorInch / 0.01489));
+                    ColorRun = (float) (-1 * (int) (colorInch / 0.01489));
                     state++;
                 }
             }
@@ -189,10 +190,10 @@ public class AutoBlueLeft extends NewHardwareMap {
             xPos = ((lfEnc - lfEncStart) + (rfEnc - rfEncStart)) / 2;
 
             // Check if we have reached the first position
-            if (xPos > 400) {
+            if (xPos < -400) {
                 sideUp(); // Side UP
                 // Get off the platform
-                if (xPos > 1500) {
+                if (xPos < -1450) {
                     move(0);
                     //timer = (float) getRuntime();
                     state = (float) 7.1;
@@ -210,15 +211,19 @@ public class AutoBlueLeft extends NewHardwareMap {
             }
         }
 
-        if (state == 7.1) {
+        if (state == (float) 7.1) {
             // Turns 100 degrees
             if (turn(0.2, -90)) {
                 // Set starting position based on current encoder positions
+                lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
+                lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
+                rfEnc =  RightFrontDrive.getCurrentPosition() +1 ;
+                rbEnc =  RightBackDrive.getCurrentPosition()  +1 ;
                 lfEncStart = lfEnc;
                 lbEncStart = lbEnc;
                 rfEncStart = rfEnc;
                 rbEncStart = rbEnc;
-                state = (float) 8.1;
+                state = (float) 7.2;
 
                 timer = (float) getRuntime();
             }
@@ -249,7 +254,7 @@ public class AutoBlueLeft extends NewHardwareMap {
 
         if (state == 8) {
             // Turns 100 degrees
-            if (turn(0.2, 10)) {
+            if (turn(0.2, 20)) {
                 // Set starting position based on current encoder positions
                 lfEncStart = lfEnc;
                 lbEncStart = lbEnc;
@@ -320,11 +325,55 @@ public class AutoBlueLeft extends NewHardwareMap {
                 plate.setPosition(0.5); //plate down
                 move(0);
                 state = 10;
+                timer = (float) getRuntime();
             }
         }
 
         if (state == 10) {
-            stop();
+            if (getRuntime() < timer + 0.5) {
+                move(0.2);
+            }
+            else {
+                state = 11;
+                timer = (float) getRuntime();
+            }
         }
+
+        if (state == 11) {
+            if (getRuntime() < timer + 1.2) {
+                move(-0.2);
+            }
+            else {
+                state = 12;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 12) {
+            if (getRuntime() < timer + 0.3) {
+                move(0.2);
+            }
+            else {
+                state = 13;
+            }
+        }
+
+        if (state == 13) {
+            if (turn(0.2, 90)) {
+                stop();
+            }
+        }
+
+        telemetry.addLine("State: " + state);
+        telemetry.addLine("Side 1: " + side.getPosition());
+        telemetry.addLine("Side 2: " + side2.getPosition());
+        telemetry.addLine("Color: " + color());
+        telemetry.addLine("Pictograph: " + pictograph);
+        telemetry.addLine("xPos" + xPos);
+        telemetry.addLine("lfEnc" + lfEnc);
+        telemetry.addLine("lbEnc" + lbEnc);
+        telemetry.addLine("rfEnc" + rfEnc);
+        telemetry.addLine("rbEnc" + rbEnc);
+        telemetry.addLine("Gyro: " + angle);
     }
 }

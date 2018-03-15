@@ -284,7 +284,8 @@ public abstract class NewHardwareMap extends OpMode {
             telemetry.addLine("Curr. Angle: " + angle);
             telemetry.addLine("ABS angle: " + Math.abs(degree-angle));
 
-            if((Math.abs(degree) - Math.abs(angle)) > 5) {
+            //if((Math.abs(degree) - Math.abs(angle)) > 5) {
+            if(Math.abs(degree - angle) > 5) {
                 //if((double)((int)(start_angle)) - (double)((int)(angle)) < degree) {
                 if(angle > degree) {
                     LeftFrontDrive.setPower(Range.clip(power, -1, 1));

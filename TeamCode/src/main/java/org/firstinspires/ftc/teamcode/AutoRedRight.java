@@ -44,6 +44,7 @@ public class AutoRedRight extends NewHardwareMap {
         }
 
         if (state == 1) {
+            sideUp();
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
             lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -63,7 +64,7 @@ public class AutoRedRight extends NewHardwareMap {
             // Look for pictograph value until finds a match
             if (pictograph == null) {
 
-                float colorInch = 22;
+                float colorInch = 19;
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     pictograph = "right"; //values were switched
@@ -87,7 +88,7 @@ public class AutoRedRight extends NewHardwareMap {
         if (state == 2) {
             //arm.setPower(0); //Stop the arm
 
-            state++;
+            state = 3;
         }
 
         if (state == 3) {
@@ -194,7 +195,7 @@ public class AutoRedRight extends NewHardwareMap {
             if (xPos > 400) {
                 sideUp();
                 // Get off the platform
-                if(xPos > 1500) {
+                if(xPos > 1450) {
                     move(0);
                     //timer = (float) getRuntime();
                     state = (float) 7.1;
@@ -213,7 +214,7 @@ public class AutoRedRight extends NewHardwareMap {
         }
 
         if (state ==  (float) 7.1) {
-            // Turns 100 degrees
+            // Turns 90 degrees
             if (turn(0.2, 90)) {
                 // Set starting position based on current encoder positions
                 state = (float) 7.2;
@@ -254,8 +255,8 @@ public class AutoRedRight extends NewHardwareMap {
         }
 
         if (state == 8) {
-            // Turns 100 degrees
-            if (turn(0.2,165)) {
+            // Turns to 160 degrees
+            if (turn(0.2,160)) {
                 // Set starting position based on current encoder positions
                 lfEncStart =  lfEnc;
                 lbEncStart =  lbEnc;
@@ -326,11 +327,43 @@ public class AutoRedRight extends NewHardwareMap {
                 plate.setPosition(0.5); //plate down
                 move(0);
                 state = 10;
+                timer = (float) getRuntime();
             }
         }
 
         if (state == 10) {
-            stop();
+            if (getRuntime() < timer + 0.5) {
+                move(0.2);
+            }
+            else {
+                state = 11;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 11) {
+            if (getRuntime() < timer + 1.2) {
+                move(-0.2);
+            }
+            else {
+                state = 12;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 12) {
+            if (getRuntime() < timer + 0.3) {
+                move(0.2);
+            }
+            else {
+               state = 13;
+            }
+        }
+
+        if(state == 13){
+            if (turn(0.2,90)) {
+                stop();
+            }
         }
 
         telemetry.addLine("State: " + state);
