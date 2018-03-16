@@ -111,6 +111,7 @@ public class AutoBlueRight extends NewHardwareMap {
         //      c.Encoders position
         // ------------------ START -----------------------------
         if (state == 1) {
+            sideUp();
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
             lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -130,7 +131,7 @@ public class AutoBlueRight extends NewHardwareMap {
             // Look for pictograph value until finds a match
             if (pictograph == null) {
 
-                float colorInch = 22;
+                float colorInch = 14;
 
                 if (vuMark == RelicRecoveryVuMark.LEFT) {
                     pictograph = "left";
@@ -199,7 +200,6 @@ public class AutoBlueRight extends NewHardwareMap {
 
             // If two seconds have passed, move robot towards a ball for 1 more second
             if (getRuntime() > timer + 2) {
-                move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
                     sideUp(); // Side UP
@@ -213,6 +213,11 @@ public class AutoBlueRight extends NewHardwareMap {
                     lbEncStart = lbEnc;
                     rfEncStart = rfEnc;
                     rbEncStart = rbEnc;
+                }
+                else {
+                    if (side.getPosition() > 0) {
+                        side.setPosition(side.getPosition() - 0.001);
+                    }
                 }
             }
         }
@@ -312,10 +317,10 @@ public class AutoBlueRight extends NewHardwareMap {
             if (xPos < -400) {
                 sideUp(); // Side UP
                 // Get off the platform
-                if(xPos < -1500) {
+                if(xPos < -1450) {
                     move(0);
                     timer = (float) getRuntime();
-                    state = (float) 7.01;
+                    state = (float) 7.2;
                     // Get position of the 4 encoders
                     lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
                     lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -490,10 +495,40 @@ public class AutoBlueRight extends NewHardwareMap {
             }
         }
         if (state == 10) {
+            if (getRuntime() < timer + 0.5) {
+                move(0.2);
+            }
+            else {
+                state = 11;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 11) {
+            if (getRuntime() < timer + 1.2) {
+                move(-0.2);
+            }
+            else {
+                state = 12;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 12) {
+            if (getRuntime() < timer + 0.6) {
+                move(0.2);
+            }
+            else {
+                state = 13;
+            }
+        }
+        if(state == 13){
             if (turn(0.2,90)) {
                 stop();
             }
         }
+
+
         /*// ------------------  END  -----------------------------*
 
         // --------------- DESCRIPTION --------------------------

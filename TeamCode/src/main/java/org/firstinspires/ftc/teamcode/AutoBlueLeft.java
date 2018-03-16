@@ -66,7 +66,7 @@ public class AutoBlueLeft extends NewHardwareMap {
 
                 float colorInch = 19;
 
-                if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
                     pictograph = "right";
                     ColorRun = (float) (-1 * (int) ((colorInch - (2 * 7.63)) / 0.01489));
                     state++;
@@ -74,7 +74,7 @@ public class AutoBlueLeft extends NewHardwareMap {
                     pictograph = "center";
                     ColorRun = (float) (-1 * (int) ((colorInch - 7.63) / 0.01489));
                     state++;
-                } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     pictograph = "left";
                     //noinspection NumericOverflow
                     ColorRun = (float) (-1 * (int) (colorInch / 0.01489));
@@ -113,7 +113,6 @@ public class AutoBlueLeft extends NewHardwareMap {
 
             // If two seconds have passed, move robot towards a ball for 1 more second
             if (getRuntime() > timer + 2) {
-                move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
                     sideUp(); // Side UP
@@ -127,6 +126,11 @@ public class AutoBlueLeft extends NewHardwareMap {
                     rbEncStart = rbEnc;
                     //state = (float)6.5;
                     state = 7;
+                }
+                else {
+                    if (side.getPosition() > 0) {
+                        side.setPosition(side.getPosition() - 0.001);
+                    }
                 }
             }
         }

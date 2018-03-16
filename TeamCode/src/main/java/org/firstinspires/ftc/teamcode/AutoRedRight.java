@@ -115,7 +115,6 @@ public class AutoRedRight extends NewHardwareMap {
 
             // If two seconds have passed, move robot towards a ball for 1 more second
             if (getRuntime() > timer + 2) {
-                move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
                     sideUp();
@@ -129,6 +128,11 @@ public class AutoRedRight extends NewHardwareMap {
                     rbEncStart = rbEnc;
                     //state = (float)6.5;
                     state = 7;
+                }
+                else {
+                    if (side.getPosition() > 0) {
+                        side.setPosition(side.getPosition() - 0.001);
+                    }
                 }
             }
         }

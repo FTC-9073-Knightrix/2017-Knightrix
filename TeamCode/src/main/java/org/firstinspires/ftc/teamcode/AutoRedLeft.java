@@ -110,6 +110,7 @@ public class AutoRedLeft extends NewHardwareMap {
         //      c.Encoders position
         // ------------------ START -----------------------------
         if (state == 1) {
+            sideUp();
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
             lbEnc =  LeftBackDrive.getCurrentPosition()   +1 ;
@@ -129,10 +130,10 @@ public class AutoRedLeft extends NewHardwareMap {
             // Look for pictograph value until finds a match
             if (pictograph == null) {
 
-                float colorInch = 22;
+                float colorInch = 14;
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    pictograph = "left";
+                    pictograph = "right";
                     ColorRun = (float) (1 * (int)((colorInch-(2*7.63))/0.01489));
                     state++;
                 }
@@ -142,7 +143,7 @@ public class AutoRedLeft extends NewHardwareMap {
                     state++;
                 }
                 else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                    pictograph = "right";
+                    pictograph = "left";
                     //noinspection NumericOverflow
                     ColorRun = (float) (1 * (int)(colorInch/0.01489));
                     state++;
@@ -198,7 +199,6 @@ public class AutoRedLeft extends NewHardwareMap {
 
             // If two seconds have passed, move robot towards a ball for 1 more second
             if (getRuntime() > timer + 2) {
-                move(0.10);
                 if (getRuntime() > timer + 3.5) {
                     move(0);
                     sideUp();
@@ -212,6 +212,11 @@ public class AutoRedLeft extends NewHardwareMap {
                     rbEncStart = rbEnc;
                     //state = (float)6.5;
                     state = 7;
+                }
+                else {
+                    if (side.getPosition() > 0) {
+                        side.setPosition(side.getPosition() - 0.001);
+                    }
                 }
             }
         }
@@ -279,7 +284,7 @@ public class AutoRedLeft extends NewHardwareMap {
             if (xPos > 400) {
                 sideUp();
                 // Get off the platform
-                if(xPos > 1500) {
+                if(xPos > 1450) {
                     move(0);
                     //timer = (float) getRuntime();
                     state = (float)7.2;
@@ -346,7 +351,7 @@ public class AutoRedLeft extends NewHardwareMap {
         // Go backwards based on pictogram distance
         // ------------------ START -----------------------------
         if (state == (float) 7.2) {
-            mech_move(0,(float)-0.2,0);
+            mech_move(0,(float)0.2,0);
             // Check encoders are higher than xxxxx
             // Get position of the 4 encoders
             lfEnc =  LeftFrontDrive.getCurrentPosition()  +1 ;
@@ -362,7 +367,7 @@ public class AutoRedLeft extends NewHardwareMap {
             xPos = ((lfEnc-lfEncStart) + (rfEnc-rfEncStart))/2;
 
             // Check if we have reached the first position
-            if(xPos < ColorRun) {
+            if(xPos > ColorRun) {
                 move(0);
                 state = 8;
             }
@@ -464,6 +469,34 @@ public class AutoRedLeft extends NewHardwareMap {
             }
         }
         if (state == 10) {
+            if (getRuntime() < timer + 0.5) {
+                move(0.2);
+            }
+            else {
+                state = 11;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 11) {
+            if (getRuntime() < timer + 1.2) {
+                move(-0.2);
+            }
+            else {
+                state = 12;
+                timer = (float) getRuntime();
+            }
+        }
+
+        if (state == 12) {
+            if (getRuntime() < timer + 0.6) {
+                move(0.2);
+            }
+            else {
+                state = 13;
+            }
+        }
+        if(state == 13){
             if (turn(0.2,90)) {
                 stop();
             }
